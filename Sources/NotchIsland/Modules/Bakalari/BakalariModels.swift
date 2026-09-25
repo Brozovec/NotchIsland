@@ -44,10 +44,10 @@ struct Timetable: Codable {
     let fetchedAt: Date
     func lessons(day: Int, hourId: Int) -> [Lesson] { lessonsByCell["\(day)-\(hourId)"] ?? [] }
 
-    static func build(_ lessons: [RemoteLesson], hours: [HourRef]) -> Timetable {
+    static func build(_ lessons: [RemoteLesson], hours: [HourRef], weekStart: Date? = nil) -> Timetable {
         var cal = Calendar(identifier: .iso8601); cal.firstWeekday = 2; cal.timeZone = TimeZone(identifier: "Europe/Prague") ?? .current
         let today = cal.startOfDay(for: Date())
-        let monday = cal.date(from: cal.dateComponents([.yearForWeekOfYear, .weekOfYear], from: today)) ?? today
+        let monday = weekStart.map { cal.startOfDay(for: $0) } ?? (cal.date(from: cal.dateComponents([.yearForWeekOfYear, .weekOfYear], from: today)) ?? today)
         var byCell: [String: [Lesson]] = [:]
         var minH = Int.max, maxH = 0
         for r in lessons {
@@ -82,6 +82,7 @@ struct Timetable: Codable {
         guard let g = raw?.trimmingCharacters(in: .whitespaces), !g.isEmpty else { return nil }
         if g.lowercased().contains("celá") { return nil }
         if let m = g.range(of: #"^(\d+)[\.\s]*(?:skupina|sk)?$"#, options: .regularExpression) { return "\(g[m].prefix(while: { $0.isNumber })).sk" }
+        if let m = g.range(of: #"^sk\s*(\d+)$"#, options: [.regularExpression, .caseInsensitive]) { return "\(g[m].filter { $0.isNumber }).sk" }
         return g
     }
 }

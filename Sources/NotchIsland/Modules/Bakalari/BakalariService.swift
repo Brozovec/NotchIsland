@@ -106,9 +106,15 @@ final class BakalariService: ObservableObject {
                 try await login(server: s.bakalariServer, user: s.bakalariUser, password: Keychain.read("bakalariPassword"))
                 html = try await fetchHTML(server: s.bakalariServer, classId: s.bakalariClass)
             }
-            let parsed = try BakalariHTMLParser.parseClassTimetable(html: html)
-            let t = Timetable.build(parsed.lessons, hours: parsed.hours)
-            timetable = t; status = parsed.lessons.isEmpty ? L("Rozvrh je prázdný (zkontroluj třídu)") : ""
+            let t: Timetable
+            if let j = BakalariJSONParser.parse(html: html) {
+                Log.w("bakalari json: \(j.lessons.count) lessons, \(j.hours.count) hours, week \(j.weekStart.map { "\($0)" } ?? "-")")
+                t = Timetable.build(j.lessons, hours: j.hours, weekStart: j.weekStart)
+            } else {
+                let parsed = try BakalariHTMLParser.parseClassTimetable(html: html)
+                t = Timetable.build(parsed.lessons, hours: parsed.hours)
+            }
+            timetable = t; status = t.lessonsByCell.isEmpty ? L("Rozvrh je prázdný (zkontroluj třídu)") : ""
             updateState()
             if let d = try? JSONEncoder().encode(t) { try? d.write(to: cacheURL) }
         } catch { status = error.localizedDescription; loggedIn = false; Log.w("bakalari: \(error)") }
@@ -155,7 +161,7 @@ final class BakalariService: ObservableObject {
         let g = AppSettings.shared.bakalariGroup
         return t.hours.flatMap { h -> [TodayLesson] in
             t.lessons(day: weekday, hourId: h.Id).filter { l in
-                guard g != 0, let grp = l.groupAbbrev, let d = grp.first, d.isNumber, let n = Int(String(d)) else { return true }
+                guard g != 0, let grp = l.groupAbbrev, let d = grp.first(where: { $0.isNumber }), let n = Int(String(d)) else { return true }
                 return n == g
             }.compactMap { l in
                 guard let s = time(h.BeginTime, on: day), let e = time(h.EndTime, on: day) else { return nil }

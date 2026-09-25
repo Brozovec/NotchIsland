@@ -65,7 +65,7 @@ struct WeekGrid: View {
     private func firstLesson(day: Int, hour: Int) -> Lesson? {
         let g = AppSettings.shared.bakalariGroup
         return t.lessons(day: day, hourId: hour).first { l in
-            guard g != 0, let grp = l.groupAbbrev, let c = grp.first, c.isNumber, let n = Int(String(c)) else { return true }
+            guard g != 0, let grp = l.groupAbbrev, let c = grp.first(where: { $0.isNumber }), let n = Int(String(c)) else { return true }
             return n == g
         }
     }
