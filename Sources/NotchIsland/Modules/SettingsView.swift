@@ -4,6 +4,7 @@ struct SettingsView: View {
     @ObservedObject var s = AppSettings.shared
     @State private var launchAtLogin = LaunchAtLogin.isEnabled
     @State private var bkPassword = Keychain.read("bakalariPassword")
+    @ObservedObject var bk = BakalariService.shared
     var body: some View {
         ScrollView(showsIndicators: false) {
             HStack(alignment: .top, spacing: 8) {
@@ -51,19 +52,18 @@ struct SettingsView: View {
                             .padding(.horizontal, 6).padding(.vertical, 3).background(Color.white.opacity(0.1), in: RoundedRectangle(cornerRadius: 6))
                             .onChange(of: bkPassword) { _, v in Keychain.save(v, "bakalariPassword") }
                     }
-                    HStack {
-                        field(L("Třída"), $s.bakalariClass)
-                        Picker("", selection: $s.bakalariGroup) { Text(L("vše")).tag(0); Text("1.sk").tag(1); Text("2.sk").tag(2) }.pickerStyle(.segmented).controlSize(.mini).frame(width: 120)
-                        Button(L("Načíst")) { Task { await BakalariService.shared.refresh(force: true) } }.font(.system(size: 10)).controlSize(.mini)
+                    HStack(spacing: 6) {
+                        Button(L("Přihlásit a načíst třídy")) { Task { await BakalariService.shared.loadClasses() } }.font(.system(size: 10)).controlSize(.mini)
+                        if bk.loading { ProgressView().controlSize(.mini).tint(.white) }
+                        if !bk.classes.isEmpty {
+                            Picker("", selection: $s.bakalariClass) { ForEach(bk.classes) { c in Text(c.name).tag(c.id) } }.controlSize(.mini).frame(width: 90)
+                                .onChange(of: s.bakalariClass) { _, _ in Task { await BakalariService.shared.refresh(force: true) } }
+                        } else if !s.bakalariClass.isEmpty {
+                            Text(s.bakalariClass).font(.system(size: 10, weight: .bold)).foregroundStyle(.white)
+                        }
+                        Picker("", selection: $s.bakalariGroup) { Text(L("vše")).tag(0); Text("1.sk").tag(1); Text("2.sk").tag(2) }.pickerStyle(.segmented).controlSize(.mini).frame(width: 110)
                     }
-                    note(L("Heslo je v Klíčence. Třída jako v Bakalářích (např. 2.B). Rozvrh se obnovuje každých 30 min."))
-                }
-                section(L("Přehrávání z prohlížeče")) {
-                    note(L("YouTube, YouTube Music, Spotify Web, SoundCloud: nainstaluj rozšíření ze složky extension/ (chrome://extensions → Načíst rozbalené)."))
-                    Button(L("Otevřít složku s rozšířením")) {
-                        let url = URL(fileURLWithPath: NSHomeDirectory() + "/Documents/Projekty/NotchIsland/extension")
-                        NSWorkspace.shared.open(FileManager.default.fileExists(atPath: url.path) ? url : Bundle.main.bundleURL)
-                    }.font(.system(size: 10)).controlSize(.mini)
+                    note(bk.status.isEmpty ? L("Heslo je v Klíčence. Po přihlášení vyber třídu a skupinu, rozvrh se obnovuje každých 30 min.") : bk.status)
                 }
                 section(L("Screenshoty")) {
                     field(L("Složka"), $s.screenshotFolder)

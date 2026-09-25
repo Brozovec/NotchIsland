@@ -21,7 +21,7 @@ Hover over the notch and it expands into a compact black panel. Move away and it
 
 | Tab | Features |
 |---|---|
-| **Island** | Now playing from Spotify, Apple Music or the browser (YouTube, YouTube Music, Spotify Web, SoundCloud via the bundled extension in `extension/`) with artwork, controls and an equalizer. Calendar strip you can scrub through by dragging (day changes as you drag). Weather tile styled after Apple Weather, based on your location, hover for the hourly forecast. |
+| **Island** | Now playing from Spotify, Apple Music, or anything macOS shows as Now Playing (YouTube in Chrome/Safari, podcasts, …) with artwork, controls and an equalizer. Calendar strip you can scrub through by dragging (day changes as you drag). Weather tile styled after Apple Weather, based on your location, hover for the hourly forecast. |
 | **Tray** | Drop files onto the notch to park them. Drag them back out anywhere, double-click to open. |
 | **Transit** | **Stop mode:** live PID (Prague) departures with delays, platform, favorite stops bar, autocomplete, and tracking of a chosen vehicle (last stop, next stop, delay, speed). **Connection mode:** mini search for RegioJet and FlixBus with times, duration, transfers, price, free seats, live RegioJet delay, city autocomplete, favorite routes, "I'm on this one" tracking, ticket links, and a one-click IDOS search for ČD trains. |
 | **Calls** | Detects Discord, Zoom, Teams, FaceTime, Slack, Chrome (Meet), Telegram and WhatsApp, and whether the microphone is live. With your own Discord app credentials it shows who is in your voice channel and lets you mute / deafen. |
@@ -49,9 +49,9 @@ cd NotchIsland
 
 `build.sh` signs with your "Apple Development" certificate if present, otherwise ad hoc. A stable signature matters: it is what lets macOS remember the permissions between builds.
 
-### Browser playback
+### System Now Playing
 
-macOS 15.4+ blocks the private MediaRemote API, so the app cannot see YouTube on its own. The `extension/` folder holds a small Chrome/Edge/Brave/Firefox extension that reports playback to the app over `127.0.0.1:47831` and executes play/pause/next/prev. See `extension/README.md`.
+macOS 15.4+ blocks the private MediaRemote API for third-party apps. NotchIsland bundles the [mediaremote-adapter](https://github.com/ungive/mediaremote-adapter) (BSD-3) which reads Now Playing through `/usr/bin/perl`, an Apple-signed process. That is how YouTube in a browser shows up with artwork and working play/pause/next.
 
 ### Data sources
 
@@ -74,7 +74,7 @@ Najedeš myší na výřez a rozbalí se kompaktní černý panel. Odjedeš a za
 
 | Záložka | Funkce |
 |---|---|
-| **Island** | Přehrávaná skladba ze Spotify, Apple Music nebo prohlížeče (YouTube, YouTube Music, Spotify Web, SoundCloud přes přiložené rozšíření ve složce `extension/`) s obalem, ovládáním a equalizerem. Kalendářní pásek, kterým se dá tažením scrubovat (den se mění pod prstem). Dlaždice počasí ve stylu Apple Počasí podle tvé polohy, po najetí hodinová předpověď. |
+| **Island** | Přehrávaná skladba ze Spotify, Apple Music nebo cokoli, co macOS ukazuje jako Právě hraje (YouTube v Chromu/Safari, podcasty…) s obalem, ovládáním a equalizerem. Kalendářní pásek, kterým se dá tažením scrubovat (den se mění pod prstem). Dlaždice počasí ve stylu Apple Počasí podle tvé polohy, po najetí hodinová předpověď. |
 | **Tray** | Přetáhni soubory na notch a odlož si je. Odtud je zase přetáhneš kamkoli, dvojklik otevře. |
 | **Doprava** | **Zastávka:** živé odjezdy PID se zpožděním, nástupištěm, lištou oblíbených zastávek, našeptáváním a sledováním vybraného vozu (poslední a další zastávka, zpoždění, rychlost). **Spojení:** mini vyhledávač RegioJet a FlixBus s časy, délkou, přestupy, cenou, volnými místy, živým zpožděním RegioJetu, našeptáváním měst, oblíbenými trasami, sledováním "sedím v tomhle spoji", odkazy na jízdenky a jedním klikem na IDOS pro vlaky ČD. |
 | **Hovory** | Pozná Discord, Zoom, Teams, FaceTime, Slack, Chrome (Meet), Telegram a WhatsApp a jestli je aktivní mikrofon. S vlastní Discord aplikací ukáže, kdo je s tebou v hlasovém kanálu, a umí mute / deafen. |
@@ -102,9 +102,9 @@ cd NotchIsland
 
 `build.sh` podepisuje certifikátem "Apple Development", když ho máš, jinak ad hoc. Stabilní podpis je důležitý, díky němu si macOS pamatuje oprávnění mezi buildy.
 
-### Přehrávání z prohlížeče
+### Systémové Právě hraje
 
-macOS 15.4+ blokuje soukromé MediaRemote API, takže appka sama YouTube nevidí. Ve složce `extension/` je malé rozšíření pro Chrome/Edge/Brave/Firefox, které appce posílá stav přehrávání přes `127.0.0.1:47831` a vykonává play/pause/další/předchozí. Viz `extension/README.md`.
+macOS 15.4+ blokuje soukromé MediaRemote API aplikacím třetích stran. NotchIsland přibaluje [mediaremote-adapter](https://github.com/ungive/mediaremote-adapter) (BSD-3), který Právě hraje čte přes `/usr/bin/perl`, tedy Apple podepsaný proces. Díky tomu se ukáže i YouTube v prohlížeči s obalem a funkčním play/pause/další.
 
 ### Zdroje dat
 

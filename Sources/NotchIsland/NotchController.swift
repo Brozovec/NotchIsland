@@ -2,7 +2,7 @@ import AppKit
 import SwiftUI
 import Combine
 
-enum CompactMode: Equatable { case none, music, call, timer, power }
+enum CompactMode: Equatable { case none, music, call, timer, power, school }
 
 @MainActor
 final class NotchState: ObservableObject {
@@ -19,12 +19,17 @@ final class NotchState: ObservableObject {
     init(geometry: NotchGeometry) {
         self.geometry = geometry
         let base = MusicService.shared.$now.combineLatest(CallsService.shared.$micInUse, CallsService.shared.$running)
-        base.combineLatest(TimerService.shared.$total, PowerService.shared.$flash)
-            .map { b, timerTotal, flash -> CompactMode in
+        base.combineLatest(TimerService.shared.$total, PowerService.shared.$flash, BakalariService.shared.$school)
+            .map { b, timerTotal, flash, school -> CompactMode in
                 let (now, mic, apps) = b
                 if flash != nil { return .power }
                 if mic && !apps.isEmpty { return .call }
                 if timerTotal > 0 { return .timer }
+                switch school {
+                case .breakTime: return .school
+                case .lesson(_, let e) where e < 5 * 60: return .school
+                default: break
+                }
                 if let n = now, n.isPlaying { return .music }
                 return .none
             }
@@ -93,7 +98,7 @@ final class NotchController {
         // rozběhnout služby
         _ = ShelfService.shared; _ = TransitService.shared; _ = IntercityService.shared; _ = WeatherService.shared
         _ = CalendarService.shared; _ = ScreenshotService.shared; _ = DiscordRPC.shared; _ = ClipboardService.shared; _ = PowerService.shared; _ = BakalariService.shared
-        BrowserMediaServer.shared.start()
+        DispatchQueue.global().async { SystemNowPlaying.shared.start() }
     }
 
     /// Otevře panel na dané záložce (globální zkratka).

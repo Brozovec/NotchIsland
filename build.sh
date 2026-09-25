@@ -15,6 +15,11 @@ cp .build/release/NotchIsland "$APP/Contents/MacOS/NotchIsland"
 cp Resources/Info.plist "$APP/Contents/Info.plist"
 cp -R Resources/Fonts "$APP/Contents/Resources/Fonts"
 cp -R Resources/Localizations/*.lproj "$APP/Contents/Resources/"
+# MediaRemote adaptér (systémové Now Playing přes perl) – viz Adapter/README.md
+FW="$APP/Contents/Resources/MediaRemoteAdapter.framework"; mkdir -p "$FW"
+clang -fobjc-arc -fvisibility=default -dynamiclib -framework Foundation -framework AppKit -framework UniformTypeIdentifiers \
+  -IAdapter/include -IAdapter/src -o "$FW/MediaRemoteAdapter" $(find Adapter/src/adapter Adapter/src/private Adapter/src/utility -name "*.m") 2>&1 | grep -E "error" && { echo "ADAPTER BUILD FAILED"; exit 1; } || true
+cp Adapter/bin/mediaremote-adapter.pl "$APP/Contents/Resources/mediaremote-adapter.pl"
 [[ -f Resources/AppIcon.icns ]] && cp Resources/AppIcon.icns "$APP/Contents/Resources/AppIcon.icns"
 # Stabilní podpis = macOS si pamatuje oprávnění napříč buildy (ad hoc podpis se mění s každým buildem).
 IDENTITY="${NOTCH_SIGN_IDENTITY:-Apple Development}"

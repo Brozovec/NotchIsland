@@ -1,6 +1,7 @@
 import Foundation
 import Combine
 import Security
+import UserNotifications
 
 /// Rozvrh z Bakalářů: přihlášení cookie session (jako v BakalariRozvrhy), scrape veřejného rozvrhu třídy, obnova každých 30 min.
 @MainActor
@@ -9,6 +10,19 @@ final class BakalariService: ObservableObject {
     @Published private(set) var timetable: Timetable?
     @Published private(set) var status = ""
     @Published private(set) var loading = false
+    @Published private(set) var classes: [DefinitionEntity] = []
+    @Published private(set) var loginOK = false
+    /// Aktuální školní stav (přepočítává se každých 15 s).
+    @Published private(set) var school: SchoolState = .none
+    enum SchoolState: Equatable {
+        case none
+        case lesson(TodayLesson, endsIn: TimeInterval)
+        case breakTime(next: TodayLesson, startsIn: TimeInterval, length: TimeInterval)
+        case beforeSchool(first: TodayLesson, startsIn: TimeInterval)
+        case done
+    }
+    private var stateTimer: Timer?
+    private var notifiedKey = ""
     private var timer: Timer?
     private let session: URLSession
     private var loggedIn = false
@@ -19,7 +33,60 @@ final class BakalariService: ObservableObject {
         session = URLSession(configuration: c)
         if let d = try? Data(contentsOf: cacheURL), let t = try? JSONDecoder().decode(Timetable.self, from: d) { timetable = t }
         timer = Timer.scheduledTimer(withTimeInterval: 1800, repeats: true) { [weak self] _ in Task { await self?.refresh() } }
-        Task { await refresh() }
+        stateTimer = Timer.scheduledTimer(withTimeInterval: 15, repeats: true) { [weak self] _ in self?.updateState() }
+        Task { await refresh(); updateState() }
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { _, _ in }
+    }
+
+    /// Po zadání serveru + jména + hesla: přihlásí se a stáhne seznam tříd.
+    func loadClasses() async {
+        let s = AppSettings.shared
+        loading = true; defer { loading = false }
+        do {
+            try await login(server: s.bakalariServer, user: s.bakalariUser, password: Keychain.read("bakalariPassword"))
+            guard let base = URL(string: s.bakalariServer) else { return }
+            var r = URLRequest(url: base.appendingPathComponent("Timetable/Public")); r.setValue("Mozilla/5.0 (NotchIsland)", forHTTPHeaderField: "User-Agent")
+            let (d, _) = try await session.data(for: r)
+            let list = try BakalariHTMLParser.parseClasses(html: String(data: d, encoding: .utf8) ?? "")
+            classes = list; loginOK = true
+            status = list.isEmpty ? L("Přihlášeno, ale seznam tříd je prázdný") : ""
+            if s.bakalariClass.isEmpty, let f = list.first { s.bakalariClass = f.id }
+            timetable = nil
+            await refresh(force: true)
+        } catch { status = error.localizedDescription; loginOK = false }
+    }
+
+    struct TodayLessonKey: Equatable { let id: String }
+
+    /// Přepočet stavu: hodina / přestávka / před školou / po škole + oznámení při začátku přestávky.
+    private func updateState() {
+        guard isConfigured else { school = .none; return }
+        let list = lessons().filter { !$0.lesson.isCancelled }
+        let now = Date()
+        var new: SchoolState = .none
+        if list.isEmpty { new = .none }
+        else if let cur = list.first(where: { $0.start <= now && $0.end > now }) { new = .lesson(cur, endsIn: cur.end.timeIntervalSince(now)) }
+        else if let next = list.first(where: { $0.start > now }) {
+            if let prev = list.last(where: { $0.end <= now }) { new = .breakTime(next: next, startsIn: next.start.timeIntervalSince(now), length: next.start.timeIntervalSince(prev.end)) }
+            else { new = .beforeSchool(first: next, startsIn: next.start.timeIntervalSince(now)) }
+        } else { new = .done }
+        school = new
+        // oznámení: začátek přestávky / poslední hodina skončila
+        let key: String
+        switch new {
+        case .breakTime(let next, _, let len): key = "break-\(next.id)"
+            if key != notifiedKey { notify(String(format: L("Přestávka %d min"), Int(len / 60)), String(format: L("Další: %@ v %@, učebna %@"), next.lesson.subjectName.isEmpty ? next.lesson.subjectAbbrev : next.lesson.subjectName, next.hour.BeginTime, next.lesson.roomAbbrev ?? "–")) }
+        case .done: key = "done-\(Calendar.current.startOfDay(for: now))"
+            if key != notifiedKey { notify(L("Konec vyučování"), L("Dnes už žádná hodina není.")) }
+        case .lesson(let l, _): key = "lesson-\(l.id)"
+        default: key = ""
+        }
+        notifiedKey = key
+    }
+
+    private func notify(_ title: String, _ body: String) {
+        let c = UNMutableNotificationContent(); c.title = title; c.body = body; c.sound = .default
+        UNUserNotificationCenter.current().add(UNNotificationRequest(identifier: UUID().uuidString, content: c, trigger: nil))
     }
 
     private var cacheURL: URL {
@@ -42,6 +109,7 @@ final class BakalariService: ObservableObject {
             let parsed = try BakalariHTMLParser.parseClassTimetable(html: html)
             let t = Timetable.build(parsed.lessons, hours: parsed.hours)
             timetable = t; status = parsed.lessons.isEmpty ? L("Rozvrh je prázdný (zkontroluj třídu)") : ""
+            updateState()
             if let d = try? JSONEncoder().encode(t) { try? d.write(to: cacheURL) }
         } catch { status = error.localizedDescription; loggedIn = false; Log.w("bakalari: \(error)") }
     }
@@ -70,7 +138,7 @@ final class BakalariService: ObservableObject {
     }
 
     // MARK: dnešek
-    struct TodayLesson: Identifiable { let id: String; let hour: HourRef; let lesson: Lesson; let start: Date; let end: Date }
+    struct TodayLesson: Identifiable, Equatable { let id: String; let hour: HourRef; let lesson: Lesson; let start: Date; let end: Date }
 
     private func time(_ hhmm: String, on day: Date) -> Date? {
         let p = hhmm.split(separator: ":").compactMap { Int($0) }; guard p.count == 2 else { return nil }

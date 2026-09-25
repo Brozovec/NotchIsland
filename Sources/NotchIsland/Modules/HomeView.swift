@@ -24,8 +24,8 @@ struct MusicPane: View {
                     .id(music.artwork)
                     .transition(.opacity)
                 if let n = music.now {
-                    BrandBadge(glyph: n.source == .spotify ? FA.spotify : (n.source == .web ? (n.siteName.contains("YouTube") ? FA.youtube : (n.siteName.contains("Spotify") ? FA.spotify : FA.chrome)) : FA.apple),
-                               color: n.source == .spotify || n.siteName.contains("Spotify") ? Color(hex: 0x1DB954) : (n.siteName.contains("YouTube") ? Color(hex: 0xFF0000) : (n.source == .web ? Color(hex: 0x4285F4) : Color(hex: 0xFC3C44))), size: 20)
+                    BrandBadge(glyph: n.source == .spotify ? FA.spotify : (n.source == .music ? FA.apple : (n.bundleId.contains("Chrome") || n.bundleId.contains("chrome") ? FA.chrome : (n.bundleId.contains("firefox") ? FA.youtube : FA.youtube))),
+                               color: n.source == .spotify ? Color(hex: 0x1DB954) : (n.source == .music ? Color(hex: 0xFC3C44) : Color(hex: 0xFF0000)), size: 20)
                         .offset(x: 5, y: 5)
                 }
             }
@@ -34,7 +34,7 @@ struct MusicPane: View {
                 if let n = music.now {
                     Text(n.title).font(.system(size: 12, weight: .bold)).foregroundStyle(.white).lineLimit(1)
                         .contentTransition(.opacity)
-                    Text(n.album).font(.system(size: 10)).foregroundStyle(.white.opacity(0.5)).lineLimit(1)
+                    Text(n.album.isEmpty ? n.siteName : n.album).font(.system(size: 10)).foregroundStyle(.white.opacity(0.5)).lineLimit(1)
                     Text(n.artist).font(.system(size: 10)).foregroundStyle(.white.opacity(0.5)).lineLimit(1)
                     HStack(spacing: 14) {
                         ctl("backward.end.fill", 9) { music.previous() }

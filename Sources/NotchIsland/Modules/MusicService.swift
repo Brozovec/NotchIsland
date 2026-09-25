@@ -4,7 +4,8 @@ import Combine
 struct NowPlaying: Equatable {
     enum Source: String { case spotify = "Spotify", music = "Hudba", web = "Web" }
     var source: Source
-    var siteName: String = ""
+    var siteName: String = ""   // název aplikace (Chrome, Safari…) u systémového zdroje
+    var bundleId: String = ""
     var isPlaying: Bool
     var title: String
     var artist: String
@@ -37,15 +38,23 @@ final class MusicService: ObservableObject {
     }
 
     private func poll() async {
-        var result: NowPlaying? = await Task.detached(priority: .utility) { [self] () -> NowPlaying? in
-            if await isRunning("com.spotify.client"), let n = Self.readSpotify() { return n }
-            if await isRunning("com.apple.Music"), let n = Self.readMusic() { return n }
-            return nil
-        }.value
-        // prohlížeč (rozšíření NotchIsland Media Bridge) – když nativní appka nehraje
-        if result == nil || result?.isPlaying == false, let w = BrowserMediaServer.shared.current(), !w.title.isEmpty, (result == nil || w.playing) {
-            result = NowPlaying(source: .web, siteName: w.site, isPlaying: w.playing, title: w.title, artist: w.artist, album: w.album.isEmpty ? w.site : w.album,
-                                durationSec: w.duration, positionSec: w.position, artworkURL: w.artwork.flatMap { URL(string: $0) })
+        var result: NowPlaying?
+        if SystemNowPlaying.shared.available {
+            // systémové Now Playing – stejné, co ukazuje macOS (Spotify, Hudba, YouTube v prohlížeči…)
+            if let i = SystemNowPlaying.shared.current() {
+                let src: NowPlaying.Source = i.bundleId == "com.spotify.client" ? .spotify : (i.bundleId == "com.apple.Music" ? .music : .web)
+                result = NowPlaying(source: src, siteName: SystemNowPlaying.appName(i.bundleId), bundleId: i.bundleId, isPlaying: i.playing, title: i.title, artist: i.artist,
+                                    album: i.album, durationSec: i.duration, positionSec: i.position, artworkURL: nil)
+            }
+        } else {
+            result = await Task.detached(priority: .utility) { [self] () -> NowPlaying? in
+                if await isRunning("com.spotify.client"), let n = Self.readSpotify() { return n }
+                if await isRunning("com.apple.Music"), let n = Self.readMusic() { return n }
+                return nil
+            }.value
+        }
+        if let r = result, let n = now, r.title == n.title, r.artist == n.artist, r.source == n.source, r.isPlaying == n.isPlaying, abs(r.positionSec - n.positionSec) < 1.5 {
+            // jen posun pozice – neplašit UI (pozici stejně počítáme z timestampu)
         }
         if result != now { now = result }
         await updateArtwork()
@@ -59,6 +68,8 @@ final class MusicService: ObservableObject {
         var loaded: NSImage?
         if let url = n.artworkURL {
             if let (data, _) = try? await URLSession.shared.data(from: url) { loaded = NSImage(data: data) }
+        } else if SystemNowPlaying.shared.available {
+            loaded = await Task.detached { SystemNowPlaying.shared.fetchArtwork() }.value
         } else if n.source == .music {
             loaded = await Task.detached { Self.readMusicArtwork() }.value
         }
@@ -119,8 +130,10 @@ final class MusicService: ObservableObject {
     // MARK: ovládání
     private func control(_ cmd: String) {
         guard let n = now else { return }
-        if n.source == .web {
-            BrowserMediaServer.shared.send(cmd == "playpause" ? "playpause" : cmd == "next track" ? "next" : "prev"); return
+        if SystemNowPlaying.shared.available {
+            SystemNowPlaying.shared.send(cmd == "playpause" ? 2 : cmd == "next track" ? 4 : 5)
+            if cmd == "playpause" { now?.isPlaying.toggle() }   // okamžitá odezva v UI
+            return
         }
         let app = n.source == .spotify ? "Spotify" : "Music"
         Task.detached { _ = Self.run("tell application \"\(app)\" to \(cmd)") }

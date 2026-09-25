@@ -40,10 +40,14 @@ struct CompactContent: View {
     @ObservedObject var calls = CallsService.shared
     @ObservedObject var timer = TimerService.shared
     @ObservedObject var power = PowerService.shared
+    @ObservedObject var school = BakalariService.shared
     var body: some View {
         HStack(spacing: 0) {
             Group {
                 switch mode {
+                case .school:
+                    Image(systemName: { if case .breakTime = school.school { return "cup.and.saucer.fill" } else { return "book.fill" } }())
+                        .font(.system(size: 11, weight: .bold)).foregroundStyle({ if case .breakTime = school.school { return Color.orange } else { return Color.green } }()).padding(.leading, 13)
                 case .timer:
                     Image(systemName: timer.isPomodoro ? "leaf.fill" : "timer").font(.system(size: 11, weight: .bold))
                         .foregroundStyle(timer.running ? (timer.phase == .rest ? Color.cyan : Color.orange) : .white.opacity(0.5)).padding(.leading, 14)
@@ -64,6 +68,8 @@ struct CompactContent: View {
             Color.clear.frame(width: notchWidth)
             Group {
                 switch mode {
+                case .school:
+                    Text(schoolWingText).font(.system(size: 10, weight: .semibold, design: .rounded)).monospacedDigit().foregroundStyle(.white).lineLimit(1).padding(.trailing, 10)
                 case .timer:
                     Text(timer.text).font(.system(size: 12, weight: .semibold, design: .rounded)).monospacedDigit()
                         .foregroundStyle(timer.running ? .white : .white.opacity(0.5)).padding(.trailing, 12)
@@ -82,6 +88,17 @@ struct CompactContent: View {
                 case .none: EmptyView()
                 }
             }.frame(width: wing, alignment: .trailing)
+        }
+    }
+}
+
+extension CompactContent {
+    var schoolWingText: String {
+        func m(_ t: TimeInterval) -> String { let s = max(0, Int(t)); return String(format: "%d:%02d", s / 60, s % 60) }
+        switch school.school {
+        case .breakTime(let n, let s, _): return "\(m(s)) → \(n.lesson.subjectAbbrev)"
+        case .lesson(_, let e): return m(e)
+        default: return ""
         }
     }
 }
