@@ -84,6 +84,26 @@ final class ClipboardService: ObservableObject {
         if let i = items.firstIndex(of: it) { let e = items.remove(at: i); items.insert(ClipItem(id: e.id, kind: e.kind, text: e.text, date: Date(), pinned: e.pinned, imagePath: e.imagePath), at: 0); save() }
     }
 
+    /// Klik = zkopírovat a rovnou vložit do aktivní aplikace (simulované ⌘V, vyžaduje Zpřístupnění).
+    func paste(_ it: ClipItem) {
+        copy(it)
+        let trusted = AXIsProcessTrustedWithOptions([kAXTrustedCheckOptionPrompt.takeUnretainedValue(): true] as CFDictionary)
+        guard trusted else {
+            ScreenshotService.shared.showHUD(L("Povol NotchIsland ve Zpřístupnění, pak klik rovnou vkládá"), icon: "hand.raised.fill")
+            NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility")!)
+            return
+        }
+        Self.closePanel?()
+        // panel se zavře a klávesnice se vrátí předchozí aplikaci, pak ⌘V
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+            let src = CGEventSource(stateID: .combinedSessionState)
+            let down = CGEvent(keyboardEventSource: src, virtualKey: 9, keyDown: true)   // V
+            let up = CGEvent(keyboardEventSource: src, virtualKey: 9, keyDown: false)
+            down?.flags = .maskCommand; up?.flags = .maskCommand
+            down?.post(tap: .cghidEventTap); up?.post(tap: .cghidEventTap)
+        }
+    }
+
     func togglePin(_ it: ClipItem) { if let i = items.firstIndex(of: it) { items[i].pinned.toggle(); save() } }
     func remove(_ it: ClipItem) { if it.kind == .image, let p = it.imagePath { try? FileManager.default.removeItem(atPath: p) }; items.removeAll { $0.id == it.id }; save() }
     func clear() { items.filter { !$0.pinned }.forEach { if $0.kind == .image, let p = $0.imagePath { try? FileManager.default.removeItem(atPath: p) } }; items.removeAll { !$0.pinned }; save() }

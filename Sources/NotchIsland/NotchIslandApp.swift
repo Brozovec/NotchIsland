@@ -32,6 +32,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     private func setupStatusItem() {
+        // Zpřístupnění pro vkládání ze schránky – zeptat se rovnou při startu (jen jednou)
+        if !UserDefaults.standard.bool(forKey: "axPrompted") {
+            UserDefaults.standard.set(true, forKey: "axPrompted")
+            _ = AXIsProcessTrustedWithOptions([kAXTrustedCheckOptionPrompt.takeUnretainedValue(): true] as CFDictionary)
+        }
         let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
         item.button?.image = NSImage(systemSymbolName: "rectangle.topthird.inset.filled", accessibilityDescription: "NotchIsland")
         let menu = NSMenu()

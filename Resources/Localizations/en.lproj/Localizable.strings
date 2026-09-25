@@ -129,3 +129,5 @@
 "Vymazat historii (připnuté zůstanou)" = "Clear history (pinned stay)";
 "Historie schránky" = "Clipboard history";
 "Cokoli zkopíruješ, objeví se tady. Klik = zkopírovat zpět." = "Anything you copy shows up here. Click = copy back.";
+"Povol NotchIsland ve Zpřístupnění, pak klik rovnou vkládá" = "Allow NotchIsland in Accessibility, then a click pastes directly";
+"Cokoli zkopíruješ, objeví se tady. Klik = vložit do aktivní aplikace." = "Anything you copy shows up here. Click = paste into the active app.";

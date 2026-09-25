@@ -14,7 +14,7 @@ struct ClipboardView: View {
             }
             .padding(.horizontal, 8).padding(.vertical, 3).background(Color.white.opacity(0.08), in: RoundedRectangle(cornerRadius: 8))
             if c.filtered.isEmpty {
-                Placeholder(icon: "doc.on.clipboard", title: L("Historie schránky"), text: L("Cokoli zkopíruješ, objeví se tady. Klik = zkopírovat zpět."))
+                Placeholder(icon: "doc.on.clipboard", title: L("Historie schránky"), text: L("Cokoli zkopíruješ, objeví se tady. Klik = vložit do aktivní aplikace."))
             } else {
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: 2) { ForEach(c.filtered) { ClipRow(it: $0) } }
@@ -55,9 +55,8 @@ struct ClipRow: View {
         .contentShape(Rectangle())
         .onHover { hover = $0 }
         .onTapGesture {
-            c.copy(it)
             withAnimation(.easeOut(duration: 0.15)) { flash = true }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) { withAnimation { flash = false }; ClipboardService.closePanel?() }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { withAnimation { flash = false }; c.paste(it) }
         }
         .help(it.text.prefix(300).description)
     }
