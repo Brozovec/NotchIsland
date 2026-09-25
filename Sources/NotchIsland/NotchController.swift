@@ -41,7 +41,7 @@ final class NotchState: ObservableObject {
     /// Šířka křídel po stranách notche ve sbaleném stavu.
     var wingWidth: CGFloat { compact == .none ? 0 : 74 }
     /// Výška rozbaleného panelu – rozvrh potřebuje víc místa.
-    var expandedHeight: CGFloat { selectedTab == .bakalari ? (UserDefaults.standard.bool(forKey: "bakalariWeekView") ? 262 : 232) : geometry.expandedSize.height }
+    var expandedHeight: CGFloat { selectedTab == .bakalari ? (UserDefaults.standard.bool(forKey: "bakalariWeekView") ? 262 : 176) : geometry.expandedSize.height }
     var expandedSize: CGSize { CGSize(width: geometry.expandedSize.width, height: expandedHeight) }
     var expandedRect: CGRect { geometry.expandedRect(height: expandedHeight) }
     var collapsedSize: CGSize { CGSize(width: geometry.notchSize.width + 2 * wingWidth, height: geometry.notchSize.height) }
@@ -90,6 +90,7 @@ final class NotchController {
         panel = NotchPanel(frame: geometry.windowFrame)
         let host = FirstMouseHostingView(rootView: NotchRootView().environmentObject(state))
         host.sizingOptions = []   // nikdy neměnit velikost okna podle obsahu (jinak se panel posouvá dolů)
+        host.safeAreaRegions = []  // okno leží přes výřez – SwiftUI by jinak obsah odsazovalo o výšku notche
         panel.contentView = host
         panel.contentView?.addSubview(cursorOverlay, positioned: .above, relativeTo: nil)
         panel.acceptsMouseMovedEvents = true

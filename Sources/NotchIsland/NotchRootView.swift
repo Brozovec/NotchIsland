@@ -30,6 +30,7 @@ struct NotchRootView: View {
             Spacer(minLength: 0)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+        .ignoresSafeArea()
     }
 }
 
@@ -148,6 +149,8 @@ struct ExpandedContent: View {
 
     var body: some View {
         let wing = (state.geometry.expandedSize.width - state.geometry.notchSize.width) / 2
+        ZStack(alignment: .top) {
+            Color.clear   // vyplní celý panel, obsah se vždy lepí nahoru
         VStack(spacing: 6) {
             HStack(spacing: 0) {
                 // všechny záložky v levém křídle, pod kamerou nic
@@ -155,7 +158,7 @@ struct ExpandedContent: View {
                     .padding(.leading, 12)
                     .frame(width: wing, alignment: .leading)
                     .clipped()
-                Color.clear.frame(width: state.geometry.notchSize.width)
+                Color.clear.frame(width: state.geometry.notchSize.width, height: 1)   // jen šířka, jinak by se roztáhl na výšku
                 HStack(spacing: 6) {
                     Spacer(minLength: 0)
                     Button { SettingsWindow.show(); NotchController.closeRequest?() } label: {
@@ -166,6 +169,7 @@ struct ExpandedContent: View {
                 .frame(width: wing)
             }
             .padding(.top, 8)
+            .fixedSize(horizontal: false, vertical: true)
             Group {
                 switch state.selectedTab {
                 case .home: HomeView()
@@ -183,6 +187,7 @@ struct ExpandedContent: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .padding(.horizontal, 12)
             .padding(.bottom, 10)
+        }
         }
     }
 }
