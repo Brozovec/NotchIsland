@@ -11,7 +11,7 @@ struct ClipItem: Identifiable, Codable, Equatable {
     var imagePath: String? = nil   // PNG na disku (obrázky)
 }
 
-/// Historie schránky (jako Win+V): sleduje NSPasteboard, drží posledních 60 položek, text se ukládá na disk.
+/// Historie schránky (jako Win+V): sleduje NSPasteboard, drží posledních 10 položek, text se ukládá na disk.
 @MainActor
 final class ClipboardService: ObservableObject {
     static let shared = ClipboardService()
@@ -23,7 +23,7 @@ final class ClipboardService: ObservableObject {
     private var lastChange = NSPasteboard.general.changeCount
     private var suppressNext = false
     private let dir: URL
-    private let maxItems = 60
+    private let maxItems = 10   // nejstarší se mažou, připnuté se nepočítají
 
     private init() {
         dir = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0].appendingPathComponent("NotchIsland/Clipboard", isDirectory: true)
