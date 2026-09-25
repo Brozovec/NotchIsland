@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleName</key><string>NotchIsland</string>
+    <key>CFBundleDisplayName</key><string>NotchIsland</string>
+    <key>CFBundleIdentifier</key><string>cz.adambroz.notchisland</string>
+    <key>CFBundleExecutable</key><string>NotchIsland</string>
+    <key>CFBundlePackageType</key><string>APPL</string>
+    <key>CFBundleShortVersionString</key><string>1.0.0</string>
+    <key>CFBundleVersion</key><string>100</string>
+    <key>LSMinimumSystemVersion</key><string>14.0</string>
+    <key>LSUIElement</key><true/>
+    <key>CFBundleIconFile</key><string>AppIcon</string>
+    <key>CFBundleDevelopmentRegion</key><string>cs</string>
+    <key>CFBundleLocalizations</key><array><string>cs</string><string>en</string><string>de</string><string>sk</string><string>pl</string></array>
+    <key>LSApplicationCategoryType</key><string>public.app-category.utilities</string>
+    <key>NSHumanReadableCopyright</key><string>© 2026 Adam Brož. MIT License.</string>
+    <key>NSHighResolutionCapable</key><true/>
+    <key>NSLocationUsageDescription</key><string>NotchIsland zobrazuje počasí pro místo, kde právě jsi.</string>
+    <key>NSLocationWhenInUseUsageDescription</key><string>NotchIsland zobrazuje počasí pro místo, kde právě jsi.</string>
+    <key>NSCalendarsFullAccessUsageDescription</key><string>NotchIsland zobrazuje nadcházející události z kalendáře.</string>
+    <key>NSAppleEventsUsageDescription</key><string>NotchIsland čte informace o přehrávané hudbě ze Spotify a Apple Music.</string>
+</dict>
+</plist>

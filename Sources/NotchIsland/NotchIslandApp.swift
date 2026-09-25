@@ -1,0 +1,43 @@
+import AppKit
+import SwiftUI
+
+@main
+struct NotchIslandApp {
+    static func main() {
+        let app = NSApplication.shared
+        let delegate = AppDelegate()
+        app.delegate = delegate
+        app.setActivationPolicy(.accessory)
+        app.run()
+    }
+}
+
+final class AppDelegate: NSObject, NSApplicationDelegate {
+    private var controller: NotchController?
+    private var statusItem: NSStatusItem?
+
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        FA.register()
+        Permissions.requestAllOnFirstLaunch()
+        LaunchAtLogin.enableOnFirstLaunch()
+        controller = NotchController()
+        controller?.show()
+        setupStatusItem()
+    }
+
+    @objc private func openPrivacy() {
+        NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy")!)
+    }
+
+    private func setupStatusItem() {
+        let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
+        item.button?.image = NSImage(systemSymbolName: "rectangle.topthird.inset.filled", accessibilityDescription: "NotchIsland")
+        let menu = NSMenu()
+        menu.addItem(withTitle: L("NotchIsland 0.1"), action: nil, keyEquivalent: "")
+        menu.addItem(.separator())
+        menu.addItem(withTitle: L("Otevřít Soukromí a zabezpečení…"), action: #selector(openPrivacy), keyEquivalent: "")
+        menu.addItem(withTitle: L("Ukončit"), action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
+        item.menu = menu
+        statusItem = item
+    }
+}
