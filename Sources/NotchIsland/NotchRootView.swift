@@ -113,16 +113,14 @@ struct ExpandedContent: View {
     var body: some View {
         let wing = (state.geometry.expandedSize.width - state.geometry.notchSize.width) / 2
         VStack(spacing: 6) {
-            let pills = NotchTab.pills
-            let leftCount = (pills.count + 1) / 2
             HStack(spacing: 0) {
-                // záložky rozdělené na obě křídla – pod kamerou nesmí nic být
-                HStack(spacing: 6) { ForEach(pills.prefix(leftCount)) { tabPill($0) } }
-                    .padding(.leading, 14)
+                // všechny záložky v levém křídle, pod kamerou nic
+                HStack(spacing: 5) { ForEach(NotchTab.pills) { tabPill($0) } }
+                    .padding(.leading, 12)
                     .frame(width: wing, alignment: .leading)
+                    .clipped()
                 Color.clear.frame(width: state.geometry.notchSize.width)
                 HStack(spacing: 6) {
-                    ForEach(pills.dropFirst(leftCount)) { tabPill($0) }
                     Spacer(minLength: 0)
                     Button { withAnimation(.easeOut(duration: 0.15)) { state.selectedTab = .settings } } label: {
                         Image(systemName: "gearshape.fill").font(.system(size: 11, weight: .semibold))
