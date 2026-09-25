@@ -41,7 +41,7 @@ final class NotchState: ObservableObject {
     /// Šířka křídel po stranách notche ve sbaleném stavu.
     var wingWidth: CGFloat { compact == .none ? 0 : 74 }
     /// Výška rozbaleného panelu – rozvrh potřebuje víc místa.
-    var expandedHeight: CGFloat { selectedTab == .bakalari ? 262 : geometry.expandedSize.height }
+    var expandedHeight: CGFloat { selectedTab == .bakalari ? 250 : geometry.expandedSize.height }
     var expandedSize: CGSize { CGSize(width: geometry.expandedSize.width, height: expandedHeight) }
     var expandedRect: CGRect { geometry.expandedRect(height: expandedHeight) }
     var collapsedSize: CGSize { CGSize(width: geometry.notchSize.width + 2 * wingWidth, height: geometry.notchSize.height) }

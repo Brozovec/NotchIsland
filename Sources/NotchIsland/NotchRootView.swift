@@ -180,7 +180,7 @@ struct ExpandedContent: View {
                 case .settings: SettingsView()
                 }
             }
-            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
             .padding(.horizontal, 12)
             .padding(.bottom, 10)
         }

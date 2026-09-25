@@ -123,25 +123,26 @@ struct WeekGrid: View {
     }
     var body: some View {
         let today = (Calendar.current.component(.weekday, from: Date()) + 5) % 7
-        GeometryReader { g in
-            let rowH = max(14, (g.size.height - 12) / 5 - 2)
-            VStack(spacing: 2) {
+        let rowH: CGFloat = 30
+        VStack(spacing: 3) {
+            HStack(spacing: 3) {
+                Color.clear.frame(width: 24, height: 10)
+                ForEach(hours, id: \.Id) { h in
+                    VStack(spacing: 0) {
+                        Text(h.Caption).font(.system(size: 8, weight: .bold)).foregroundStyle(.white.opacity(0.5))
+                    }.frame(maxWidth: .infinity)
+                }
+            }.frame(height: 10)
+            ForEach(0..<5, id: \.self) { d in
                 HStack(spacing: 3) {
-                    Color.clear.frame(width: 22, height: 8)
-                    ForEach(hours, id: \.Id) { h in
-                        Text(h.Caption).font(.system(size: 7, weight: .bold)).foregroundStyle(.white.opacity(0.4)).frame(maxWidth: .infinity)
-                    }
-                }.frame(height: 8)
-                ForEach(0..<5, id: \.self) { d in
-                    HStack(spacing: 3) {
-                        Text(days[d]).font(.system(size: 8, weight: .bold)).foregroundStyle(d == today ? .cyan : .white.opacity(0.5))
-                            .frame(width: 22, height: rowH)
-                            .background(d == today ? Color.cyan.opacity(0.15) : .clear, in: RoundedRectangle(cornerRadius: 5))
-                        ForEach(hours, id: \.Id) { h in WeekCell(lessons: lessonsFor(day: d, hour: h.Id), isToday: d == today, height: rowH) }
-                    }
+                    Text(days[d]).font(.system(size: 9, weight: .bold)).foregroundStyle(d == today ? .cyan : .white.opacity(0.55))
+                        .frame(width: 24, height: rowH)
+                        .background(d == today ? Color.cyan.opacity(0.15) : .clear, in: RoundedRectangle(cornerRadius: 6))
+                    ForEach(hours, id: \.Id) { h in WeekCell(lessons: lessonsFor(day: d, hour: h.Id), isToday: d == today, height: rowH) }
                 }
             }
         }
+        .frame(maxWidth: .infinity, alignment: .top)
     }
 }
 
@@ -169,14 +170,20 @@ struct WeekCell: View {
             } else {
                 ForEach(lessons.prefix(2)) { l in
                     let multi = lessons.count > 1
-                    HStack(spacing: 2) {
-                        Text(l.subjectAbbrev).font(.system(size: multi ? 7 : 9, weight: .bold))
-                            .foregroundStyle(l.isCancelled ? .white.opacity(0.4) : .white).strikethrough(l.isCancelled, color: .red).lineLimit(1)
-                        if !multi || height > 30 {
-                            Text(l.isCancelled ? "×" : (l.roomAbbrev ?? "")).font(.system(size: multi ? 6 : 7, weight: .semibold))
-                                .foregroundStyle(l.isCancelled ? .red : (l.roomChanged ? .orange : .cyan)).lineLimit(1)
+                    Group {
+                        if multi {
+                            HStack(spacing: 3) {
+                                Text(l.subjectAbbrev).font(.system(size: 8, weight: .bold))
+                                Text(l.isCancelled ? "×" : (l.roomAbbrev ?? "")).font(.system(size: 7, weight: .semibold)).foregroundStyle(l.isCancelled ? .red : (l.roomChanged ? .orange : .cyan))
+                            }
+                        } else {
+                            VStack(spacing: 0) {
+                                Text(l.subjectAbbrev).font(.system(size: 10, weight: .bold))
+                                Text(l.isCancelled ? L("Zrušeno") : (l.roomAbbrev ?? "")).font(.system(size: 8, weight: .semibold)).foregroundStyle(l.isCancelled ? .red : (l.roomChanged ? .orange : .cyan))
+                            }
                         }
                     }
+                    .foregroundStyle(l.isCancelled ? Color.white.opacity(0.4) : Color.white).strikethrough(l.isCancelled, color: .red).lineLimit(1)
                     .frame(maxWidth: .infinity, maxHeight: .infinity)
                     .background(bg(l), in: RoundedRectangle(cornerRadius: 4))
                     .overlay(RoundedRectangle(cornerRadius: 4).stroke(l.isCancelled ? Color.red.opacity(0.5) : (l.isChanged ? Color.orange.opacity(0.5) : .clear), style: StrokeStyle(lineWidth: 1, dash: l.isCancelled ? [2, 2] : [])))
