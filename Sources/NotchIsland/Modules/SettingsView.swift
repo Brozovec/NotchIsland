@@ -23,7 +23,23 @@ struct SettingsView: View {
                     Toggle(isOn: $launchAtLogin) { Text(L("Spouštět po přihlášení")).font(.system(size: 11)).foregroundStyle(.white.opacity(0.85)) }
                         .toggleStyle(.switch).controlSize(.mini)
                         .onChange(of: launchAtLogin) { _, v in LaunchAtLogin.set(v); launchAtLogin = LaunchAtLogin.isEnabled }
-                    note(L("Verze 1.0 · Adam Brož · github.com/adambroz/NotchIsland"))
+                    note(L("Verze 1.0 · Adam Brož · github.com/brozovec/NotchIsland"))
+                }
+                section(L("Moduly")) {
+                    HStack(spacing: 6) {
+                        ForEach(NotchTab.all.filter { $0 != .home }) { tab in
+                            let on = !s.disabledTabs.contains(tab.rawValue)
+                            Button {
+                                if on { s.disabledTabs.append(tab.rawValue) } else { s.disabledTabs.removeAll { $0 == tab.rawValue } }
+                            } label: {
+                                HStack(spacing: 3) { Image(systemName: tab.icon).font(.system(size: 9, weight: .bold)); Text(tab.title).font(.system(size: 9, weight: .semibold)) }
+                                    .padding(.horizontal, 7).padding(.vertical, 3)
+                                    .background(on ? Color.white.opacity(0.18) : Color.white.opacity(0.05), in: Capsule())
+                                    .foregroundStyle(on ? .white : .white.opacity(0.35))
+                            }.buttonStyle(.plain)
+                        }
+                    }
+                    note(L("Kliknutím záložku skryješ nebo zase ukážeš."))
                 }
                 section(L("Screenshoty")) {
                     field(L("Složka"), $s.screenshotFolder)

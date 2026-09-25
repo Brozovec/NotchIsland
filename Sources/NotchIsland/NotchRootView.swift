@@ -94,6 +94,7 @@ struct NotchShape: Shape {
 
 struct ExpandedContent: View {
     @EnvironmentObject var state: NotchState
+    @ObservedObject var settings = AppSettings.shared
     var body: some View {
         let wing = (state.geometry.expandedSize.width - state.geometry.notchSize.width) / 2
         VStack(spacing: 6) {
@@ -101,6 +102,7 @@ struct ExpandedContent: View {
                 // záložky jen v levém křídle – pod kamerou nesmí nic být
                 HStack(spacing: 3) {
                     ForEach(NotchTab.pills) { tab in
+                        let _ = settings.disabledTabs
                         let on = state.selectedTab == tab
                         Button { withAnimation(.spring(response: 0.3, dampingFraction: 0.85)) { state.selectedTab = tab } } label: {
                             HStack(spacing: 3) {

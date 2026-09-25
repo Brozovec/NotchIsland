@@ -39,7 +39,10 @@ final class IntercityService: ObservableObject {
 
     private init() {
         Task { await loadRJCities() }
-        trackTimer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { [weak self] _ in Task { await self?.refreshTracked() } }
+        trackTimer = Timer.scheduledTimer(withTimeInterval: 60, repeats: true) { [weak self] _ in
+            guard let self, self.tracked != nil else { return }   // bez sledovaného spoje žádná síť
+            Task { await self.refreshTracked() }
+        }
     }
 
     /// Našeptávání měst (RegioJet seznam + FlixBus autocomplete).

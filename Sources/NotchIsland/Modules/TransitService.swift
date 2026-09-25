@@ -56,8 +56,11 @@ final class TransitService: ObservableObject {
 
     private init() {
         stopQuery = AppSettings.shared.favoriteStops.first ?? ""
-        refreshTimer = Timer.scheduledTimer(withTimeInterval: 25, repeats: true) { [weak self] _ in Task { await self?.refresh() } }
-        Task { await refresh() }
+        // obnovovat jen když je Doprava vidět nebo sledujeme spoj; při otevření záložky se obnoví hned
+        refreshTimer = Timer.scheduledTimer(withTimeInterval: 25, repeats: true) { [weak self] _ in
+            guard let self, NotchState.isVisible(.transit) || self.trackedTripId != nil else { return }
+            Task { await self.refresh() }
+        }
     }
 
     /// Našeptávání názvů zastávek (z GTFS PID, načte se na pozadí při prvním psaní).
@@ -75,7 +78,12 @@ final class TransitService: ObservableObject {
     }
     func clearSuggestions() { suggestions = [] }
 
+    private var lastRefresh = Date.distantPast
+    /// Zavolat při zobrazení záložky – obnoví jen když jsou data starší než 20 s.
+    func refreshIfStale() { if Date().timeIntervalSince(lastRefresh) > 20 { Task { await refresh() } } }
+
     func refresh() async {
+        lastRefresh = Date()
         loading = true; defer { loading = false }
         let token = AppSettings.shared.golemioToken.trimmingCharacters(in: .whitespaces)
         if !token.isEmpty {

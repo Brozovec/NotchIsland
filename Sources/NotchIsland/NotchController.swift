@@ -6,8 +6,12 @@ enum CompactMode: Equatable { case none, music, call }
 
 @MainActor
 final class NotchState: ObservableObject {
-    @Published var isExpanded = false
-    @Published var selectedTab: NotchTab = .home
+    /// Aktuální stav pro služby (obnovují data jen, když je to vidět).
+    static var isExpanded = false
+    static var visibleTab: NotchTab = .home
+    static func isVisible(_ tab: NotchTab) -> Bool { isExpanded && visibleTab == tab }
+    @Published var isExpanded = false { didSet { NotchState.isExpanded = isExpanded } }
+    @Published var selectedTab: NotchTab = .home { didSet { NotchState.visibleTab = selectedTab } }
     @Published var compact: CompactMode = .none
     let geometry: NotchGeometry
     private var bag = Set<AnyCancellable>()
@@ -35,7 +39,8 @@ enum NotchTab: String, CaseIterable, Identifiable {
     case home, files, transit, calls, shot, notes, settings
     var id: String { rawValue }
     /// Záložky zobrazené jako pilulky (nastavení má vlastní ikonu vpravo).
-    static var pills: [NotchTab] { [.home, .files, .transit, .calls, .shot, .notes] }
+    static let all: [NotchTab] = [.home, .files, .transit, .calls, .shot, .notes]
+    static var pills: [NotchTab] { all.filter { $0 == .home || !AppSettings.shared.disabledTabs.contains($0.rawValue) } }
     var icon: String {
         switch self {
         case .home: return "house.fill"; case .files: return "tray.full.fill"; case .transit: return "tram.fill"
@@ -146,10 +151,20 @@ final class NotchController {
     }
 
     private func setExpanded(_ expanded: Bool) {
-        if expanded { syncWindowFrame(expanded: true) } // nejdřív zvětšit okno, pak animovat obsah
-        withAnimation(.spring(response: 0.38, dampingFraction: 0.78)) { state.isExpanded = expanded }
-        if expanded { updateCursorZone() }
-        if !expanded {
+        if expanded {
+            // Nejdřív zvětšit okno a nechat proběhnout layout – jinak SwiftUI animuje i posun středu
+            // z malého okna do velkého a panel "přijede zleva".
+            syncWindowFrame(expanded: true)
+            panel.contentView?.layoutSubtreeIfNeeded()
+            DispatchQueue.main.async { [weak self] in
+                guard let self else { return }
+                withAnimation(.spring(response: 0.38, dampingFraction: 0.78)) { self.state.isExpanded = true }
+                self.updateCursorZone()
+            }
+            return
+        }
+        withAnimation(.spring(response: 0.38, dampingFraction: 0.78)) { state.isExpanded = false }
+        do {
             panel.resignKey()
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.45) { [weak self] in
                 guard let self, !self.state.isExpanded else { return }

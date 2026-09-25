@@ -7,6 +7,7 @@ final class AppSettings: ObservableObject {
     private let d = UserDefaults.standard
 
     @Published var golemioToken: String { didSet { d.set(golemioToken, forKey: "golemioToken") } }
+    @Published var disabledTabs: [String] { didSet { d.set(disabledTabs, forKey: "disabledTabs") } }
     @Published var favoriteRoutes: [String] { didSet { d.set(favoriteRoutes, forKey: "favoriteRoutes") } }
     @Published var discordClientId: String { didSet { d.set(discordClientId, forKey: "discordClientId") } }
     @Published var discordClientSecret: String { didSet { d.set(discordClientSecret, forKey: "discordClientSecret") } }
@@ -16,6 +17,7 @@ final class AppSettings: ObservableObject {
 
     private init() {
         golemioToken = d.string(forKey: "golemioToken") ?? ""
+        disabledTabs = d.stringArray(forKey: "disabledTabs") ?? []
         favoriteRoutes = d.stringArray(forKey: "favoriteRoutes") ?? ["Praha|Brno"]
         discordClientId = d.string(forKey: "discordClientId") ?? ""
         discordClientSecret = d.string(forKey: "discordClientSecret") ?? ""

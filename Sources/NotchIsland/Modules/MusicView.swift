@@ -62,6 +62,7 @@ struct EqualizerView: View {
     var bars: Int = 5
     var color: Color = .white
     @State private var levels: [CGFloat] = []
+    @State private var tick = 0
     private let timer = Timer.publish(every: 0.12, on: .main, in: .common).autoconnect()
     var body: some View {
         HStack(alignment: .bottom, spacing: 3) {
@@ -73,6 +74,7 @@ struct EqualizerView: View {
         }
         .onAppear { levels = Array(repeating: 0.15, count: bars) }
         .onReceive(timer) { _ in
+            guard active || levels.contains(where: { $0 > 0.12 }) else { return }   // v klidu nic nepřekreslovat
             withAnimation(.easeInOut(duration: 0.12)) {
                 levels = (0..<bars).map { _ in active ? CGFloat.random(in: 0.15...1.0) : 0.12 }
             }

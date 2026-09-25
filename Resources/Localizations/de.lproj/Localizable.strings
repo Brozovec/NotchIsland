@@ -121,4 +121,6 @@
 "⌘⇧2 oblast · ⌘⇧1 obrazovka · ⌘⇧7 okno · ⌘⇧O text. Poprvé macOS požádá o Nahrávání obrazovky." = "⌘⇧2 Bereich · ⌘⇧1 Bildschirm · ⌘⇧7 Fenster · ⌘⇧O Text. macOS fragt beim ersten Mal nach Bildschirmaufnahme.";
 "Obecné" = "Allgemein";
 "Spouštět po přihlášení" = "Beim Anmelden starten";
-"Verze 1.0 · Adam Brož · github.com/adambroz/NotchIsland" = "Version 1.0 · Adam Brož · github.com/adambroz/NotchIsland";
+"Verze 1.0 · Adam Brož · github.com/brozovec/NotchIsland" = "Version 1.0 · Adam Brož · github.com/brozovec/NotchIsland";
+"Moduly" = "Module";
+"Kliknutím záložku skryješ nebo zase ukážeš." = "Klicken, um einen Tab auszublenden oder anzuzeigen.";

@@ -41,6 +41,7 @@ struct StopBoardView: View {
     @ObservedObject var settings = AppSettings.shared
     var body: some View {
         VStack(spacing: 4) {
+            let _ = ()
             HStack(spacing: 6) {
                 Image(systemName: "magnifyingglass").font(.system(size: 10)).foregroundStyle(.white.opacity(0.5))
                 TextField(L("Zastávka (Anděl, Hlavní nádraží…)"), text: $t.stopQuery)
@@ -86,6 +87,7 @@ struct StopBoardView: View {
             }
             }
         }
+        .onAppear { t.refreshIfStale() }
     }
     private func toggleFavorite() {
         let s = t.stopQuery.trimmingCharacters(in: .whitespaces); guard !s.isEmpty else { return }

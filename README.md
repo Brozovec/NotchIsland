@@ -38,7 +38,7 @@ Languages: Czech, English, German, Slovak, Polish (follows the system language).
 **Build from source** (Xcode 15+ / Swift 5.9+):
 
 ```bash
-git clone https://github.com/adambroz/NotchIsland.git
+git clone https://github.com/brozovec/NotchIsland.git
 cd NotchIsland
 ./build.sh install      # builds, signs and copies to /Applications
 ./build.sh dmg          # builds a distributable DMG
@@ -84,7 +84,7 @@ Jazyky: čeština, angličtina, němčina, slovenština, polština (podle jazyka
 **Sestavení ze zdrojáků** (Xcode 15+ / Swift 5.9+):
 
 ```bash
-git clone https://github.com/adambroz/NotchIsland.git
+git clone https://github.com/brozovec/NotchIsland.git
 cd NotchIsland
 ./build.sh install      # sestaví, podepíše a nakopíruje do /Applications
 ./build.sh dmg          # vytvoří DMG k distribuci
