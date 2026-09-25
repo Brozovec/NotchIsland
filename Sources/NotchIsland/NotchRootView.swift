@@ -95,38 +95,41 @@ struct NotchShape: Shape {
 struct ExpandedContent: View {
     @EnvironmentObject var state: NotchState
     @ObservedObject var settings = AppSettings.shared
+
+    private func tabPill(_ tab: NotchTab) -> some View {
+        let on = state.selectedTab == tab
+        return Button { withAnimation(.spring(response: 0.3, dampingFraction: 0.85)) { state.selectedTab = tab } } label: {
+            HStack(spacing: 3) {
+                Image(systemName: tab.icon).font(.system(size: 10, weight: .bold))
+                if on { Text(tab.title).font(.system(size: 10, weight: .semibold)).fixedSize() }
+            }
+            .padding(.horizontal, on ? 9 : 7).padding(.vertical, 4)
+            .background(on ? Color.white.opacity(0.16) : .clear, in: Capsule())
+            .foregroundStyle(on ? .white : .white.opacity(0.45))
+        }
+        .buttonStyle(.plain).help(tab.title)
+    }
+
     var body: some View {
         let wing = (state.geometry.expandedSize.width - state.geometry.notchSize.width) / 2
         VStack(spacing: 6) {
+            let pills = NotchTab.pills
+            let leftCount = (pills.count + 1) / 2
             HStack(spacing: 0) {
-                // záložky jen v levém křídle – pod kamerou nesmí nic být
-                HStack(spacing: 6) {
-                    ForEach(NotchTab.pills) { tab in
-                        let _ = settings.disabledTabs
-                        let on = state.selectedTab == tab
-                        Button { withAnimation(.spring(response: 0.3, dampingFraction: 0.85)) { state.selectedTab = tab } } label: {
-                            HStack(spacing: 3) {
-                                Image(systemName: tab.icon).font(.system(size: 10, weight: .bold))
-                                if on { Text(tab.title).font(.system(size: 10, weight: .semibold)).fixedSize() }
-                            }
-                            .padding(.horizontal, on ? 9 : 7).padding(.vertical, 4)
-                            .background(on ? Color.white.opacity(0.16) : .clear, in: Capsule())
-                            .foregroundStyle(on ? .white : .white.opacity(0.45))
-                        }
-                        .buttonStyle(.plain).help(tab.title)
-                    }
-                }
-                .padding(.leading, 14)
-                .frame(width: wing, alignment: .leading)
+                // záložky rozdělené na obě křídla – pod kamerou nesmí nic být
+                HStack(spacing: 6) { ForEach(pills.prefix(leftCount)) { tabPill($0) } }
+                    .padding(.leading, 14)
+                    .frame(width: wing, alignment: .leading)
                 Color.clear.frame(width: state.geometry.notchSize.width)
-                HStack {
-                    Spacer()
+                HStack(spacing: 6) {
+                    ForEach(pills.dropFirst(leftCount)) { tabPill($0) }
+                    Spacer(minLength: 0)
                     Button { withAnimation(.easeOut(duration: 0.15)) { state.selectedTab = .settings } } label: {
                         Image(systemName: "gearshape.fill").font(.system(size: 11, weight: .semibold))
                             .foregroundStyle(state.selectedTab == .settings ? .white : .white.opacity(0.45))
                     }.buttonStyle(.plain)
                 }
-                .padding(.trailing, 14)
+                .padding(.leading, 14).padding(.trailing, 14)
                 .frame(width: wing)
             }
             .padding(.top, 8)
