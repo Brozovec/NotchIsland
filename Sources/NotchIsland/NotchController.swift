@@ -36,21 +36,21 @@ final class NotchState: ObservableObject {
 }
 
 enum NotchTab: String, CaseIterable, Identifiable {
-    case home, files, transit, calls, shot, notes, settings
+    case home, files, transit, calls, shot, notes, clipboard, settings
     var id: String { rawValue }
     /// Záložky zobrazené jako pilulky (nastavení má vlastní ikonu vpravo).
-    static let all: [NotchTab] = [.home, .files, .transit, .calls, .shot, .notes]
+    static let all: [NotchTab] = [.home, .files, .transit, .calls, .shot, .notes, .clipboard]
     static var pills: [NotchTab] { all.filter { $0 == .home || !AppSettings.shared.disabledTabs.contains($0.rawValue) } }
     var icon: String {
         switch self {
         case .home: return "house.fill"; case .files: return "tray.full.fill"; case .transit: return "tram.fill"
-        case .calls: return "phone.fill"; case .shot: return "camera.fill"; case .notes: return "note.text"; case .settings: return "gearshape.fill"
+        case .calls: return "phone.fill"; case .shot: return "camera.fill"; case .notes: return "note.text"; case .clipboard: return "doc.on.clipboard"; case .settings: return "gearshape.fill"
         }
     }
     var title: String {
         switch self {
         case .home: return L("Island"); case .files: return L("Tray"); case .transit: return L("Doprava")
-        case .calls: return L("Hovory"); case .shot: return L("Shot"); case .notes: return L("Poznámky"); case .settings: return L("Nastavení")
+        case .calls: return L("Hovory"); case .shot: return L("Shot"); case .notes: return L("Poznámky"); case .clipboard: return L("Schránka"); case .settings: return L("Nastavení")
         }
     }
 }
@@ -86,7 +86,14 @@ final class NotchController {
         installMouseMonitors()
         // rozběhnout služby
         _ = ShelfService.shared; _ = TransitService.shared; _ = IntercityService.shared; _ = WeatherService.shared
-        _ = CalendarService.shared; _ = ScreenshotService.shared; _ = DiscordRPC.shared
+        _ = CalendarService.shared; _ = ScreenshotService.shared; _ = DiscordRPC.shared; _ = ClipboardService.shared
+    }
+
+    /// Otevře panel na dané záložce (globální zkratka).
+    func open(tab: NotchTab) {
+        state.selectedTab = tab
+        if !state.isExpanded { setExpanded(true) }
+        collapseWork?.cancel(); collapseWork = nil
     }
 
     func show() {

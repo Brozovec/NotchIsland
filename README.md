@@ -27,6 +27,7 @@ Hover over the notch and it expands into a compact black panel. Move away and it
 | **Calls** | Detects Discord, Zoom, Teams, FaceTime, Slack, Chrome (Meet), Telegram and WhatsApp, and whether the microphone is live. With your own Discord app credentials it shows who is in your voice channel and lets you mute / deafen. |
 | **Shot** | Shottr-style screenshots: ⌘⇧2 area, ⌘⇧1 screen, ⌘⇧7 window, ⌘⇧O text recognition (OCR, Czech + English). Every shot is copied to the clipboard and saved to `~/Pictures/NotchIsland`. History with pin-to-screen and an editor (A arrow, R rectangle, O oval, P pen, T text, B blur, C counter, ⌘Z / ⌘⇧Z). |
 | **Notes** | A quick notepad that saves itself. |
+| **Clipboard** | Clipboard history like Win+V: text, images and files, search, pin, click to copy back. ⌘⇧V opens it. Password-manager entries are skipped. |
 | **Settings** | Launch at login, Golemio token (optional, faster PID data), Discord credentials, screenshot folder. |
 
 Languages: Czech, English, German, Slovak, Polish (follows the system language).
@@ -73,6 +74,7 @@ Najedeš myší na výřez a rozbalí se kompaktní černý panel. Odjedeš a za
 | **Hovory** | Pozná Discord, Zoom, Teams, FaceTime, Slack, Chrome (Meet), Telegram a WhatsApp a jestli je aktivní mikrofon. S vlastní Discord aplikací ukáže, kdo je s tebou v hlasovém kanálu, a umí mute / deafen. |
 | **Shot** | Screenshoty ve stylu Shottr: ⌘⇧2 oblast, ⌘⇧1 obrazovka, ⌘⇧7 okno, ⌘⇧O rozpoznání textu (OCR, česky i anglicky). Každý snímek jde do schránky a do `~/Pictures/NotchIsland`. Historie s připnutím na obrazovku a editor (A šipka, R obdélník, O ovál, P pero, T text, B rozmazání, C počítadlo, ⌘Z / ⌘⇧Z). |
 | **Poznámky** | Rychlý zápisník, ukládá se sám. |
+| **Schránka** | Historie schránky jako Win+V: text, obrázky i soubory, hledání, připnutí, klik zkopíruje zpět. ⌘⇧V ji otevře. Položky ze správců hesel přeskakuje. |
 | **Nastavení** | Spouštění po přihlášení, Golemio token (volitelný, rychlejší data PID), Discord přihlášení, složka pro snímky. |
 
 Jazyky: čeština, angličtina, němčina, slovenština, polština (podle jazyka systému).

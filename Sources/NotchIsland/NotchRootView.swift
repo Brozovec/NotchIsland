@@ -138,6 +138,7 @@ struct ExpandedContent: View {
                 case .calls: CallsView()
                 case .shot: ShotView()
                 case .notes: NotesView()
+                case .clipboard: ClipboardView()
                 case .settings: SettingsView()
                 }
             }

@@ -22,6 +22,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         LaunchAtLogin.enableOnFirstLaunch()
         controller = NotchController()
         controller?.show()
+        ScreenshotService.shared.openClipboard = { [weak self] in self?.controller?.open(tab: .clipboard) }
         setupStatusItem()
     }
 

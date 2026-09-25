@@ -20,10 +20,10 @@ final class ScreenshotService: ObservableObject {
     private var editors: [AnnotationWindow] = []
     private var hud: HUDWindow?
 
-    enum Mode: UInt32 { case screen = 1, area = 2, window = 3, ocr = 4 }
+    enum Mode: UInt32 { case screen = 1, area = 2, window = 3, ocr = 4, clipboard = 5 }
     static let bindings: [(Mode, UInt32, String)] = [
         (.screen, UInt32(kVK_ANSI_1), "⌘⇧1"), (.area, UInt32(kVK_ANSI_2), "⌘⇧2"),
-        (.window, UInt32(kVK_ANSI_7), "⌘⇧7"), (.ocr, UInt32(kVK_ANSI_O), "⌘⇧O"),
+        (.window, UInt32(kVK_ANSI_7), "⌘⇧7"), (.ocr, UInt32(kVK_ANSI_O), "⌘⇧O"), (.clipboard, UInt32(kVK_ANSI_V), "⌘⇧V"),
     ]
 
     private init() {
@@ -75,7 +75,11 @@ final class ScreenshotService: ObservableObject {
         }
     }
 
+    /// Volá se při ⌘⇧V – otevře historii schránky v notchi.
+    var openClipboard: (() -> Void)?
+
     func capture(mode: Mode) {
+        if mode == .clipboard { openClipboard?(); return }
         Log.w("capture(\(mode)) capturing=\(capturing) screenAccess=\(CGPreflightScreenCaptureAccess())")
         guard !capturing, ensureScreenAccess() else { return }
         capturing = true
@@ -86,7 +90,7 @@ final class ScreenshotService: ObservableObject {
         let p = Process()
         p.executableURL = URL(fileURLWithPath: "/usr/sbin/screencapture")
         var args = ["-x"]
-        switch mode { case .area, .ocr: args.append("-i"); case .window: args += ["-i", "-W"]; case .screen: break }
+        switch mode { case .area, .ocr: args.append("-i"); case .window: args += ["-i", "-W"]; case .screen, .clipboard: break }
         args.append(url.path)
         p.arguments = args
         p.terminationHandler = { [weak self] proc in

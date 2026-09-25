@@ -124,3 +124,8 @@
 "Verze 1.0 · Adam Brož · github.com/brozovec/NotchIsland" = "Version 1.0 · Adam Brož · github.com/brozovec/NotchIsland";
 "Moduly" = "Modules";
 "Kliknutím záložku skryješ nebo zase ukážeš." = "Click to hide or show a tab.";
+"Schránka" = "Clipboard";
+"Hledat ve schránce…" = "Search clipboard…";
+"Vymazat historii (připnuté zůstanou)" = "Clear history (pinned stay)";
+"Historie schránky" = "Clipboard history";
+"Cokoli zkopíruješ, objeví se tady. Klik = zkopírovat zpět." = "Anything you copy shows up here. Click = copy back.";
