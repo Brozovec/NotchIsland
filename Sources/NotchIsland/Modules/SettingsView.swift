@@ -28,18 +28,20 @@ struct SettingsView: View {
                     note(L("Verze 1.0 · Adam Brož · github.com/brozovec/NotchIsland"))
                 }
                 section(L("Moduly")) {
+                    ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 6) {
                         ForEach(NotchTab.all.filter { $0 != .home }) { tab in
                             let on = !s.disabledTabs.contains(tab.rawValue)
                             Button {
                                 if on { s.disabledTabs.append(tab.rawValue) } else { s.disabledTabs.removeAll { $0 == tab.rawValue } }
                             } label: {
-                                HStack(spacing: 3) { Image(systemName: tab.icon).font(.system(size: 9, weight: .bold)); Text(tab.title).font(.system(size: 9, weight: .semibold)) }
+                                HStack(spacing: 3) { Image(systemName: tab.icon).font(.system(size: 9, weight: .bold)); Text(tab.title).font(.system(size: 9, weight: .semibold)).lineLimit(1).fixedSize() }
                                     .padding(.horizontal, 7).padding(.vertical, 3)
                                     .background(on ? Color.white.opacity(0.18) : Color.white.opacity(0.05), in: Capsule())
                                     .foregroundStyle(on ? .white : .white.opacity(0.35))
                             }.buttonStyle(.plain)
                         }
+                    }
                     }
                     note(L("Kliknutím záložku skryješ nebo zase ukážeš."))
                 }
