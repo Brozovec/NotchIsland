@@ -100,7 +100,7 @@ struct ExpandedContent: View {
         VStack(spacing: 6) {
             HStack(spacing: 0) {
                 // záložky jen v levém křídle – pod kamerou nesmí nic být
-                HStack(spacing: 3) {
+                HStack(spacing: 6) {
                     ForEach(NotchTab.pills) { tab in
                         let _ = settings.disabledTabs
                         let on = state.selectedTab == tab
@@ -109,14 +109,14 @@ struct ExpandedContent: View {
                                 Image(systemName: tab.icon).font(.system(size: 10, weight: .bold))
                                 if on { Text(tab.title).font(.system(size: 10, weight: .semibold)).fixedSize() }
                             }
-                            .padding(.horizontal, on ? 8 : 6).padding(.vertical, 4)
+                            .padding(.horizontal, on ? 9 : 7).padding(.vertical, 4)
                             .background(on ? Color.white.opacity(0.16) : .clear, in: Capsule())
                             .foregroundStyle(on ? .white : .white.opacity(0.45))
                         }
                         .buttonStyle(.plain).help(tab.title)
                     }
                 }
-                .padding(.leading, 10)
+                .padding(.leading, 14)
                 .frame(width: wing, alignment: .leading)
                 Color.clear.frame(width: state.geometry.notchSize.width)
                 HStack {

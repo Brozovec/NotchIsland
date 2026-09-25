@@ -6,7 +6,7 @@
 #   ./build.sh dmg      sestaví a vytvoří build/NotchIsland-<verze>.dmg
 set -e
 cd "$(dirname "$0")"
-swift build -c release 2>&1 | grep -E "error:" && { echo "BUILD FAILED"; exit 1; } || true
+swift build -c release 2>&1 | grep -E "^.*\.swift:[0-9]+:[0-9]+: error:" && { echo "BUILD FAILED"; exit 1; } || true
 [[ -x .build/release/NotchIsland ]] || { echo "BUILD FAILED"; exit 1; }
 APP=build/NotchIsland.app
 rm -rf "$APP"

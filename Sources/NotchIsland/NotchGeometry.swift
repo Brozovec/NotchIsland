@@ -5,8 +5,8 @@ struct NotchGeometry {
     let screen: NSScreen
     let notchSize: CGSize
     /// Velikost okna – dost velká, aby se do ní vešel rozbalený stav.
-    let windowSize = CGSize(width: 760, height: 230)
-    let expandedSize = CGSize(width: 620, height: 152)
+    let windowSize = CGSize(width: 880, height: 230)
+    let expandedSize = CGSize(width: 740, height: 152)
 
     static func detect() -> NotchGeometry {
         let screen = NSScreen.screens.first { $0.safeAreaInsets.top > 0 } ?? NSScreen.main ?? NSScreen.screens[0]
