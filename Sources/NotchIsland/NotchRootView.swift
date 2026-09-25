@@ -13,7 +13,7 @@ struct NotchRootView: View {
                     .shadow(color: .black.opacity(state.isExpanded || state.compact != .none ? 0.45 : 0), radius: 14, y: 6)
                 if state.isExpanded {
                     ExpandedContent()
-                        .frame(width: size.width, height: size.height)
+                        .frame(width: size.width, height: size.height, alignment: .top)
                         .transition(.opacity.combined(with: .scale(scale: 0.96, anchor: .top)))
                 } else if state.compact != .none {
                     CompactContent(mode: state.compact, notchWidth: g.notchSize.width, wing: state.wingWidth)

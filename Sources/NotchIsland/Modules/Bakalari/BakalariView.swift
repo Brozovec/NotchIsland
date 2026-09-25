@@ -10,6 +10,7 @@ struct BakalariView: View {
         VStack(alignment: .leading, spacing: 4) {
             HStack(spacing: 8) {
                 Picker("", selection: $week) { Text(L("Dnes")).tag(false); Text(L("Týden")).tag(true) }.pickerStyle(.segmented).controlSize(.mini).frame(width: 110)
+                    .onChange(of: week) { _, _ in NotchController.relayout?() }
                 Button { day = Calendar.current.date(byAdding: .day, value: -1, to: day)! } label: { Image(systemName: "chevron.left").font(.system(size: 9, weight: .bold)) }.buttonStyle(.plain).foregroundStyle(.white.opacity(0.6))
                 Text(day, format: .dateTime.weekday(.wide).day().month()).font(.system(size: 11, weight: .semibold)).foregroundStyle(.white)
                     .onTapGesture { day = Date() }

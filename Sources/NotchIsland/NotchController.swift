@@ -41,7 +41,7 @@ final class NotchState: ObservableObject {
     /// Šířka křídel po stranách notche ve sbaleném stavu.
     var wingWidth: CGFloat { compact == .none ? 0 : 74 }
     /// Výška rozbaleného panelu – rozvrh potřebuje víc místa.
-    var expandedHeight: CGFloat { selectedTab == .bakalari ? 232 : geometry.expandedSize.height }
+    var expandedHeight: CGFloat { selectedTab == .bakalari ? (UserDefaults.standard.bool(forKey: "bakalariWeekView") ? 262 : 232) : geometry.expandedSize.height }
     var expandedSize: CGSize { CGSize(width: geometry.expandedSize.width, height: expandedHeight) }
     var expandedRect: CGRect { geometry.expandedRect(height: expandedHeight) }
     var collapsedSize: CGSize { CGSize(width: geometry.notchSize.width + 2 * wingWidth, height: geometry.notchSize.height) }
@@ -72,6 +72,8 @@ enum NotchTab: String, CaseIterable, Identifiable {
 final class NotchController {
     /// Zavření panelu odjinud (např. po otevření okna nastavení).
     static var closeRequest: (() -> Void)?
+    /// Přepočet výšky panelu (např. Dnes/Týden).
+    static var relayout: (() -> Void)?
     private let geometry = NotchGeometry.detect()
     private let state: NotchState
     private let panel: NotchPanel
@@ -86,7 +88,9 @@ final class NotchController {
     init() {
         state = NotchState(geometry: geometry)
         panel = NotchPanel(frame: geometry.windowFrame)
-        panel.contentView = FirstMouseHostingView(rootView: NotchRootView().environmentObject(state))
+        let host = FirstMouseHostingView(rootView: NotchRootView().environmentObject(state))
+        host.sizingOptions = []   // nikdy neměnit velikost okna podle obsahu (jinak se panel posouvá dolů)
+        panel.contentView = host
         panel.contentView?.addSubview(cursorOverlay, positioned: .above, relativeTo: nil)
         panel.acceptsMouseMovedEvents = true
         // Při změně křídel (hudba / hovor): okno nejdřív roztáhnout na větší z obou velikostí,
@@ -102,6 +106,11 @@ final class NotchController {
         }.store(in: &bag)
         installMouseMonitors()
         NotchController.closeRequest = { [weak self] in self?.close() }
+        NotchController.relayout = { [weak self] in
+            guard let self else { return }
+            withAnimation(.spring(response: 0.35, dampingFraction: 0.85)) { self.state.objectWillChange.send() }
+            self.updateCursorZone()
+        }
         // rozběhnout služby
         _ = ShelfService.shared; _ = TransitService.shared; _ = IntercityService.shared; _ = WeatherService.shared
         _ = CalendarService.shared; _ = ScreenshotService.shared; _ = DiscordRPC.shared; _ = ClipboardService.shared; _ = PowerService.shared; _ = BakalariService.shared
