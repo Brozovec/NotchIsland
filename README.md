@@ -17,16 +17,18 @@
 
 ### What it does
 
-Hover over the notch and it expands into a compact black panel. Move away and it folds back. While music plays or you are on a call, small "wings" appear beside the camera, just like the iPhone's Dynamic Island.
+Hover over the notch and it expands into a compact black panel. Move away and it folds back. While music plays, a timer runs or you are on a call, small "wings" appear beside the camera, just like the iPhone's Dynamic Island. Plugging in the charger or connecting AirPods flashes the battery level there for three seconds.
 
 | Tab | Features |
 |---|---|
-| **Island** | Now playing from Spotify or Apple Music with artwork, controls and an equalizer. Calendar strip you can scrub through by dragging (day changes as you drag). Weather tile styled after Apple Weather, based on your location, hover for the hourly forecast. |
+| **Island** | Now playing from Spotify, Apple Music or the browser (YouTube, YouTube Music, Spotify Web, SoundCloud via the bundled extension in `extension/`) with artwork, controls and an equalizer. Calendar strip you can scrub through by dragging (day changes as you drag). Weather tile styled after Apple Weather, based on your location, hover for the hourly forecast. |
 | **Tray** | Drop files onto the notch to park them. Drag them back out anywhere, double-click to open. |
 | **Transit** | **Stop mode:** live PID (Prague) departures with delays, platform, favorite stops bar, autocomplete, and tracking of a chosen vehicle (last stop, next stop, delay, speed). **Connection mode:** mini search for RegioJet and FlixBus with times, duration, transfers, price, free seats, live RegioJet delay, city autocomplete, favorite routes, "I'm on this one" tracking, ticket links, and a one-click IDOS search for ČD trains. |
 | **Calls** | Detects Discord, Zoom, Teams, FaceTime, Slack, Chrome (Meet), Telegram and WhatsApp, and whether the microphone is live. With your own Discord app credentials it shows who is in your voice channel and lets you mute / deafen. |
 | **Shot** | Shottr-style screenshots: ⌘⇧2 area, ⌘⇧1 screen, ⌘⇧7 window, ⌘⇧O text recognition (OCR, Czech + English). Every shot is copied to the clipboard and saved to `~/Pictures/NotchIsland`. History with pin-to-screen and an editor (A arrow, R rectangle, O oval, P pen, T text, B blur, C counter, ⌘Z / ⌘⇧Z). |
 | **Notes** | A quick notepad that saves itself. |
+| **Timer** | Countdown and Pomodoro (25/5, long break after 4 rounds). Runs in the wings beside the camera, click pauses. |
+| **Timetable** | Bakaláři school timetable: today's lessons with room, teacher, changes and cancellations; current lesson highlighted; next lesson shown on the home screen. Login with your Bakaláři account (password in Keychain), any Bakaláři server. |
 | **Clipboard** | Clipboard history like Win+V: text, images and files, search, pin, click to copy back. ⌘⇧V opens it. Password-manager entries are skipped. |
 | **Settings** | Launch at login, Golemio token (optional, faster PID data), Discord credentials, screenshot folder. |
 
@@ -47,6 +49,10 @@ cd NotchIsland
 
 `build.sh` signs with your "Apple Development" certificate if present, otherwise ad hoc. A stable signature matters: it is what lets macOS remember the permissions between builds.
 
+### Browser playback
+
+macOS 15.4+ blocks the private MediaRemote API, so the app cannot see YouTube on its own. The `extension/` folder holds a small Chrome/Edge/Brave/Firefox extension that reports playback to the app over `127.0.0.1:47831` and executes play/pause/next/prev. See `extension/README.md`.
+
 ### Data sources
 
 - PID departures: Golemio API with a free token, or the public GTFS-Realtime feed plus the daily PID GTFS timetable (no key needed).
@@ -64,16 +70,18 @@ Requires a Mac with a notch for the full effect; on other Macs a small island is
 
 ### Co to umí
 
-Najedeš myší na výřez a rozbalí se kompaktní černý panel. Odjedeš a zase se sbalí. Když hraje hudba nebo jsi na hovoru, vedle kamery se objeví "křídla" jako u Dynamic Islandu na iPhonu.
+Najedeš myší na výřez a rozbalí se kompaktní černý panel. Odjedeš a zase se sbalí. Když hraje hudba, běží časovač nebo jsi na hovoru, vedle kamery se objeví "křídla" jako u Dynamic Islandu na iPhonu. Připojení nabíječky nebo AirPods tam na tři sekundy ukáže stav baterie.
 
 | Záložka | Funkce |
 |---|---|
-| **Island** | Přehrávaná skladba ze Spotify nebo Apple Music s obalem, ovládáním a equalizerem. Kalendářní pásek, kterým se dá tažením scrubovat (den se mění pod prstem). Dlaždice počasí ve stylu Apple Počasí podle tvé polohy, po najetí hodinová předpověď. |
+| **Island** | Přehrávaná skladba ze Spotify, Apple Music nebo prohlížeče (YouTube, YouTube Music, Spotify Web, SoundCloud přes přiložené rozšíření ve složce `extension/`) s obalem, ovládáním a equalizerem. Kalendářní pásek, kterým se dá tažením scrubovat (den se mění pod prstem). Dlaždice počasí ve stylu Apple Počasí podle tvé polohy, po najetí hodinová předpověď. |
 | **Tray** | Přetáhni soubory na notch a odlož si je. Odtud je zase přetáhneš kamkoli, dvojklik otevře. |
 | **Doprava** | **Zastávka:** živé odjezdy PID se zpožděním, nástupištěm, lištou oblíbených zastávek, našeptáváním a sledováním vybraného vozu (poslední a další zastávka, zpoždění, rychlost). **Spojení:** mini vyhledávač RegioJet a FlixBus s časy, délkou, přestupy, cenou, volnými místy, živým zpožděním RegioJetu, našeptáváním měst, oblíbenými trasami, sledováním "sedím v tomhle spoji", odkazy na jízdenky a jedním klikem na IDOS pro vlaky ČD. |
 | **Hovory** | Pozná Discord, Zoom, Teams, FaceTime, Slack, Chrome (Meet), Telegram a WhatsApp a jestli je aktivní mikrofon. S vlastní Discord aplikací ukáže, kdo je s tebou v hlasovém kanálu, a umí mute / deafen. |
 | **Shot** | Screenshoty ve stylu Shottr: ⌘⇧2 oblast, ⌘⇧1 obrazovka, ⌘⇧7 okno, ⌘⇧O rozpoznání textu (OCR, česky i anglicky). Každý snímek jde do schránky a do `~/Pictures/NotchIsland`. Historie s připnutím na obrazovku a editor (A šipka, R obdélník, O ovál, P pero, T text, B rozmazání, C počítadlo, ⌘Z / ⌘⇧Z). |
 | **Poznámky** | Rychlý zápisník, ukládá se sám. |
+| **Časovač** | Odpočet a Pomodoro (25/5, po 4 kolech dlouhá pauza). Běží v křídlech vedle kamery, klik pauzne. |
+| **Rozvrh** | Rozvrh z Bakalářů: dnešní hodiny s učebnou, učitelem, změnami a odpadlými hodinami; aktuální hodina zvýrazněná; další hodina na domovské obrazovce. Přihlášení Bakaláři účtem (heslo v Klíčence), libovolný server. |
 | **Schránka** | Historie schránky jako Win+V: text, obrázky i soubory, hledání, připnutí, klik zkopíruje zpět. ⌘⇧V ji otevře. Položky ze správců hesel přeskakuje. |
 | **Nastavení** | Spouštění po přihlášení, Golemio token (volitelný, rychlejší data PID), Discord přihlášení, složka pro snímky. |
 
@@ -93,6 +101,10 @@ cd NotchIsland
 ```
 
 `build.sh` podepisuje certifikátem "Apple Development", když ho máš, jinak ad hoc. Stabilní podpis je důležitý, díky němu si macOS pamatuje oprávnění mezi buildy.
+
+### Přehrávání z prohlížeče
+
+macOS 15.4+ blokuje soukromé MediaRemote API, takže appka sama YouTube nevidí. Ve složce `extension/` je malé rozšíření pro Chrome/Edge/Brave/Firefox, které appce posílá stav přehrávání přes `127.0.0.1:47831` a vykonává play/pause/další/předchozí. Viz `extension/README.md`.
 
 ### Zdroje dat
 

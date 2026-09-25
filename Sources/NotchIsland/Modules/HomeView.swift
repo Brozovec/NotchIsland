@@ -24,7 +24,8 @@ struct MusicPane: View {
                     .id(music.artwork)
                     .transition(.opacity)
                 if let n = music.now {
-                    BrandBadge(glyph: n.source == .spotify ? FA.spotify : FA.apple, color: n.source == .spotify ? Color(hex: 0x1DB954) : Color(hex: 0xFC3C44), size: 20)
+                    BrandBadge(glyph: n.source == .spotify ? FA.spotify : (n.source == .web ? (n.siteName.contains("YouTube") ? FA.youtube : (n.siteName.contains("Spotify") ? FA.spotify : FA.chrome)) : FA.apple),
+                               color: n.source == .spotify || n.siteName.contains("Spotify") ? Color(hex: 0x1DB954) : (n.siteName.contains("YouTube") ? Color(hex: 0xFF0000) : (n.source == .web ? Color(hex: 0x4285F4) : Color(hex: 0xFC3C44))), size: 20)
                         .offset(x: 5, y: 5)
                 }
             }
@@ -81,6 +82,13 @@ struct CalendarPane: View {
                 WeekPager(weekOffset: Binding(get: { weekOffset ?? 0 }, set: { weekOffset = $0 }), selected: $selected, weekStart: weekStart)
                 .frame(height: 26)
             }
+            if Calendar.current.isDateInToday(selected), BakalariService.shared.isConfigured, let line = nextLessonLine() {
+                HStack(spacing: 5) {
+                    Image(systemName: "graduationcap.fill").font(.system(size: 9)).foregroundStyle(.cyan)
+                    Text(line).font(.system(size: 10, weight: .medium)).foregroundStyle(.white).lineLimit(1)
+                    Spacer()
+                }
+            }
             let list = cal.events(on: selected)
             if list.isEmpty {
                 VStack(spacing: 2) {
@@ -117,6 +125,16 @@ struct CalendarPane: View {
 }
 
 /// Pásek dnů: tažením (nebo dvěma prsty) se plynule posouvá a mění vybraný den – jako scrubování.
+extension CalendarPane {
+    func nextLessonLine() -> String? {
+        let c = BakalariService.shared.current()
+        let f = DateFormatter(); f.dateFormat = "H:mm"
+        if let n = c.now { return "\(n.lesson.subjectAbbrev) · \(n.lesson.roomAbbrev ?? "") · " + L("do") + " \(f.string(from: n.end))" + (c.next.map { " → \($0.lesson.subjectAbbrev)" } ?? "") }
+        if let n = c.next { let m = Int(n.start.timeIntervalSinceNow / 60); return L("Další:") + " \(n.lesson.subjectAbbrev) · \(n.lesson.roomAbbrev ?? "") · " + (m < 60 ? String(format: L("za %d min"), m) : f.string(from: n.start)) }
+        return nil
+    }
+}
+
 struct WeekPager: View {
     @Binding var weekOffset: Int      // ponecháno kvůli rozhraní, nepoužívá se
     @Binding var selected: Date

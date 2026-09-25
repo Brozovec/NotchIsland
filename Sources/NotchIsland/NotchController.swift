@@ -2,7 +2,7 @@ import AppKit
 import SwiftUI
 import Combine
 
-enum CompactMode: Equatable { case none, music, call }
+enum CompactMode: Equatable { case none, music, call, timer, power }
 
 @MainActor
 final class NotchState: ObservableObject {
@@ -18,9 +18,13 @@ final class NotchState: ObservableObject {
 
     init(geometry: NotchGeometry) {
         self.geometry = geometry
-        MusicService.shared.$now.combineLatest(CallsService.shared.$micInUse, CallsService.shared.$running)
-            .map { now, mic, apps -> CompactMode in
+        let base = MusicService.shared.$now.combineLatest(CallsService.shared.$micInUse, CallsService.shared.$running)
+        base.combineLatest(TimerService.shared.$total, PowerService.shared.$flash)
+            .map { b, timerTotal, flash -> CompactMode in
+                let (now, mic, apps) = b
+                if flash != nil { return .power }
                 if mic && !apps.isEmpty { return .call }
+                if timerTotal > 0 { return .timer }
                 if let n = now, n.isPlaying { return .music }
                 return .none
             }
@@ -36,21 +40,21 @@ final class NotchState: ObservableObject {
 }
 
 enum NotchTab: String, CaseIterable, Identifiable {
-    case home, files, transit, calls, shot, notes, clipboard, settings
+    case home, files, transit, calls, shot, notes, clipboard, timer, bakalari, settings
     var id: String { rawValue }
     /// Záložky zobrazené jako pilulky (nastavení má vlastní ikonu vpravo).
-    static let all: [NotchTab] = [.home, .files, .transit, .calls, .shot, .notes, .clipboard]
+    static let all: [NotchTab] = [.home, .files, .transit, .calls, .shot, .notes, .clipboard, .timer, .bakalari]
     static var pills: [NotchTab] { all.filter { $0 == .home || !AppSettings.shared.disabledTabs.contains($0.rawValue) } }
     var icon: String {
         switch self {
         case .home: return "house.fill"; case .files: return "tray.full.fill"; case .transit: return "tram.fill"
-        case .calls: return "phone.fill"; case .shot: return "camera.fill"; case .notes: return "note.text"; case .clipboard: return "doc.on.clipboard"; case .settings: return "gearshape.fill"
+        case .calls: return "phone.fill"; case .shot: return "camera.fill"; case .notes: return "note.text"; case .clipboard: return "doc.on.clipboard"; case .timer: return "timer"; case .bakalari: return "graduationcap.fill"; case .settings: return "gearshape.fill"
         }
     }
     var title: String {
         switch self {
         case .home: return L("Island"); case .files: return L("Tray"); case .transit: return L("Doprava")
-        case .calls: return L("Hovory"); case .shot: return L("Shot"); case .notes: return L("Poznámky"); case .clipboard: return L("Schránka"); case .settings: return L("Nastavení")
+        case .calls: return L("Hovory"); case .shot: return L("Shot"); case .notes: return L("Poznámky"); case .clipboard: return L("Schránka"); case .timer: return L("Časovač"); case .bakalari: return L("Rozvrh"); case .settings: return L("Nastavení")
         }
     }
 }
@@ -88,7 +92,8 @@ final class NotchController {
         installMouseMonitors()
         // rozběhnout služby
         _ = ShelfService.shared; _ = TransitService.shared; _ = IntercityService.shared; _ = WeatherService.shared
-        _ = CalendarService.shared; _ = ScreenshotService.shared; _ = DiscordRPC.shared; _ = ClipboardService.shared
+        _ = CalendarService.shared; _ = ScreenshotService.shared; _ = DiscordRPC.shared; _ = ClipboardService.shared; _ = PowerService.shared; _ = BakalariService.shared
+        BrowserMediaServer.shared.start()
     }
 
     /// Otevře panel na dané záložce (globální zkratka).

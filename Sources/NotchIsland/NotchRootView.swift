@@ -38,10 +38,18 @@ struct CompactContent: View {
     let wing: CGFloat
     @ObservedObject var music = MusicService.shared
     @ObservedObject var calls = CallsService.shared
+    @ObservedObject var timer = TimerService.shared
+    @ObservedObject var power = PowerService.shared
     var body: some View {
         HStack(spacing: 0) {
             Group {
                 switch mode {
+                case .timer:
+                    Image(systemName: timer.isPomodoro ? "leaf.fill" : "timer").font(.system(size: 11, weight: .bold))
+                        .foregroundStyle(timer.running ? (timer.phase == .rest ? Color.cyan : Color.orange) : .white.opacity(0.5)).padding(.leading, 14)
+                case .power:
+                    Image(systemName: power.flash?.icon ?? "battery.100").font(.system(size: 12, weight: .semibold))
+                        .foregroundStyle(power.flash?.charging == true ? .green : .white).padding(.leading, 12)
                 case .music:
                     Artwork(image: music.artwork, size: 22).padding(.leading, 12)
                         .id(music.artwork).transition(.opacity.combined(with: .scale(scale: 0.8)))
@@ -56,6 +64,15 @@ struct CompactContent: View {
             Color.clear.frame(width: notchWidth)
             Group {
                 switch mode {
+                case .timer:
+                    Text(timer.text).font(.system(size: 12, weight: .semibold, design: .rounded)).monospacedDigit()
+                        .foregroundStyle(timer.running ? .white : .white.opacity(0.5)).padding(.trailing, 12)
+                        .contentShape(Rectangle()).onTapGesture { timer.toggle() }
+                case .power:
+                    HStack(spacing: 4) {
+                        if let f = power.flash, f.level >= 0 { Text("\(f.level) %").font(.system(size: 11, weight: .bold)).foregroundStyle(f.charging ? .green : .white) }
+                        else { Text(power.flash?.text ?? "").font(.system(size: 10, weight: .semibold)).foregroundStyle(.white).lineLimit(1) }
+                    }.padding(.trailing, 12)
                 case .music: EqualizerView(active: music.now?.isPlaying ?? false, bars: 4, color: .green).frame(width: 18, height: 16).padding(.trailing, 14)
                 case .call:
                     HStack(spacing: 4) {
@@ -140,6 +157,8 @@ struct ExpandedContent: View {
                 case .shot: ShotView()
                 case .notes: NotesView()
                 case .clipboard: ClipboardView()
+                case .timer: TimerView()
+                case .bakalari: BakalariView()
                 case .settings: SettingsView()
                 }
             }

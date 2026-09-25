@@ -2,8 +2,9 @@ import AppKit
 import Combine
 
 struct NowPlaying: Equatable {
-    enum Source: String { case spotify = "Spotify", music = "Hudba" }
+    enum Source: String { case spotify = "Spotify", music = "Hudba", web = "Web" }
     var source: Source
+    var siteName: String = ""
     var isPlaying: Bool
     var title: String
     var artist: String
@@ -36,11 +37,16 @@ final class MusicService: ObservableObject {
     }
 
     private func poll() async {
-        let result: NowPlaying? = await Task.detached(priority: .utility) { [self] () -> NowPlaying? in
+        var result: NowPlaying? = await Task.detached(priority: .utility) { [self] () -> NowPlaying? in
             if await isRunning("com.spotify.client"), let n = Self.readSpotify() { return n }
             if await isRunning("com.apple.Music"), let n = Self.readMusic() { return n }
             return nil
         }.value
+        // prohlížeč (rozšíření NotchIsland Media Bridge) – když nativní appka nehraje
+        if result == nil || result?.isPlaying == false, let w = BrowserMediaServer.shared.current(), !w.title.isEmpty, (result == nil || w.playing) {
+            result = NowPlaying(source: .web, siteName: w.site, isPlaying: w.playing, title: w.title, artist: w.artist, album: w.album.isEmpty ? w.site : w.album,
+                                durationSec: w.duration, positionSec: w.position, artworkURL: w.artwork.flatMap { URL(string: $0) })
+        }
         if result != now { now = result }
         await updateArtwork()
     }
@@ -113,6 +119,9 @@ final class MusicService: ObservableObject {
     // MARK: ovládání
     private func control(_ cmd: String) {
         guard let n = now else { return }
+        if n.source == .web {
+            BrowserMediaServer.shared.send(cmd == "playpause" ? "playpause" : cmd == "next track" ? "next" : "prev"); return
+        }
         let app = n.source == .spotify ? "Spotify" : "Music"
         Task.detached { _ = Self.run("tell application \"\(app)\" to \(cmd)") }
     }

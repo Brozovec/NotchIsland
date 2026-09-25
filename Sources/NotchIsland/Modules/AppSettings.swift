@@ -8,6 +8,10 @@ final class AppSettings: ObservableObject {
 
     @Published var golemioToken: String { didSet { d.set(golemioToken, forKey: "golemioToken") } }
     @Published var disabledTabs: [String] { didSet { d.set(disabledTabs, forKey: "disabledTabs") } }
+    @Published var bakalariServer: String { didSet { d.set(bakalariServer, forKey: "bakalariServer") } }
+    @Published var bakalariUser: String { didSet { d.set(bakalariUser, forKey: "bakalariUser") } }
+    @Published var bakalariClass: String { didSet { d.set(bakalariClass, forKey: "bakalariClass") } }
+    @Published var bakalariGroup: Int { didSet { d.set(bakalariGroup, forKey: "bakalariGroup") } }   // 0 = vše, 1, 2
     @Published var favoriteRoutes: [String] { didSet { d.set(favoriteRoutes, forKey: "favoriteRoutes") } }
     @Published var discordClientId: String { didSet { d.set(discordClientId, forKey: "discordClientId") } }
     @Published var discordClientSecret: String { didSet { d.set(discordClientSecret, forKey: "discordClientSecret") } }
@@ -18,6 +22,10 @@ final class AppSettings: ObservableObject {
     private init() {
         golemioToken = d.string(forKey: "golemioToken") ?? ""
         disabledTabs = d.stringArray(forKey: "disabledTabs") ?? []
+        bakalariServer = d.string(forKey: "bakalariServer") ?? "https://mot-spsd.bakalari.cz"
+        bakalariUser = d.string(forKey: "bakalariUser") ?? ""
+        bakalariClass = d.string(forKey: "bakalariClass") ?? ""
+        bakalariGroup = d.integer(forKey: "bakalariGroup")
         favoriteRoutes = d.stringArray(forKey: "favoriteRoutes") ?? ["Praha|Brno"]
         discordClientId = d.string(forKey: "discordClientId") ?? ""
         discordClientSecret = d.string(forKey: "discordClientSecret") ?? ""
