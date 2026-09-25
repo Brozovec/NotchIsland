@@ -8,11 +8,14 @@ struct RemoteLesson: Codable {
     let day: Int; let dayName: String?; let hour: Int
     let subject: String?; let subjectAbbreviation: String?; let teacher: String?; let room: String?
     let group: String?; let theme: String?; let type: String?; let changed: Bool?; let changeInfo: ChangeInfo?
+    var teacherFull: String? = nil; var roomFull: String? = nil; var notice: String? = nil; var groupFull: String? = nil
     struct ChangeInfo: Codable { let raw: String?; let description: String? }
     init(day: Int, dayName: String? = nil, hour: Int, subject: String? = nil, subjectAbbreviation: String? = nil, teacher: String? = nil,
-         room: String? = nil, group: String? = nil, theme: String? = nil, type: String? = nil, changed: Bool? = nil, changeInfo: ChangeInfo? = nil) {
+         room: String? = nil, group: String? = nil, theme: String? = nil, type: String? = nil, changed: Bool? = nil, changeInfo: ChangeInfo? = nil,
+         teacherFull: String? = nil, roomFull: String? = nil, notice: String? = nil, groupFull: String? = nil) {
         self.day = day; self.dayName = dayName; self.hour = hour; self.subject = subject; self.subjectAbbreviation = subjectAbbreviation
         self.teacher = teacher; self.room = room; self.group = group; self.theme = theme; self.type = type; self.changed = changed; self.changeInfo = changeInfo
+        self.teacherFull = teacherFull; self.roomFull = roomFull; self.notice = notice; self.groupFull = groupFull
     }
 }
 
@@ -24,6 +27,7 @@ struct Lesson: Codable, Hashable, Identifiable {
     let subjectAbbrev: String; let subjectName: String
     let teacherAbbrev: String?; let roomAbbrev: String?; let groupAbbrev: String?
     let state: LessonState; let changeDescription: String?
+    var teacherFull: String? = nil; var roomFull: String? = nil; var theme: String? = nil; var notice: String? = nil; var groupFull: String? = nil
     var isCancelled: Bool { state == .removed || state == .absent }
     var isChanged: Bool { state == .changed || state == .added }
 }
@@ -55,7 +59,8 @@ struct Timetable: Codable {
             let (ab, name) = splitSubject(r.subject ?? "", r.subjectAbbreviation)
             byCell["\(d)-\(r.hour)", default: []].append(Lesson(dayIndex: d, hourId: r.hour, subjectAbbrev: ab, subjectName: name,
                 teacherAbbrev: cleanTeacher(r.teacher), roomAbbrev: r.room, groupAbbrev: normalizeGroup(r.group), state: state(r),
-                changeDescription: r.changeInfo?.description ?? r.changeInfo?.raw))
+                changeDescription: r.changeInfo?.description ?? r.changeInfo?.raw,
+                teacherFull: r.teacherFull, roomFull: r.roomFull, theme: r.theme, notice: r.notice, groupFull: r.groupFull))
         }
         if minH == .max { minH = 1 }; if maxH == 0 { maxH = 7 }
         let hs = hours.isEmpty ? (min(minH, 1)...maxH).map { SchoolHours.hourRef($0) } : hours.filter { $0.Id >= min(minH, 1) && $0.Id <= maxH }

@@ -62,7 +62,9 @@ enum BakalariJSONParser {
                     lessons.append(RemoteLesson(day: dayIndex, hour: idx, subject: a["SubjectText"] as? String ?? "", subjectAbbreviation: a["SubjectAbbrev"] as? String,
                                                 teacher: a["Teacher"] as? String ?? (a["TeacherFullname"] as? String), room: a["Room"] as? String,
                                                 group: a["GroupsNames"] as? String, theme: a["Theme"] as? String, type: type, changed: changed,
-                                                changeInfo: change.isEmpty ? nil : .init(raw: change, description: change)))
+                                                changeInfo: change.isEmpty ? nil : .init(raw: change, description: change),
+                                                teacherFull: a["TeacherFullname"] as? String, roomFull: a["RoomFullName"] as? String,
+                                                notice: a["Notice"] as? String, groupFull: a["GroupsFullNames"] as? String))
                 }
             }
         }

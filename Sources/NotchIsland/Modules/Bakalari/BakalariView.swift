@@ -4,6 +4,7 @@ struct BakalariView: View {
     @ObservedObject var b = BakalariService.shared
     @State private var day = Date()
     @AppStorage("bakalariWeekView") private var week = false
+    @State private var hovered: BakalariService.TodayLesson?
     var body: some View {
         let list = b.lessons(on: day)
         VStack(spacing: 4) {
@@ -25,16 +26,41 @@ struct BakalariView: View {
             } else if list.isEmpty {
                 Placeholder(icon: "graduationcap", title: L("Bakaláři"), text: b.status.isEmpty ? L("Dnes žádné hodiny") : b.status)
             } else {
-                if Calendar.current.isDateInToday(day) { SchoolStateLine(state: b.school) }
+                if let h = hovered { LessonDetailLine(l: h) }
+                else if Calendar.current.isDateInToday(day) { SchoolStateLine(state: b.school) }
+                else { Color.clear.frame(height: 12) }
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 4) {
                         ForEach(groupedByHour(list), id: \.0) { _, ls in
-                            VStack(spacing: 2) { ForEach(ls) { LessonCard(l: $0, split: ls.count) } }.frame(height: 78)
+                            VStack(spacing: 2) {
+                                ForEach(ls) { l in LessonCard(l: l, split: ls.count).onHover { hovered = $0 ? l : (hovered?.id == l.id ? nil : hovered) } }
+                            }.frame(height: 78)
                         }
                     }
                 }
+                .animation(.easeOut(duration: 0.12), value: hovered?.id)
             }
         }
+    }
+}
+
+/// Detail hodiny po najetí myší: celý název, učitel, učebna, skupina, téma, poznámka, změna.
+struct LessonDetailLine: View {
+    let l: BakalariService.TodayLesson
+    var body: some View {
+        let x = l.lesson
+        HStack(spacing: 6) {
+            Text("\(l.hour.Caption). \(l.hour.BeginTime)–\(l.hour.EndTime)").font(.system(size: 9, weight: .bold)).foregroundStyle(.cyan)
+            Text(x.subjectName.isEmpty ? x.subjectAbbrev : x.subjectName).font(.system(size: 10, weight: .semibold)).foregroundStyle(.white).lineLimit(1)
+            Text("·").foregroundStyle(.white.opacity(0.3))
+            Text([x.teacherFull ?? x.teacherAbbrev, x.roomFull ?? x.roomAbbrev, x.groupFull ?? x.groupAbbrev].compactMap { $0 }.filter { !$0.isEmpty }.joined(separator: " · "))
+                .font(.system(size: 9)).foregroundStyle(.white.opacity(0.7)).lineLimit(1)
+            if let t = x.theme, !t.isEmpty { Text(L("téma") + ": \(t)").font(.system(size: 9)).foregroundStyle(.white.opacity(0.6)).lineLimit(1) }
+            if let n = x.notice, !n.isEmpty { Text(n).font(.system(size: 9, weight: .semibold)).foregroundStyle(.yellow).lineLimit(1) }
+            if let c = x.changeDescription, !c.isEmpty { Text(c).font(.system(size: 9, weight: .semibold)).foregroundStyle(.orange).lineLimit(1) }
+            Spacer(minLength: 0)
+        }
+        .transition(.opacity)
     }
 }
 
@@ -123,7 +149,9 @@ struct LessonCard: View {
         .frame(width: 66).frame(maxHeight: .infinity)
         .background(isNow ? Color.green.opacity(0.22) : (l.lesson.isChanged ? Color.orange.opacity(0.18) : Color.white.opacity(0.06)), in: RoundedRectangle(cornerRadius: 9))
         .overlay(RoundedRectangle(cornerRadius: 9).stroke(isNow ? Color.green.opacity(0.6) : .clear, lineWidth: 1))
-        .help([l.lesson.subjectName, l.lesson.groupAbbrev, l.lesson.changeDescription].compactMap { $0 }.joined(separator: " · "))
+        .overlay(alignment: .topTrailing) {
+            if let n = l.lesson.notice, !n.isEmpty { Circle().fill(Color.yellow).frame(width: 5, height: 5).padding(4) }
+        }
     }
 }
 
