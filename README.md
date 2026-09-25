@@ -9,7 +9,12 @@
   <b>Created by Adam Brož</b> · macOS 14+ · Swift / SwiftUI · MIT
 </p>
 
-<p align="center"><a href="#english">English</a> · <a href="#česky">Česky</a></p>
+<p align="center"><a href="#english">English</a> · <a href="#česky">Česky</a> · <a href="https://github.com/brozovec/NotchIsland/releases/latest">Download DMG</a></p>
+
+<p align="center">
+  <img src="docs/screenshot-transit.png" width="900" alt="Transit search"><br>
+  <img src="docs/screenshot-timer.png" width="900" alt="Timer">
+</p>
 
 ---
 

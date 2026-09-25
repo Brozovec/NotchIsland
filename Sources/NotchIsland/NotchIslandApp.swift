@@ -25,13 +25,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         controller?.show()
         ScreenshotService.shared.openClipboard = { [weak self] in self?.controller?.open(tab: .clipboard) }
         ClipboardService.closePanel = { [weak self] in self?.controller?.close() }
-        // ladicí spouštěč: otevřít panel na záložce (cz.adambroz.notchisland.open, objekt = rawValue záložky)
-        DistributedNotificationCenter.default().addObserver(forName: Notification.Name("cz.adambroz.notchisland.open"), object: nil, queue: .main) { [weak self] n in
-            Task { @MainActor in
-                if let raw = n.object as? String, let tab = NotchTab(rawValue: raw) { self?.controller?.open(tab: tab) }
-                else { self?.controller?.close() }
-            }
-        }
         setupStatusItem()
     }
 

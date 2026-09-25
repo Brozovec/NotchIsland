@@ -28,11 +28,6 @@ final class ScreenshotService: ObservableObject {
 
     private init() {
         registerHotKeys()
-        // ladicí spouštěč: `distnoted` zpráva cz.adambroz.notchisland.capture s objektem "area|screen|window|ocr"
-        DistributedNotificationCenter.default().addObserver(forName: Notification.Name("cz.adambroz.notchisland.capture"), object: nil, queue: .main) { [weak self] n in
-            let m: Mode = ["screen": .screen, "window": .window, "ocr": .ocr][n.object as? String ?? "area"] ?? .area
-            Task { @MainActor in self?.capture(mode: m) }
-        }
     }
 
     var folder: URL {
