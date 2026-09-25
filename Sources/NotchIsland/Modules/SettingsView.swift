@@ -7,8 +7,8 @@ struct SettingsView: View {
     @ObservedObject var bk = BakalariService.shared
     var body: some View {
         ScrollView(showsIndicators: true) {
-            HStack(alignment: .top, spacing: 10) {
-              VStack(spacing: 8) {
+            VStack(alignment: .leading, spacing: 10) {
+              Group {
                 section(L("Doprava")) {
                     field(L("Golemio token"), $s.golemioToken, secure: true)
                     note(L("S tokenem jdou odjezdy PID rychleji přes API, bez něj z veřejných dat (1× denně ~50 MB). RegioJet/FlixBus z jejich webu."))
@@ -28,8 +28,7 @@ struct SettingsView: View {
                     note(L("Verze 1.0 · Adam Brož · github.com/brozovec/NotchIsland"))
                 }
                 section(L("Moduly")) {
-                    ScrollView(.horizontal, showsIndicators: false) {
-                    HStack(spacing: 6) {
+                    FlowLayout(spacing: 6) {
                         ForEach(NotchTab.all.filter { $0 != .home }) { tab in
                             let on = !s.disabledTabs.contains(tab.rawValue)
                             Button {
@@ -42,14 +41,13 @@ struct SettingsView: View {
                             }.buttonStyle(.plain)
                         }
                     }
-                    }
                     note(L("Kliknutím záložku skryješ nebo zase ukážeš."))
                 }
                 section(L("Bakaláři (rozvrh)")) {
                     field(L("Server"), $s.bakalariServer)
                     field(L("Jméno"), $s.bakalariUser)
                     HStack {
-                        Text(L("Heslo")).font(.system(size: 11)).foregroundStyle(.white.opacity(0.6)).frame(width: 70, alignment: .leading)
+                        Text(L("Heslo")).font(.system(size: 11)).foregroundStyle(.white.opacity(0.6)).frame(width: 90, alignment: .leading)
                         SecureField("", text: $bkPassword).textFieldStyle(.plain).font(.system(size: 11)).foregroundStyle(.white)
                             .padding(.horizontal, 6).padding(.vertical, 3).background(Color.white.opacity(0.1), in: RoundedRectangle(cornerRadius: 6))
                             .onChange(of: bkPassword) { _, v in Keychain.save(v, "bakalariPassword") }
@@ -73,21 +71,47 @@ struct SettingsView: View {
                 }
               }
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
     private func section<C: View>(_ title: String, @ViewBuilder _ c: () -> C) -> some View {
         VStack(alignment: .leading, spacing: 5) {
-            Text(title).font(.system(size: 10, weight: .bold)).foregroundStyle(.white.opacity(0.9))
+            Text(title).font(.system(size: 12, weight: .bold)).foregroundStyle(.white.opacity(0.9))
             c()
         }.padding(6).frame(maxWidth: .infinity, alignment: .leading).background(Color.white.opacity(0.06), in: RoundedRectangle(cornerRadius: 8))
     }
     private func field(_ label: String, _ b: Binding<String>, secure: Bool = false) -> some View {
         HStack {
-            Text(label).font(.system(size: 11)).foregroundStyle(.white.opacity(0.6)).frame(width: 70, alignment: .leading)
+            Text(label).font(.system(size: 11)).foregroundStyle(.white.opacity(0.6)).frame(width: 90, alignment: .leading)
             Group { if secure { SecureField("", text: b) } else { TextField("", text: b) } }
                 .textFieldStyle(.plain).font(.system(size: 11)).foregroundStyle(.white)
                 .padding(.horizontal, 6).padding(.vertical, 3).background(Color.white.opacity(0.1), in: RoundedRectangle(cornerRadius: 6))
         }
     }
-    private func note(_ t: String) -> some View { Text(t).font(.system(size: 8)).foregroundStyle(.white.opacity(0.45)) }
+    private func note(_ t: String) -> some View { Text(t).font(.system(size: 10)).foregroundStyle(.white.opacity(0.45)) }
+}
+
+
+/// Zalamovaná řada (jako CSS flex-wrap).
+struct FlowLayout: Layout {
+    var spacing: CGFloat = 6
+    func sizeThatFits(proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) -> CGSize {
+        let w = proposal.width ?? 400
+        var x: CGFloat = 0, y: CGFloat = 0, rowH: CGFloat = 0
+        for v in subviews {
+            let s = v.sizeThatFits(.unspecified)
+            if x + s.width > w, x > 0 { x = 0; y += rowH + spacing; rowH = 0 }
+            x += s.width + spacing; rowH = max(rowH, s.height)
+        }
+        return CGSize(width: w, height: y + rowH)
+    }
+    func placeSubviews(in bounds: CGRect, proposal: ProposedViewSize, subviews: Subviews, cache: inout ()) {
+        var x = bounds.minX, y = bounds.minY, rowH: CGFloat = 0
+        for v in subviews {
+            let s = v.sizeThatFits(.unspecified)
+            if x + s.width > bounds.maxX, x > bounds.minX { x = bounds.minX; y += rowH + spacing; rowH = 0 }
+            v.place(at: CGPoint(x: x, y: y), proposal: ProposedViewSize(s))
+            x += s.width + spacing; rowH = max(rowH, s.height)
+        }
+    }
 }
