@@ -5,7 +5,7 @@ struct NotchRootView: View {
 
     var body: some View {
         let g = state.geometry
-        let size = state.isExpanded ? g.expandedSize : state.collapsedSize
+        let size = state.isExpanded ? state.expandedSize : state.collapsedSize
         VStack(spacing: 0) {
             ZStack(alignment: .top) {
                 NotchShape(bottomRadius: state.isExpanded ? 26 : (state.compact == .none ? 12 : 16), topRadius: state.isExpanded ? 12 : 6)
@@ -25,6 +25,7 @@ struct NotchRootView: View {
             .frame(width: size.width, height: size.height)
             .clipShape(NotchShape(bottomRadius: state.isExpanded ? 26 : 12, topRadius: state.isExpanded ? 12 : 6))
             .animation(.spring(response: 0.45, dampingFraction: 0.82), value: state.compact)
+            .animation(.spring(response: 0.35, dampingFraction: 0.85), value: state.selectedTab)
             .contentShape(Rectangle())
             Spacer(minLength: 0)
         }

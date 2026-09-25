@@ -5,7 +5,7 @@ struct NotchGeometry {
     let screen: NSScreen
     let notchSize: CGSize
     /// Velikost okna – dost velká, aby se do ní vešel rozbalený stav.
-    let windowSize = CGSize(width: 1040, height: 230)
+    let windowSize = CGSize(width: 1040, height: 340)
     let expandedSize = CGSize(width: 900, height: 152)
 
     static func detect() -> NotchGeometry {
@@ -35,9 +35,9 @@ struct NotchGeometry {
                       width: notchSize.width, height: notchSize.height)
     }
 
-    var expandedRect: CGRect {
+    var expandedRect: CGRect { expandedRect(height: expandedSize.height) }
+    func expandedRect(height: CGFloat) -> CGRect {
         let f = screen.frame
-        return CGRect(x: f.midX - expandedSize.width / 2, y: f.maxY - expandedSize.height,
-                      width: expandedSize.width, height: expandedSize.height)
+        return CGRect(x: f.midX - expandedSize.width / 2, y: f.maxY - height, width: expandedSize.width, height: height)
     }
 }

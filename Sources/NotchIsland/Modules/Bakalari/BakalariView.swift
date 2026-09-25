@@ -22,19 +22,25 @@ struct BakalariView: View {
             if !b.isConfigured {
                 Placeholder(icon: "graduationcap", title: L("Bakaláři"), text: L("Vyplň Bakaláře v Nastavení"))
             } else if week, let t = b.timetable {
-                WeekGrid(t: t)
+                WeekGrid(t: t, hours: b.allHours)
             } else if list.isEmpty {
                 Placeholder(icon: "graduationcap", title: L("Bakaláři"), text: b.status.isEmpty ? L("Dnes žádné hodiny") : b.status)
             } else {
                 if let h = hovered { LessonDetailLine(l: h) }
                 else if Calendar.current.isDateInToday(day) { SchoolStateLine(state: b.school) }
                 else { Color.clear.frame(height: 12) }
+                let grouped = Dictionary(grouping: list, by: { $0.hour.Id })
+                let allHours = b.allHours
                 ScrollView(.horizontal, showsIndicators: false) {
                     HStack(spacing: 4) {
-                        ForEach(groupedByHour(list), id: \.0) { _, ls in
-                            VStack(spacing: 2) {
-                                ForEach(ls) { l in LessonCard(l: l, split: ls.count).onHover { hovered = $0 ? l : (hovered?.id == l.id ? nil : hovered) } }
-                            }.frame(height: 78)
+                        ForEach(allHours, id: \.Id) { h in
+                            if let ls = grouped[h.Id], !ls.isEmpty {
+                                VStack(spacing: 2) {
+                                    ForEach(ls) { l in LessonCard(l: l, split: ls.count).onHover { hovered = $0 ? l : (hovered?.id == l.id ? nil : hovered) } }
+                                }.frame(height: 78)
+                            } else {
+                                EmptyHourCard(h: h)
+                            }
                         }
                     }
                 }
@@ -89,8 +95,24 @@ struct SchoolStateLine: View {
 }
 
 /// Celý týden: řádky dny, sloupce hodiny – dlaždice s předmětem a učebnou, dnešek zvýrazněný.
+struct EmptyHourCard: View {
+    let h: HourRef
+    var body: some View {
+        VStack(spacing: 2) {
+            Text(h.Caption).font(.system(size: 8, weight: .bold)).foregroundStyle(.white.opacity(0.3))
+            Spacer()
+            Text(h.BeginTime).font(.system(size: 8)).foregroundStyle(.white.opacity(0.2))
+        }
+        .padding(.vertical, 4)
+        .frame(width: 66, height: 78)
+        .background(Color.white.opacity(0.025), in: RoundedRectangle(cornerRadius: 9))
+        .overlay(RoundedRectangle(cornerRadius: 9).stroke(Color.white.opacity(0.06), style: StrokeStyle(lineWidth: 1, dash: [3, 3])))
+    }
+}
+
 struct WeekGrid: View {
     let t: Timetable
+    let hours: [HourRef]
     private let days = ["Po", "Út", "St", "Čt", "Pá"]
     private func lessonsFor(day: Int, hour: Int) -> [Lesson] {
         let g = AppSettings.shared.bakalariGroup
@@ -101,9 +123,8 @@ struct WeekGrid: View {
     }
     var body: some View {
         let today = (Calendar.current.component(.weekday, from: Date()) + 5) % 7
-        let hours = t.hours.filter { h in (0..<5).contains { !t.lessons(day: $0, hourId: h.Id).isEmpty } }
         GeometryReader { g in
-            let rowH = max(14, (g.size.height - 10) / 5 - 2)
+            let rowH = max(14, (g.size.height - 12) / 5 - 2)
             VStack(spacing: 2) {
                 HStack(spacing: 3) {
                     Color.clear.frame(width: 22, height: 8)

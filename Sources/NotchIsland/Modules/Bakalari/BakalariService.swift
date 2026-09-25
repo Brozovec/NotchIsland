@@ -143,6 +143,12 @@ final class BakalariService: ObservableObject {
         return String(data: d, encoding: .utf8) ?? ""
     }
 
+    /// Všechny vyučovací hodiny 0–12 (časy z Bakalářů, jinak ze zvonění školy).
+    var allHours: [HourRef] {
+        let known = Dictionary(uniqueKeysWithValues: (timetable?.hours ?? []).map { ($0.Id, $0) })
+        return (0...12).map { known[$0] ?? SchoolHours.hourRef($0) }
+    }
+
     // MARK: dnešek
     struct TodayLesson: Identifiable, Equatable { let id: String; let hour: HourRef; let lesson: Lesson; let start: Date; let end: Date }
 

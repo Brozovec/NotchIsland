@@ -40,6 +40,10 @@ final class NotchState: ObservableObject {
 
     /// Šířka křídel po stranách notche ve sbaleném stavu.
     var wingWidth: CGFloat { compact == .none ? 0 : 74 }
+    /// Výška rozbaleného panelu – rozvrh potřebuje víc místa.
+    var expandedHeight: CGFloat { selectedTab == .bakalari ? 262 : geometry.expandedSize.height }
+    var expandedSize: CGSize { CGSize(width: geometry.expandedSize.width, height: expandedHeight) }
+    var expandedRect: CGRect { geometry.expandedRect(height: expandedHeight) }
     var collapsedSize: CGSize { CGSize(width: geometry.notchSize.width + 2 * wingWidth, height: geometry.notchSize.height) }
     var collapsedRect: CGRect { geometry.collapsedRect.insetBy(dx: -wingWidth, dy: 0) }
 }
@@ -157,7 +161,7 @@ final class NotchController {
             return e
         } as Any)
         monitors.append(NSEvent.addLocalMonitorForEvents(matching: [.leftMouseDown]) { [weak self] e in
-            if let self, self.state.isExpanded, self.geometry.expandedRect.contains(NSEvent.mouseLocation) { self.panel.makeKeyAndOrderFront(nil) }
+            if let self, self.state.isExpanded, self.state.expandedRect.contains(NSEvent.mouseLocation) { self.panel.makeKeyAndOrderFront(nil) }
             return e
         } as Any)
     }
@@ -179,7 +183,7 @@ final class NotchController {
     }
 
     private func handleMouseDown() {
-        if state.isExpanded, !geometry.expandedRect.contains(NSEvent.mouseLocation) { holdOpen = false; setExpanded(false) }
+        if state.isExpanded, !state.expandedRect.contains(NSEvent.mouseLocation) { holdOpen = false; setExpanded(false) }
     }
 
     private func setExpanded(_ expanded: Bool) {
