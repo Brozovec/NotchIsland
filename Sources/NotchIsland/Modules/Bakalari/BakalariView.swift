@@ -7,7 +7,7 @@ struct BakalariView: View {
     @State private var hovered: BakalariService.TodayLesson?
     var body: some View {
         let list = b.lessons(on: day)
-        VStack(spacing: 4) {
+        VStack(alignment: .leading, spacing: 4) {
             HStack(spacing: 8) {
                 Picker("", selection: $week) { Text(L("Dnes")).tag(false); Text(L("Týden")).tag(true) }.pickerStyle(.segmented).controlSize(.mini).frame(width: 110)
                 Button { day = Calendar.current.date(byAdding: .day, value: -1, to: day)! } label: { Image(systemName: "chevron.left").font(.system(size: 9, weight: .bold)) }.buttonStyle(.plain).foregroundStyle(.white.opacity(0.6))
@@ -44,9 +44,12 @@ struct BakalariView: View {
                         }
                     }
                 }
+                .frame(height: 80)
                 .animation(.easeOut(duration: 0.12), value: hovered?.id)
             }
+            Spacer(minLength: 0)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
     }
 }
 

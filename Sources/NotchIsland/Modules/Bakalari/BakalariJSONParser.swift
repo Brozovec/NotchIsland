@@ -25,6 +25,14 @@ enum BakalariJSONParser {
         guard let root = extract(html: html), let days = root["Days"] as? [[String: Any]] else { return nil }
         var lessons: [RemoteLesson] = []
         var hours: [Int: HourRef] = [:]
+        // Horní seznam hodin: pořadí = číslo hodiny (0., 1., …) s reálnými časy. Interní Index v Days je posunutý (+2).
+        var captionByBegin: [String: Int] = [:]
+        for (i, h) in (root["Hours"] as? [[String: Any]] ?? []).enumerated() {
+            let cap = Int(h["Caption"] as? String ?? "") ?? i
+            let b = h["BeginTime"] as? String ?? "", e = h["EndTime"] as? String ?? ""
+            hours[cap] = HourRef(Id: cap, Caption: "\(cap)", BeginTime: b, EndTime: e)
+            captionByBegin[b] = cap
+        }
         var weekStart: Date?
         let df = DateFormatter(); df.dateFormat = "d.M.yyyy"; df.timeZone = TimeZone(identifier: "Europe/Prague")
         func hm(_ s: String?) -> String { guard let s else { return "" }; let p = s.split(separator: ":"); return p.count >= 2 ? "\(Int(p[0]) ?? 0):\(p[1])" : s }
@@ -35,8 +43,10 @@ enum BakalariJSONParser {
                 weekStart = df.date(from: t)
             }
             for hour in day["Hours"] as? [[String: Any]] ?? [] {
-                guard let idx = hour["Index"] as? Int else { continue }
-                if hours[idx] == nil { hours[idx] = HourRef(Id: idx, Caption: "\(idx)", BeginTime: hm(hour["Begin"] as? String), EndTime: hm(hour["End"] as? String)) }
+                guard let rawIdx = hour["Index"] as? Int else { continue }
+                let begin = hm(hour["Begin"] as? String)
+                let idx = captionByBegin[begin] ?? (rawIdx - 2)   // číslo hodiny podle času, jinak posun -2
+                if hours[idx] == nil { hours[idx] = HourRef(Id: idx, Caption: "\(idx)", BeginTime: begin, EndTime: hm(hour["End"] as? String)) }
                 let hourType = (hour["Type"] as? String ?? "").lowercased()
                 let infoRemoved = hour["InfoRemoved"] as? String
                 let atoms = hour["Atoms"] as? [[String: Any]] ?? []
