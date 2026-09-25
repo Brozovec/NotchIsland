@@ -23,6 +23,7 @@ struct NotchRootView: View {
                 }
             }
             .frame(width: size.width, height: size.height)
+            .clipShape(NotchShape(bottomRadius: state.isExpanded ? 26 : 12, topRadius: state.isExpanded ? 12 : 6))
             .animation(.spring(response: 0.45, dampingFraction: 0.82), value: state.compact)
             .contentShape(Rectangle())
             Spacer(minLength: 0)

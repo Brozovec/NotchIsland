@@ -88,7 +88,7 @@ struct SchoolStateLine: View {
     }
 }
 
-/// Celý týden: řádky dny, sloupce hodiny.
+/// Celý týden: řádky dny, sloupce hodiny – dlaždice s předmětem a učebnou, dnešek zvýrazněný.
 struct WeekGrid: View {
     let t: Timetable
     private let days = ["Po", "Út", "St", "Čt", "Pá"]
@@ -101,21 +101,79 @@ struct WeekGrid: View {
     }
     var body: some View {
         let today = (Calendar.current.component(.weekday, from: Date()) + 5) % 7
-        VStack(spacing: 2) {
-            HStack(spacing: 2) {
-                Text("").frame(width: 18)
-                ForEach(t.hours, id: \.Id) { h in Text(h.Caption).font(.system(size: 7, weight: .bold)).foregroundStyle(.white.opacity(0.4)).frame(maxWidth: .infinity) }
-            }
-            ForEach(0..<5, id: \.self) { d in
-                HStack(spacing: 2) {
-                    Text(days[d]).font(.system(size: 7, weight: .bold)).foregroundStyle(d == today ? .cyan : .white.opacity(0.5)).frame(width: 18)
-                    ForEach(t.hours, id: \.Id) { h in
-                        WeekCell(lessons: lessonsFor(day: d, hour: h.Id), isToday: d == today)
+        let hours = t.hours.filter { h in (0..<5).contains { !t.lessons(day: $0, hourId: h.Id).isEmpty } }
+        GeometryReader { g in
+            let rowH = max(14, (g.size.height - 10) / 5 - 2)
+            VStack(spacing: 2) {
+                HStack(spacing: 3) {
+                    Color.clear.frame(width: 22, height: 8)
+                    ForEach(hours, id: \.Id) { h in
+                        Text(h.Caption).font(.system(size: 7, weight: .bold)).foregroundStyle(.white.opacity(0.4)).frame(maxWidth: .infinity)
+                    }
+                }.frame(height: 8)
+                ForEach(0..<5, id: \.self) { d in
+                    HStack(spacing: 3) {
+                        Text(days[d]).font(.system(size: 8, weight: .bold)).foregroundStyle(d == today ? .cyan : .white.opacity(0.5))
+                            .frame(width: 22, height: rowH)
+                            .background(d == today ? Color.cyan.opacity(0.15) : .clear, in: RoundedRectangle(cornerRadius: 5))
+                        ForEach(hours, id: \.Id) { h in WeekCell(lessons: lessonsFor(day: d, hour: h.Id), isToday: d == today, height: rowH) }
                     }
                 }
             }
         }
     }
+}
+
+struct WeekCell: View {
+    let lessons: [Lesson]
+    let isToday: Bool
+    let height: CGFloat
+    private func bg(_ l: Lesson) -> Color {
+        if l.isCancelled { return Color.red.opacity(0.14) }
+        if l.isChanged { return Color.orange.opacity(0.22) }
+        return Color.white.opacity(isToday ? 0.16 : 0.09)
+    }
+    private var tip: String {
+        lessons.map { l in
+            var t = "\(l.groupAbbrev.map { "\($0) " } ?? "")\(l.subjectName.isEmpty ? l.subjectAbbrev : l.subjectName) · \(l.roomFull ?? l.roomAbbrev ?? "") · \(l.teacherFull ?? l.teacherAbbrev ?? "")"
+            if let th = l.theme, !th.isEmpty { t += " · \(th)" }
+            if let c = l.changeDescription { t += " · \(c)" }
+            return t
+        }.joined(separator: "\n")
+    }
+    var body: some View {
+        VStack(spacing: 1) {
+            if lessons.isEmpty {
+                RoundedRectangle(cornerRadius: 4).fill(Color.white.opacity(0.03)).frame(maxWidth: .infinity, maxHeight: .infinity)
+            } else {
+                ForEach(lessons.prefix(2)) { l in
+                    let multi = lessons.count > 1
+                    HStack(spacing: 2) {
+                        Text(l.subjectAbbrev).font(.system(size: multi ? 7 : 9, weight: .bold))
+                            .foregroundStyle(l.isCancelled ? .white.opacity(0.4) : .white).strikethrough(l.isCancelled, color: .red).lineLimit(1)
+                        if !multi || height > 30 {
+                            Text(l.isCancelled ? "×" : (l.roomAbbrev ?? "")).font(.system(size: multi ? 6 : 7, weight: .semibold))
+                                .foregroundStyle(l.isCancelled ? .red : (l.roomChanged ? .orange : .cyan)).lineLimit(1)
+                        }
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .background(bg(l), in: RoundedRectangle(cornerRadius: 4))
+                    .overlay(RoundedRectangle(cornerRadius: 4).stroke(l.isCancelled ? Color.red.opacity(0.5) : (l.isChanged ? Color.orange.opacity(0.5) : .clear), style: StrokeStyle(lineWidth: 1, dash: l.isCancelled ? [2, 2] : [])))
+                }
+            }
+        }
+        .frame(height: height)
+        .help(tip)
+    }
+}
+
+extension Lesson {
+    /// Suplování / změna zmiňuje jinou učebnu než původní → zvýraznit učebnu.
+    var roomChanged: Bool {
+        guard isChanged, let c = changeDescription, let r = roomAbbrev, !r.isEmpty else { return false }
+        return c.contains(r)
+    }
+    var badge: String? { isCancelled ? "×" : (state == .added ? "+" : (isChanged ? "S" : nil)) }
 }
 
 /// Seskupí hodiny podle vyučovací hodiny (skupiny / semináře ve stejný čas).
@@ -129,64 +187,58 @@ struct LessonCard: View {
     let l: BakalariService.TodayLesson
     var split = 1   // kolik hodin sdílí stejný čas (1 = celá karta, 2+ = půlené)
     private var isNow: Bool { l.start <= Date() && l.end > Date() }
+    private var x: Lesson { l.lesson }
+    private var bg: Color {
+        if x.isCancelled { return Color.red.opacity(0.14) }
+        if isNow { return Color.green.opacity(0.22) }
+        if x.isChanged { return Color.orange.opacity(0.2) }
+        return Color.white.opacity(0.07)
+    }
+    private var border: Color {
+        if x.isCancelled { return Color.red.opacity(0.5) }
+        if isNow { return Color.green.opacity(0.6) }
+        if x.isChanged { return Color.orange.opacity(0.5) }
+        return .clear
+    }
+    private var badgeColor: Color { x.isCancelled ? .red : (x.state == .added ? .green : .orange) }
     var body: some View {
         let compact = split > 1
         VStack(spacing: compact ? 0 : 2) {
             if !compact { Text(l.hour.Caption).font(.system(size: 8, weight: .bold)).foregroundStyle(.white.opacity(0.4)) }
-            HStack(spacing: 3) {
-                if compact, let g = l.lesson.groupAbbrev { Text(g).font(.system(size: 7)).foregroundStyle(.white.opacity(0.5)) }
-                Text(l.lesson.subjectAbbrev).font(.system(size: compact ? 11 : 13, weight: .bold)).foregroundStyle(l.lesson.isCancelled ? .white.opacity(0.35) : .white).strikethrough(l.lesson.isCancelled)
-            }
-            HStack(spacing: 4) {
-                Text(l.lesson.roomAbbrev ?? "–").font(.system(size: compact ? 9 : 10, weight: .semibold)).foregroundStyle(.cyan.opacity(l.lesson.isCancelled ? 0.4 : 1))
-                if compact { Text(l.lesson.teacherAbbrev ?? "").font(.system(size: 8)).foregroundStyle(.white.opacity(0.5)).lineLimit(1) }
+            titleRow(compact: compact)
+            if x.isCancelled {
+                Text(L("Zrušeno")).font(.system(size: compact ? 8 : 9, weight: .semibold)).foregroundStyle(.red)
+            } else {
+                HStack(spacing: 4) {
+                    Text(x.roomAbbrev ?? "–").font(.system(size: compact ? 9 : 10, weight: .bold)).foregroundStyle(x.roomChanged ? Color.orange : Color.cyan)
+                    if compact { Text(x.teacherAbbrev ?? "").font(.system(size: 8)).foregroundStyle(.white.opacity(0.5)).lineLimit(1) }
+                }
             }
             if !compact {
-                Text(l.lesson.teacherAbbrev ?? "").font(.system(size: 8)).foregroundStyle(.white.opacity(0.5)).lineLimit(1)
-                Text("\(l.hour.BeginTime)").font(.system(size: 8)).foregroundStyle(.white.opacity(0.4))
+                Text(x.teacherAbbrev ?? "").font(.system(size: 8)).foregroundStyle(.white.opacity(0.5)).lineLimit(1)
+                Text(l.hour.BeginTime).font(.system(size: 8)).foregroundStyle(.white.opacity(0.4))
             }
         }
         .frame(width: 66).frame(maxHeight: .infinity)
-        .background(isNow ? Color.green.opacity(0.22) : (l.lesson.isChanged ? Color.orange.opacity(0.18) : Color.white.opacity(0.06)), in: RoundedRectangle(cornerRadius: 9))
-        .overlay(RoundedRectangle(cornerRadius: 9).stroke(isNow ? Color.green.opacity(0.6) : .clear, lineWidth: 1))
+        .background(bg, in: RoundedRectangle(cornerRadius: 9))
+        .overlay(RoundedRectangle(cornerRadius: 9).stroke(border, style: StrokeStyle(lineWidth: 1, dash: x.isCancelled ? [3, 2] : [])))
+        .overlay(alignment: .topLeading) { badgeView }
         .overlay(alignment: .topTrailing) {
-            if let n = l.lesson.notice, !n.isEmpty { Circle().fill(Color.yellow).frame(width: 5, height: 5).padding(4) }
+            if let n = x.notice, !n.isEmpty { Circle().fill(Color.yellow).frame(width: 5, height: 5).padding(4) }
         }
     }
-}
-
-struct WeekCell: View {
-    let lessons: [Lesson]
-    let isToday: Bool
-    private func bg(_ l: Lesson?) -> Color {
-        guard let l else { return Color.white.opacity(0.03) }
-        if l.isChanged { return Color.orange.opacity(0.25) }
-        return Color.white.opacity(isToday ? 0.14 : 0.08)
-    }
-    private var tip: String {
-        lessons.map { l in
-            var t = "\(l.groupAbbrev.map { "\($0) " } ?? "")\(l.subjectName) · \(l.roomAbbrev ?? "") · \(l.teacherAbbrev ?? "")"
-            if let c = l.changeDescription { t += " · \(c)" }
-            return t
-        }.joined(separator: "\n")
-    }
-    var body: some View {
-        VStack(spacing: 1) {
-            if lessons.isEmpty {
-                Color.clear.frame(maxWidth: .infinity).frame(height: 15).background(bg(nil), in: RoundedRectangle(cornerRadius: 3))
-            } else {
-                ForEach(lessons.prefix(3)) { l in
-                    Text(l.subjectAbbrev)
-                        .font(.system(size: lessons.count > 1 ? 6.5 : 8, weight: .semibold))
-                        .foregroundStyle(l.isCancelled ? Color.white.opacity(0.3) : Color.white)
-                        .strikethrough(l.isCancelled)
-                        .frame(maxWidth: .infinity)
-                        .frame(height: lessons.count > 1 ? 7 : 15)
-                        .background(bg(l), in: RoundedRectangle(cornerRadius: 2))
-                }
-            }
+    private func titleRow(compact: Bool) -> some View {
+        HStack(spacing: 3) {
+            if compact, let g = x.groupAbbrev { Text(g).font(.system(size: 7)).foregroundStyle(.white.opacity(0.5)) }
+            Text(x.subjectAbbrev).font(.system(size: compact ? 11 : 13, weight: .bold))
+                .foregroundStyle(x.isCancelled ? Color.white.opacity(0.45) : Color.white)
+                .strikethrough(x.isCancelled, color: .red)
         }
-        .frame(height: 15)
-        .help(tip)
+    }
+    @ViewBuilder private var badgeView: some View {
+        if let b = x.badge {
+            Text(b).font(.system(size: 7, weight: .black)).foregroundStyle(.white).frame(width: 11, height: 11)
+                .background(badgeColor, in: RoundedRectangle(cornerRadius: 3)).padding(3)
+        }
     }
 }

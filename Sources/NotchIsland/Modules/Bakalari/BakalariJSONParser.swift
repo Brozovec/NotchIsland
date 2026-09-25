@@ -52,6 +52,18 @@ enum BakalariJSONParser {
                 }
                 for a in atoms {
                     let change = a["ChangeInfo"] as? String ?? ""
+                    let atomTypeRaw = (a["Type"] as? String ?? "atom").lowercased()
+                    if atomTypeRaw == "removed" {
+                        // "Zrušeno (NJ, Šmejkal Petr)" → předmět NJ, učitel
+                        var subj = "", teacher: String? = nil
+                        if let m = change.range(of: #"\(([^,)]+)(?:,\s*([^)]+))?\)"#, options: .regularExpression) {
+                            let inner = change[m].dropFirst().dropLast().split(separator: ",", maxSplits: 1).map { $0.trimmingCharacters(in: .whitespaces) }
+                            subj = inner.first ?? ""; if inner.count > 1 { teacher = inner[1] }
+                        }
+                        lessons.append(RemoteLesson(day: dayIndex, hour: idx, subject: subj, subjectAbbreviation: subj, teacher: teacher, type: "removed",
+                                                    changed: true, changeInfo: .init(raw: change, description: change.isEmpty ? "Zrušeno" : change), teacherFull: teacher))
+                        continue
+                    }
                     let code = (a["InfoChangeCode"] as? Int) ?? 0   // 2 = beze změny, 1 = suplování/změna
                     let atomType = (a["Type"] as? String ?? "atom").lowercased()
                     var type = "atom"
