@@ -55,7 +55,8 @@ final class SystemNowPlaying: @unchecked Sendable {
     }
 
     private func handle(_ line: Data) {
-        guard let j = try? JSONSerialization.jsonObject(with: line) as? [String: Any] else { return }
+        guard var j = try? JSONSerialization.jsonObject(with: line) as? [String: Any] else { return }
+        if let p = j["payload"] as? [String: Any] { j = p }   // stream: {"type":"data","payload":{...}}
         lock.lock(); defer { lock.unlock() }
         lastLine = Date()
         // stream posílá i prázdné/nulové payloady, když nic nehraje
