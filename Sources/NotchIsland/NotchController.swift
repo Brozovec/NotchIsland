@@ -63,6 +63,8 @@ final class NotchController {
     private var monitors: [Any] = []
     private var collapseWork: DispatchWorkItem?
     private var pollTimer: Timer?
+    /// Otevřeno zkratkou: nesbalovat, dokud myš nepřijde a zase neodejde (nebo klik mimo / Esc).
+    private var holdOpen = false
     private let cursorOverlay = NotchCursorOverlay()
     private var bag = Set<AnyCancellable>()
 
@@ -92,9 +94,14 @@ final class NotchController {
     /// Otevře panel na dané záložce (globální zkratka).
     func open(tab: NotchTab) {
         state.selectedTab = tab
-        if !state.isExpanded { setExpanded(true) }
+        holdOpen = true
         collapseWork?.cancel(); collapseWork = nil
+        if !state.isExpanded { setExpanded(true) }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in self?.panel.makeKeyAndOrderFront(nil) }
     }
+
+    /// Zavře panel (Esc, výběr položky).
+    func close() { holdOpen = false; if state.isExpanded { setExpanded(false) } }
 
     func show() {
         syncWindowFrame()
@@ -132,6 +139,10 @@ final class NotchController {
         }
         let down: (NSEvent) -> Void = { [weak self] _ in Task { @MainActor in self?.handleMouseDown() } }
         if let m = NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseDown, .rightMouseDown], handler: down) { monitors.append(m) }
+        monitors.append(NSEvent.addLocalMonitorForEvents(matching: [.keyDown]) { [weak self] e in
+            if e.keyCode == 53, let self, self.state.isExpanded { self.close(); return nil }
+            return e
+        } as Any)
         monitors.append(NSEvent.addLocalMonitorForEvents(matching: [.leftMouseDown]) { [weak self] e in
             if let self, self.state.isExpanded, self.geometry.expandedRect.contains(NSEvent.mouseLocation) { self.panel.makeKeyAndOrderFront(nil) }
             return e
@@ -145,8 +156,9 @@ final class NotchController {
         hotRect.size.height += 200
         if hotRect.contains(p) {
             collapseWork?.cancel(); collapseWork = nil
+            holdOpen = false   // myš dorazila – dál platí normální chování
             if !state.isExpanded { setExpanded(true) }
-        } else if state.isExpanded, collapseWork == nil {
+        } else if state.isExpanded, collapseWork == nil, !holdOpen {
             let work = DispatchWorkItem { [weak self] in self?.collapseWork = nil; self?.setExpanded(false) }
             collapseWork = work
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: work)
@@ -154,7 +166,7 @@ final class NotchController {
     }
 
     private func handleMouseDown() {
-        if state.isExpanded, !geometry.expandedRect.contains(NSEvent.mouseLocation) { setExpanded(false) }
+        if state.isExpanded, !geometry.expandedRect.contains(NSEvent.mouseLocation) { holdOpen = false; setExpanded(false) }
     }
 
     private func setExpanded(_ expanded: Bool) {

@@ -15,6 +15,8 @@ struct ClipItem: Identifiable, Codable, Equatable {
 @MainActor
 final class ClipboardService: ObservableObject {
     static let shared = ClipboardService()
+    /// Zavře notch po výběru položky (nastaví controller).
+    static var closePanel: (() -> Void)?
     @Published private(set) var items: [ClipItem] = []
     @Published var query = ""
     private var timer: Timer?

@@ -23,6 +23,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         controller = NotchController()
         controller?.show()
         ScreenshotService.shared.openClipboard = { [weak self] in self?.controller?.open(tab: .clipboard) }
+        ClipboardService.closePanel = { [weak self] in self?.controller?.close() }
         setupStatusItem()
     }
 

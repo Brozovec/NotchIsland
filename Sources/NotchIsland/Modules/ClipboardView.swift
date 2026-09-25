@@ -57,7 +57,7 @@ struct ClipRow: View {
         .onTapGesture {
             c.copy(it)
             withAnimation(.easeOut(duration: 0.15)) { flash = true }
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { withAnimation { flash = false } }
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.35) { withAnimation { flash = false }; ClipboardService.closePanel?() }
         }
         .help(it.text.prefix(300).description)
     }
