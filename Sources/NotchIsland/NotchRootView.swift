@@ -156,10 +156,9 @@ struct ExpandedContent: View {
                 Color.clear.frame(width: state.geometry.notchSize.width)
                 HStack(spacing: 6) {
                     Spacer(minLength: 0)
-                    Button { withAnimation(.easeOut(duration: 0.15)) { state.selectedTab = .settings } } label: {
-                        Image(systemName: "gearshape.fill").font(.system(size: 11, weight: .semibold))
-                            .foregroundStyle(state.selectedTab == .settings ? .white : .white.opacity(0.45))
-                    }.buttonStyle(.plain)
+                    Button { SettingsWindow.show(); NotchController.closeRequest?() } label: {
+                        Image(systemName: "gearshape.fill").font(.system(size: 11, weight: .semibold)).foregroundStyle(.white.opacity(0.45))
+                    }.buttonStyle(.plain).help(L("Nastavení"))
                 }
                 .padding(.leading, 14).padding(.trailing, 14)
                 .frame(width: wing)

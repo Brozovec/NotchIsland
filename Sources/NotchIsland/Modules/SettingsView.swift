@@ -6,9 +6,9 @@ struct SettingsView: View {
     @State private var bkPassword = Keychain.read("bakalariPassword")
     @ObservedObject var bk = BakalariService.shared
     var body: some View {
-        ScrollView(showsIndicators: false) {
-            HStack(alignment: .top, spacing: 8) {
-              VStack(spacing: 6) {
+        ScrollView(showsIndicators: true) {
+            HStack(alignment: .top, spacing: 10) {
+              VStack(spacing: 8) {
                 section(L("Doprava")) {
                     field(L("Golemio token"), $s.golemioToken, secure: true)
                     note(L("S tokenem jdou odjezdy PID rychleji přes API, bez něj z veřejných dat (1× denně ~50 MB). RegioJet/FlixBus z jejich webu."))

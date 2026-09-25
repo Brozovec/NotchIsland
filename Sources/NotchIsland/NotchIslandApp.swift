@@ -27,6 +27,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         setupStatusItem()
     }
 
+    @objc private func openSettings() { Task { @MainActor in SettingsWindow.show() } }
+
     @objc private func openPrivacy() {
         NSWorkspace.shared.open(URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy")!)
     }
@@ -42,6 +44,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let menu = NSMenu()
         menu.addItem(withTitle: L("NotchIsland 0.1"), action: nil, keyEquivalent: "")
         menu.addItem(.separator())
+        menu.addItem(withTitle: L("Nastavení…"), action: #selector(openSettings), keyEquivalent: ",")
         menu.addItem(withTitle: L("Otevřít Soukromí a zabezpečení…"), action: #selector(openPrivacy), keyEquivalent: "")
         menu.addItem(withTitle: L("Ukončit"), action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q")
         item.menu = menu

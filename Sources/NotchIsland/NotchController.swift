@@ -66,6 +66,8 @@ enum NotchTab: String, CaseIterable, Identifiable {
 
 @MainActor
 final class NotchController {
+    /// Zavření panelu odjinud (např. po otevření okna nastavení).
+    static var closeRequest: (() -> Void)?
     private let geometry = NotchGeometry.detect()
     private let state: NotchState
     private let panel: NotchPanel
@@ -95,6 +97,7 @@ final class NotchController {
             }
         }.store(in: &bag)
         installMouseMonitors()
+        NotchController.closeRequest = { [weak self] in self?.close() }
         // rozběhnout služby
         _ = ShelfService.shared; _ = TransitService.shared; _ = IntercityService.shared; _ = WeatherService.shared
         _ = CalendarService.shared; _ = ScreenshotService.shared; _ = DiscordRPC.shared; _ = ClipboardService.shared; _ = PowerService.shared; _ = BakalariService.shared
