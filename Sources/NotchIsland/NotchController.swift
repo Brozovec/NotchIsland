@@ -118,7 +118,7 @@ final class NotchController {
     }
 
     /// Zavře panel (Esc, výběr položky).
-    func close() { holdOpen = false; if state.isExpanded { setExpanded(false) } }
+    func close() { Log.w("collapse: close()"); holdOpen = false; if state.isExpanded { setExpanded(false) } }
 
     func show() {
         syncWindowFrame()
@@ -151,9 +151,11 @@ final class NotchController {
     private func installMouseMonitors() {
         // Polohu myši čteme přímo (30×/s) – události mouseMoved v oblasti výřezu nechodí spolehlivě
         // (kurzor pod kamerou macOS schovává), takže se panel dřív sbaloval, když jsi najel pod kameru.
-        pollTimer = Timer.scheduledTimer(withTimeInterval: 1.0 / 30, repeats: true) { [weak self] _ in
+        let t = Timer(timeInterval: 1.0 / 30, repeats: true) { [weak self] _ in
             Task { @MainActor in self?.handleMouseMoved() }
         }
+        RunLoop.main.add(t, forMode: .common)   // i během hoveru / tažení (event tracking mode)
+        pollTimer = t
         let down: (NSEvent) -> Void = { [weak self] _ in Task { @MainActor in self?.handleMouseDown() } }
         if let m = NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseDown, .rightMouseDown], handler: down) { monitors.append(m) }
         monitors.append(NSEvent.addLocalMonitorForEvents(matching: [.keyDown]) { [weak self] e in
@@ -176,14 +178,21 @@ final class NotchController {
             holdOpen = false   // myš dorazila – dál platí normální chování
             if !state.isExpanded { setExpanded(true) }
         } else if state.isExpanded, collapseWork == nil, !holdOpen {
-            let work = DispatchWorkItem { [weak self] in self?.collapseWork = nil; self?.setExpanded(false) }
+            let work = DispatchWorkItem { [weak self] in
+                guard let self else { return }
+                self.collapseWork = nil
+                // znovu ověřit – myš se mohla mezitím vrátit
+                var r = self.state.expandedRect.insetBy(dx: -24, dy: -24); r.size.height += 200
+                guard !r.contains(NSEvent.mouseLocation), !self.holdOpen else { return }
+                self.setExpanded(false)
+            }
             collapseWork = work
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.3, execute: work)
         }
     }
 
     private func handleMouseDown() {
-        if state.isExpanded, !state.expandedRect.contains(NSEvent.mouseLocation) { holdOpen = false; setExpanded(false) }
+        if state.isExpanded, !state.expandedRect.contains(NSEvent.mouseLocation) { Log.w("collapse: click outside"); holdOpen = false; setExpanded(false) }
     }
 
     private func setExpanded(_ expanded: Bool) {
