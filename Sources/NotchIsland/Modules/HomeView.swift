@@ -4,11 +4,11 @@ import SwiftUI
 struct HomeView: View {
     var body: some View {
         HStack(spacing: 0) {
-            MusicPane().frame(width: 270)
+            MusicPane().frame(width: 300)
             divider
             CalendarPane().frame(maxWidth: .infinity)
             divider
-            WeatherTile().frame(width: 150)
+            WeatherTile().frame(width: 160)
         }
     }
     private var divider: some View { Rectangle().fill(Color.white.opacity(0.12)).frame(width: 1).padding(.vertical, 6).padding(.horizontal, 6) }

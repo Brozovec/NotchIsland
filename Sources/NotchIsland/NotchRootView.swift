@@ -137,7 +137,7 @@ struct ExpandedContent: View {
                 Image(systemName: tab.icon).font(.system(size: 10, weight: .bold))
                 if on { Text(tab.title).font(.system(size: 10, weight: .semibold)).fixedSize() }
             }
-            .padding(.horizontal, on ? 9 : 7).padding(.vertical, 4)
+            .padding(.horizontal, on ? 8 : 6).padding(.vertical, 4)
             .background(on ? Color.white.opacity(0.16) : .clear, in: Capsule())
             .foregroundStyle(on ? .white : .white.opacity(0.45))
         }
@@ -149,7 +149,7 @@ struct ExpandedContent: View {
         VStack(spacing: 6) {
             HStack(spacing: 0) {
                 // všechny záložky v levém křídle, pod kamerou nic
-                HStack(spacing: 5) { ForEach(NotchTab.pills) { tabPill($0) } }
+                HStack(spacing: 4) { ForEach(NotchTab.pills) { tabPill($0) } }
                     .padding(.leading, 12)
                     .frame(width: wing, alignment: .leading)
                     .clipped()
