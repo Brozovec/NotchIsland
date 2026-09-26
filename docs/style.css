@@ -69,3 +69,10 @@ img{max-width:100%;height:auto}
   .btn{padding:11px 16px;font-size:14px}
 }
 @media (max-width:400px){.notch .wx{display:none}.eq{display:none}}
+
+/* screenshoty na mobilu: posouvat vodorovně místo zmenšení na nečitelno */
+@media (max-width:640px){
+  .shots figure{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .shots figure img{min-width:760px}
+  .shots figcaption{position:sticky;left:0}
+}
