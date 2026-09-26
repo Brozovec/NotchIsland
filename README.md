@@ -11,7 +11,7 @@
 
 <p align="center"><a href="#english">English</a> · <a href="#česky">Česky</a> · <a href="https://notchisland.brozovec.eu/">Website</a> · <a href="https://github.com/Brozovec/NotchIsland/releases/latest">Download DMG</a></p>
 
-<p align="center"><img src="docs/og-image.png" width="900" alt="NotchIsland"></p>
+<p align="center"><img src="docs/promo/banner-1600x900.jpg" width="900" alt="NotchIsland – your MacBook notch, finally useful"></p>
 
 <p align="center">
   <img src="docs/demo/home.png" width="900" alt="Island tab: now playing from the browser, calendar strip and weather"><br>
