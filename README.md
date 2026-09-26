@@ -6,7 +6,7 @@
 
 <p align="center">
   Turns the MacBook notch into a Dynamic Island. Music, files, live transit, calls, weather, calendar, screenshots and quick notes, all one hover away.<br>
-  <b>Created by Adam Brož</b> · macOS 14+ · Swift / SwiftUI · MIT
+  <b>Created by Adam Brož</b> · macOS 14+ · Swift / SwiftUI · Source-available, attribution required
 </p>
 
 <p align="center"><a href="#english">English</a> · <a href="#česky">Česky</a> · <a href="https://notchisland.brozovec.eu/">Website</a> · <a href="https://github.com/Brozovec/NotchIsland/releases/latest">Download DMG</a></p>
@@ -185,4 +185,4 @@ Plný efekt vyžaduje Mac s výřezem; na ostatních se vykreslí malý ostrůve
 
 ---
 
-<p align="center">Made with ❤️ in Prague by <b>Adam Brož</b></p>
+<p align="center">Made with ❤️ in Prague by <b>Adam Brož</b> · <a href="LICENSE">License</a></p>

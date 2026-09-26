@@ -15,7 +15,7 @@
     <key>CFBundleDevelopmentRegion</key><string>cs</string>
     <key>CFBundleLocalizations</key><array><string>cs</string><string>en</string><string>de</string><string>sk</string><string>pl</string></array>
     <key>LSApplicationCategoryType</key><string>public.app-category.utilities</string>
-    <key>NSHumanReadableCopyright</key><string>© 2026 Adam Brož. MIT License.</string>
+    <key>NSHumanReadableCopyright</key><string>© 2026 Adam Brož. Custom Attribution License.</string>
     <key>NSHighResolutionCapable</key><true/>
     <key>NSLocationUsageDescription</key><string>NotchIsland zobrazuje počasí pro místo, kde právě jsi.</string>
     <key>NSLocationWhenInUseUsageDescription</key><string>NotchIsland zobrazuje počasí pro místo, kde právě jsi.</string>
