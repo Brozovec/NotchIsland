@@ -1,21 +1,81 @@
-MIT License
+CUSTOM ATTRIBUTION LICENSE
 
 Copyright (c) 2026 Adam Brož
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to use, run, study, and modify the Software, subject to the following conditions:
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+1. ATTRIBUTION
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+The original author of the Software, Adam Brož, must always be clearly credited.
+
+Any copy, modified version, derivative work, deployment, website, application, repository, or other project substantially based on the Software must contain a clear and reasonably visible notice stating:
+
+"Originally created by Adam Brož"
+
+or an equivalent attribution that clearly identifies Adam Brož as the original author.
+
+The original copyright notice and this license must be retained in all copies or substantial portions of the Software.
+
+2. MODIFICATIONS
+
+You are permitted to modify, extend, adapt, and build upon the Software.
+
+Modified versions must clearly state that they are based on the original Software created by Adam Brož.
+
+Modifications must not be represented as an entirely original work if they contain substantial portions of the original Software.
+
+3. NO MISREPRESENTATION OF AUTHORSHIP
+
+You may not claim, imply, or represent that you are the original author or creator of the Software.
+
+You may not remove, hide, alter, or intentionally obscure copyright notices, author information, attribution notices, or references identifying Adam Brož as the original author.
+
+4. REDISTRIBUTION
+
+You may not redistribute, republish, mirror, re-upload, or otherwise reproduce the Software, or a substantially identical copy of the Software, as your own independent project without explicit written permission from Adam Brož.
+
+Distribution of modified or derivative versions is permitted only when:
+
+(a) Adam Brož is clearly identified as the original author;
+
+(b) this license and the original copyright notice are included;
+
+(c) the modifications are clearly identified as modifications or derivative work; and
+
+(d) the Software is not presented or marketed as being originally created entirely by another person or organization.
+
+5. NO REBRANDING AS ORIGINAL WORK
+
+You may not rename, rebrand, package, publish, or distribute the Software in a manner intended to conceal its origin or make users believe that the original Software was created by someone other than Adam Brož.
+
+Creating a fork or derivative project is permitted, provided that the original authorship remains clearly disclosed.
+
+6. COMMERCIAL USE
+
+Commercial use of the Software is permitted, provided that all conditions of this license, including the attribution requirements, are followed.
+
+Commercial use does not grant permission to claim ownership or original authorship of the Software.
+
+7. COPYRIGHT OWNERSHIP
+
+This license does not transfer ownership of the copyright.
+
+Adam Brož remains the copyright holder and original author of the Software and its original source code.
+
+Copyright in modifications independently created by other contributors remains with their respective authors, without affecting Adam Brož's copyright in the original Software.
+
+8. WARRANTY DISCLAIMER
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+
+IN NO EVENT SHALL THE AUTHOR OR COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+9. TERMINATION
+
+Any violation of the conditions of this license automatically terminates the permissions granted under this license.
+
+Upon termination, the violating party must cease distribution and use of the Software unless explicit written permission is subsequently granted by Adam Brož.
+
+10. ADDITIONAL PERMISSIONS
+
+Additional permissions, including permission to redistribute the Software without the restrictions described above, may be granted separately in writing by Adam Brož.
