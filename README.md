@@ -15,10 +15,10 @@
 
 <p align="center">
   <img src="docs/demo/home.png" width="900" alt="Island tab: now playing from the browser, calendar strip and weather"><br>
-  <img src="docs/screenshot-transit.png" width="900" alt="Connection search Prague → Brno with FlixBus results, prices and live delay"><br>
+  <img src="docs/demo/transit.png" width="900" alt="Connection search Prague → Brno with FlixBus results, prices and live delay"><br>
   <img src="docs/demo/clipboard.png" width="900" alt="Clipboard history"><br>
-  <img src="docs/screenshot-calls.png" width="900" alt="Calls tab: microphone status and running meeting apps"><br>
-  <img src="docs/screenshot-timer.png" width="900" alt="Timer and Pomodoro tab">
+  <img src="docs/demo/calls.png" width="900" alt="Calls tab: microphone status and running meeting apps"><br>
+  <img src="docs/demo/timer.png" width="900" alt="Timer and Pomodoro tab">
 </p>
 
 <p align="center">👉 Interactive demo at <a href="https://notchisland.brozovec.eu/">notchisland.brozovec.eu</a></p>

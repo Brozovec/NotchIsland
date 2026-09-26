@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
-  <url><loc>https://notchisland.brozovec.eu/</loc><lastmod>2026-09-26</lastmod><changefreq>monthly</changefreq><priority>1.0</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://notchisland.brozovec.eu/"/><xhtml:link rel="alternate" hreflang="cs" href="https://notchisland.brozovec.eu/cs/"/></url>
-  <url><loc>https://notchisland.brozovec.eu/cs/</loc><lastmod>2026-09-26</lastmod><changefreq>monthly</changefreq><priority>0.9</priority>
-    <xhtml:link rel="alternate" hreflang="en" href="https://notchisland.brozovec.eu/"/><xhtml:link rel="alternate" hreflang="cs" href="https://notchisland.brozovec.eu/cs/"/></url>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://notchisland.brozovec.eu/</loc><lastmod>2026-09-26</lastmod><changefreq>monthly</changefreq><priority>1.0</priority></url>
 </urlset>

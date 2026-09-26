@@ -11,7 +11,7 @@ struct TransitView: View {
                     Button { withAnimation(.spring(response: 0.3, dampingFraction: 0.85)) { modeRaw = m.rawValue } } label: {
                         HStack(spacing: 5) {
                             FAIcon(m == .stop ? FA.tram : FA.bus, size: 9, brand: false)
-                            Text(m.rawValue)
+                            Text(L(m.rawValue))
                         }
                         .font(.system(size: 10, weight: .semibold)).frame(maxWidth: .infinity, alignment: .leading)
                         .padding(.horizontal, 8).padding(.vertical, 5)
@@ -326,8 +326,8 @@ struct ConnectionRow: View {
                     Text("+\(d) min").font(.system(size: 9, weight: .semibold)).foregroundStyle(.red)
                 }
                 HStack(spacing: 4) {
-                    if let f = c.freeSeats { Text(f == 0 ? L("vyprodáno") : "\(f) míst").foregroundStyle(f == 0 ? .red.opacity(0.9) : .white.opacity(0.5)) }
-                    if let p = c.price { Text("\(Int(p)) Kč").foregroundStyle(.white) }
+                    if let f = c.freeSeats { Text(f == 0 ? L("vyprodáno") : String(format: L("%d míst"), f)).foregroundStyle(f == 0 ? .red.opacity(0.9) : .white.opacity(0.5)) }
+                    if let p = c.price { Text("\(Int(p)) " + L("Kč")).foregroundStyle(.white) }
                 }.font(.system(size: 9))
             }
             Button(action: onBuy) { Image(systemName: "cart.fill").font(.system(size: 10)).foregroundStyle(.white.opacity(hover ? 0.9 : 0.35)) }.buttonStyle(.plain).help(L("Koupit jízdenku"))
