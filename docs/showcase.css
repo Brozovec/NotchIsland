@@ -32,3 +32,5 @@
 .hint{text-align:center;color:var(--muted);font-size:14px;margin-top:16px}
 .cursor{position:absolute;width:14px;height:20px;z-index:6;pointer-events:none;filter:drop-shadow(0 2px 3px rgba(0,0,0,.6));transition:top .9s ease-in-out,left .9s ease-in-out}
 @media (max-width:640px){.island.open{width:96%;height:200px}.pane{font-size:11px}.wxt{display:none}}
+
+@media (max-width:900px){.mac .menubar span:not(.r){display:none}.mac .menubar{justify-content:space-between}}

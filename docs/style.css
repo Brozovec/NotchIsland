@@ -37,3 +37,35 @@ footer{border-top:1px solid rgba(255,255,255,.06);padding:34px 0;color:var(--mut
 .card .ic{color:var(--accent);font-size:22px}
 .tabs button i{font-size:11px}.btn i{font-size:14px}
 .pane .tile{position:relative}
+
+/* --- responzivita --- */
+img{max-width:100%;height:auto}
+.shots figure img{width:100%;height:auto}
+.hero{padding:56px 0 32px}
+@media (max-width:900px){
+  .mac{aspect-ratio:auto;height:auto;min-height:0;padding-bottom:14px}
+  .mac .dock{display:none}
+  .island{position:relative;left:auto;transform:none;margin:26px auto 0;width:170px}
+  .island.compact{width:290px}
+  .island.open{width:min(760px,96%);height:auto;min-height:200px}
+  .island .body{position:relative;inset:auto}
+  .mac .menubar{position:relative}
+  .cursor{display:none!important}
+  .pane.on{flex-wrap:wrap}
+  .pane .tile{min-width:180px}
+}
+@media (max-width:640px){
+  .wrap{padding:0 14px}
+  nav{height:52px}nav .links{gap:10px;font-size:12px}nav .links a:nth-child(2),nav .links a:nth-child(3){display:none}
+  h1{font-size:34px}.sub{font-size:16px}h2{font-size:26px}
+  .notch{padding:14px 16px 18px;gap:12px}.notch .art{width:56px;height:56px}.notch .t b{font-size:15px}
+  .grid{grid-template-columns:1fr}
+  .steps div{padding-left:52px}
+  .shots figure{padding:0 8px 10px;border-radius:14px}.shots figure img{border-radius:0 0 14px 14px}
+  .cards{flex-wrap:wrap}.lc{width:46px;height:58px}
+  .pane .art{width:48px;height:48px}.ring{width:56px;height:56px;font-size:13px}
+  .tabs{flex-wrap:wrap;height:auto;row-gap:2px}
+  .island.open{min-height:0}
+  .btn{padding:11px 16px;font-size:14px}
+}
+@media (max-width:400px){.notch .wx{display:none}.eq{display:none}}
