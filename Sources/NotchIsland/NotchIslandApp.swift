@@ -25,6 +25,23 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         controller?.show()
         ScreenshotService.shared.openClipboard = { [weak self] in self?.controller?.open(tab: .clipboard) }
         ClipboardService.closePanel = { [weak self] in self?.controller?.close() }
+        // Skrytý ladicí režim (defaults write cz.adambroz.notchisland debugTriggers -bool true):
+        // distnoted "cz.adambroz.notchisland.debug" s objektem "open <tab>" | "close" | "capture" | "stop <zastávka>" | "route <odkud>|<kam>"
+        if UserDefaults.standard.bool(forKey: "debugTriggers") {
+            DistributedNotificationCenter.default().addObserver(forName: Notification.Name("cz.adambroz.notchisland.debug"), object: nil, queue: .main) { [weak self] n in
+                let parts = (n.object as? String ?? "").split(separator: " ", maxSplits: 1).map(String.init)
+                Task { @MainActor in
+                    switch parts.first {
+                    case "open": if let t = NotchTab(rawValue: parts.last ?? "") { self?.controller?.open(tab: t) }
+                    case "close": self?.controller?.close()
+                    case "capture": ScreenshotService.shared.capture(mode: .screen)
+                    case "stop": TransitService.shared.stopQuery = parts.last ?? ""; await TransitService.shared.refresh()
+                    case "route": let p = (parts.last ?? "").split(separator: "|").map(String.init); if p.count == 2 { IntercityService.shared.from = p[0]; IntercityService.shared.to = p[1]; await IntercityService.shared.search() }
+                    default: break
+                    }
+                }
+            }
+        }
         setupStatusItem()
     }
 

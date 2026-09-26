@@ -29,3 +29,11 @@ code{background:rgba(255,255,255,.08);padding:2px 6px;border-radius:6px;font-siz
 .faq details{background:var(--panel);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:4px 18px;margin-bottom:10px}.faq summary{cursor:pointer;font-weight:600;padding:12px 0}.faq p{color:var(--muted);margin:0 0 14px}
 footer{border-top:1px solid rgba(255,255,255,.06);padding:34px 0;color:var(--muted);font-size:14px;text-align:center}
 @media (max-width:640px){.notch{flex-wrap:wrap}.wx{display:none}nav .links{gap:12px;font-size:13px}}
+
+.notch img.art,.pane img.art,.wing img.art{object-fit:cover;box-shadow:0 6px 18px rgba(0,0,0,.5)}
+.shots figure{margin:0 0 22px;background:linear-gradient(#1a1f3a,#0b0e1c);border-radius:22px;padding:0 18px 12px;border:1px solid rgba(255,255,255,.07)}
+.shots figure img{margin:0;border:0;border-radius:0 0 26px 26px;box-shadow:0 24px 60px rgba(0,0,0,.55)}
+.shots figcaption{color:var(--muted);font-size:13px;padding:12px 4px 0;text-align:center}
+.card .ic{color:var(--accent);font-size:22px}
+.tabs button i{font-size:11px}.btn i{font-size:14px}
+.pane .tile{position:relative}

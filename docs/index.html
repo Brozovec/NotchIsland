@@ -19,7 +19,8 @@
 <meta property="og:image" content="https://notchisland.brozovec.eu/og-image.png"><meta property="og:image:width" content="1280"><meta property="og:image:height" content="640">
 <meta property="og:locale" content="en_US"><meta property="og:locale:alternate" content="cs_CZ">
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="NotchIsland – Dynamic Island for the MacBook notch"><meta name="twitter:description" content="Free, open-source Dynamic Island for macOS. Music, files, live transit, timetable, screenshots, clipboard, timer, weather."><meta name="twitter:image" content="https://notchisland.brozovec.eu/og-image.png">
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer">
+<link rel="stylesheet" href="style.css"><link rel="stylesheet" href="showcase.css">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[
 {"@type":"SoftwareApplication","name":"NotchIsland","applicationCategory":"UtilitiesApplication","operatingSystem":"macOS 14 or later","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"downloadUrl":"https://github.com/Brozovec/NotchIsland/releases/latest","softwareVersion":"1.0","license":"https://opensource.org/licenses/MIT","author":{"@type":"Person","name":"Adam Brož","url":"https://github.com/Brozovec"},"image":"https://notchisland.brozovec.eu/og-image.png","description":"Dynamic Island for the MacBook notch: now playing, file tray, live public transport, school timetable, screenshots with OCR, clipboard history, timer, weather and calendar."},
@@ -35,44 +36,88 @@
 <body>
 <header><div class="wrap"><nav>
 <a class="logo" href="./"><img src="icon.png" alt="">NotchIsland</a>
-<div class="links"><a href="#features">Features</a><a href="#install">Install</a><a href="#faq">FAQ</a><a href="https://github.com/Brozovec/NotchIsland">GitHub</a><a href="cs/" lang="cs">Česky</a></div>
+<div class="links"><a href="#demo">Demo</a><a href="#features">Features</a><a href="#install">Install</a><a href="#faq">FAQ</a><a href="https://github.com/Brozovec/NotchIsland">GitHub</a><a href="cs/" lang="cs">Česky</a></div>
 </nav></div></header>
 
 <main class="wrap">
 <section class="hero">
   <div class="notch" aria-hidden="true">
-    <div class="art"></div>
-    <div class="t"><b>Now Playing</b><span>Spotify · YouTube · Apple Music</span></div>
+    <img class="art" src="https://image-cdn-fa.spotifycdn.com/image/ab67616d00001e028863bc11d2aa12b54f5aeb36" alt="" width="72" height="72">
+    <div class="t"><b>Blinding Lights</b><span>The Weeknd · After Hours · <i class="fa-brands fa-spotify" style="color:#1db954"></i> Spotify</span></div>
     <div class="eq"><i></i><i></i><i></i><i></i></div>
     <div class="wx"><small>Prague</small><b>12°</b></div>
   </div>
   <h1>Your MacBook notch, finally useful.</h1>
   <p class="sub">NotchIsland turns the camera cutout into a Dynamic Island. Hover to expand: music, files, live transit, your timetable, screenshots, clipboard, a timer and the weather.</p>
-  <div class="cta"><a class="btn" href="https://github.com/Brozovec/NotchIsland/releases/latest">⬇ Download for macOS</a><a class="btn ghost" href="https://github.com/Brozovec/NotchIsland">View on GitHub</a></div>
+  <div class="cta"><a class="btn" href="https://github.com/Brozovec/NotchIsland/releases/latest"><i class="fa-solid fa-download"></i> Download for macOS</a><a class="btn ghost" href="https://github.com/Brozovec/NotchIsland"><i class="fa-brands fa-github"></i> View on GitHub</a></div>
   <p class="note">Free · Open source (MIT) · macOS 14+ · Apple Silicon &amp; Intel · Czech, English, German, Slovak, Polish</p>
+</section>
+
+
+<section id="demo">
+  <h2>See it in action</h2>
+  <p class="lead">Hover the notch below. Click the tabs. It's the real layout, rebuilt in HTML.</p>
+  <div class="mac">
+    <div class="wall"></div>
+    <div class="menubar"><b></b><span>Finder</span><span>File</span><span>Edit</span><span>View</span><span class="r">Mon 13:36</span></div>
+    <svg id="cursor" class="cursor" viewBox="0 0 14 20" style="left:50%;top:60%"><path d="M1 1l12 9-5 1 3 6-2 1-3-6-4 4z" fill="#fff" stroke="#000" stroke-width="1"/></svg>
+    <div class="island" id="island">
+      <div class="wing l"><img class="art" src="https://image-cdn-fa.spotifycdn.com/image/ab67616d00001e029c284a6855f4945dc5a3cd73" alt="" width="20" height="20"></div>
+      <div class="wing r"><div class="eqs"><i></i><i></i><i></i><i></i></div></div>
+      <div class="body">
+        <div class="tabs">
+          <button data-tab="island" class="on"><i class="fa-solid fa-house"></i> Island</button><button data-tab="tray"><i class="fa-solid fa-inbox"></i></button><button data-tab="doprava"><i class="fa-solid fa-train-subway"></i></button><button data-tab="hovory"><i class="fa-solid fa-phone"></i></button><button data-tab="shot"><i class="fa-solid fa-camera"></i></button><button data-tab="schranka"><i class="fa-solid fa-clipboard"></i></button><button data-tab="casovac"><i class="fa-solid fa-stopwatch"></i></button><button data-tab="rozvrh"><i class="fa-solid fa-graduation-cap"></i></button>
+          <span class="gear"><i class="fa-solid fa-gear"></i></span>
+        </div>
+        <div class="pane on" data-pane="island">
+          <img class="art" src="https://image-cdn-fa.spotifycdn.com/image/ab67616d00001e029c284a6855f4945dc5a3cd73" alt="" width="64" height="64">
+          <div class="tile"><b>Mr. Brightside</b><br><span style="color:#9a9aa6">The Killers · Hot Fuss</span><div style="display:flex;align-items:center;gap:14px;margin-top:8px"><i class="fa-solid fa-backward-step"></i><i class="fa-solid fa-pause"></i><i class="fa-solid fa-forward-step"></i><div class="eqs" style="margin:0 0 0 auto"><i></i><i></i><i></i><i></i></div></div><span style="position:absolute;left:58px;top:56px;background:#1db954;border-radius:6px;padding:2px 4px;font-size:10px"><i class="fa-brands fa-spotify"></i></span></div>
+          <div class="tile"><b>Sep</b> &nbsp;<span style="color:#9a9aa6">22 · 23 · 24 · </span><b style="color:#3b82f6">25</b><span style="color:#9a9aa6"> · 26</span><br><br><span style="color:#9a9aa6">Next: MAT · A315 · in 12 min</span></div>
+          <div class="wxt"><small>Prague</small><b>12°</b><small>Partly cloudy</small></div>
+        </div>
+        <div class="pane" data-pane="tray"><div class="tile" style="border:1px dashed rgba(255,255,255,.25);display:grid;place-items:center;color:#9a9aa6">Drop files here · drag them out later</div></div>
+        <div class="pane" data-pane="doprava"><div class="tile">
+          <div class="row"><span><span class="badge b-tram"><i class="fa-solid fa-train-subway"></i> 9</span> Sídliště Řepy</span><span class="ok">on time</span><b>2 min</b></div>
+          <div class="row"><span><span class="badge b-bus"><i class="fa-solid fa-bus"></i> 191</span> Na Knížecí</span><span class="late">+3′</span><b>5 min</b></div>
+          <div class="row"><span><span class="badge b-metro"><i class="fa-solid fa-m"></i> B</span> Černý Most</span><span class="ok">on time</span><b>7 min</b></div>
+        </div><div class="tile">
+          <div class="row"><span class="badge b-rj">RegioJet</span><span>15:00 → 17:25 · 2:25 h</span><b>199 Kč</b></div>
+          <div class="row"><span class="badge b-fb">FlixBus</span><span>15:30 → 18:05 · 2:35 h</span><b>249 Kč</b></div>
+        </div></div>
+        <div class="pane" data-pane="hovory"><div class="tile"><i class="fa-solid fa-microphone" style="color:#3fe36f"></i> <b>On a call</b> · Discord<br><span style="color:#9a9aa6">#general: Adam, Kuba, Tereza</span><div class="chips"><span><i class="fa-solid fa-microphone-slash"></i> Mute</span><span><i class="fa-solid fa-volume-xmark"></i> Deafen</span></div></div></div>
+        <div class="pane" data-pane="shot"><div class="tile"><div class="chips"><span>⌘⇧2 Area</span><span>⌘⇧1 Screen</span><span>⌘⇧7 Window</span><span>⌘⇧O OCR</span></div></div><div class="shot"></div><div class="shot"></div></div>
+        <div class="pane" data-pane="schranka"><div class="tile"><div class="row"><span><i class="fa-regular fa-file-lines" style="color:#9a9aa6"></i> https://github.com/Brozovec/NotchIsland</span><small>2 min</small></div><div class="row"><span><i class="fa-regular fa-file-lines" style="color:#9a9aa6"></i> dinner at 7?</span><small>10 min</small></div><div class="row"><span><i class="fa-regular fa-image" style="color:#9a9aa6"></i> Image 1200×800</span><small>1 h</small></div></div></div>
+        <div class="pane" data-pane="casovac"><div class="ring">24:59</div><div class="tile"><div class="chips"><span>5</span><span>10</span><span>25</span><span>45</span><span style="background:rgba(255,159,10,.35)"><i class="fa-solid fa-leaf"></i> Pomodoro</span></div><p style="color:#9a9aa6;margin:8px 0 0">Countdown runs beside the camera. Click to pause.</p></div></div>
+        <div class="pane" data-pane="rozvrh"><div class="tile"><div style="color:#ffb340;font-size:11px;margin-bottom:6px"><i class="fa-solid fa-mug-hot"></i> Break 20 min · next MAT (A315) in 14 min</div><div class="cards"><div class="lc"><b>ČJL</b><span class="rm">A103</span><span>8:00</span></div><div class="lc now"><b>PRG</b><span class="rm">A104</span><span>8:50</span></div><div class="lc"><b>PRG</b><span class="rm">A104</span><span>9:45</span></div><div class="lc x"><b>NJ</b><span>Cancelled</span></div><div class="lc s"><b>MAT</b><span class="rm" style="color:#ffb340">A315</span><span>11:40</span></div><div class="lc"><b>TV</b><span class="rm">SOK</span><span>12:35</span></div></div></div></div>
+      </div>
+    </div>
+    <div class="dock"><i style="--a:#5ac8fa;--b:#007aff"></i><i style="--a:#ff9f0a;--b:#ff375f"></i><i style="--a:#30d158;--b:#0a84ff"></i><i style="--a:#bf5af2;--b:#5e5ce6"></i><i style="--a:#ffd60a;--b:#ff9f0a"></i><i style="--a:#8e8e93;--b:#48484a"></i></div>
+  </div>
+  <p class="hint">This is a demo built from HTML. The real thing is one download away.</p>
 </section>
 
 <section id="features">
   <h2>Everything one hover away</h2>
   <p class="lead">Nine modules. Turn off the ones you don't need.</p>
   <div class="grid">
-    <div class="card"><div class="ic">🎵</div><h3>Now Playing</h3><p>Artwork, title, controls and an equalizer for Spotify, Apple Music and anything in a browser. While music plays, small wings appear beside the camera.</p></div>
-    <div class="card"><div class="ic">🗂️</div><h3>File tray</h3><p>Drop files onto the notch to park them, drag them out anywhere later.</p></div>
-    <div class="card"><div class="ic">🚋</div><h3>Live transit</h3><p>Prague (PID) departures with delays and vehicle tracking, plus a RegioJet / FlixBus search with prices, seats and live delay.</p></div>
-    <div class="card"><div class="ic">🎓</div><h3>School timetable</h3><p>Bakaláři timetable with rooms, substitutions and cancellations. Break countdown in the notch and a notification when a break starts.</p></div>
-    <div class="card"><div class="ic">📸</div><h3>Screenshots</h3><p>⌘⇧2 area, ⌘⇧1 screen, ⌘⇧O text recognition (OCR). Copied instantly; editor with arrows, blur and counters.</p></div>
-    <div class="card"><div class="ic">📋</div><h3>Clipboard history</h3><p>⌘⇧V shows the last 10 things you copied. Click pastes straight into the active app.</p></div>
-    <div class="card"><div class="ic">⏱️</div><h3>Timer &amp; Pomodoro</h3><p>Countdown beside the camera, click to pause. Pomodoro 25/5 with long breaks.</p></div>
-    <div class="card"><div class="ic">📞</div><h3>Calls</h3><p>Knows when Discord, Zoom, Teams or FaceTime use your mic. See who is in your Discord voice channel and mute from the notch.</p></div>
-    <div class="card"><div class="ic">🌤️</div><h3>Weather &amp; calendar</h3><p>Apple-Weather-style tile for your location and a calendar strip you scrub through by dragging.</p></div>
+    <div class="card"><div class="ic"><i class="fa-brands fa-spotify"></i></div><h3>Now Playing</h3><p>Artwork, title, controls and an equalizer for Spotify, Apple Music and anything in a browser. While music plays, small wings appear beside the camera.</p></div>
+    <div class="card"><div class="ic"><i class="fa-solid fa-inbox"></i>️</div><h3>File tray</h3><p>Drop files onto the notch to park them, drag them out anywhere later.</p></div>
+    <div class="card"><div class="ic"><i class="fa-solid fa-train-subway"></i></div><h3>Live transit</h3><p>Prague (PID) departures with delays and vehicle tracking, plus a RegioJet / FlixBus search with prices, seats and live delay.</p></div>
+    <div class="card"><div class="ic"><i class="fa-solid fa-graduation-cap"></i></div><h3>School timetable</h3><p>Bakaláři timetable with rooms, substitutions and cancellations. Break countdown in the notch and a notification when a break starts.</p></div>
+    <div class="card"><div class="ic"><i class="fa-solid fa-camera"></i></div><h3>Screenshots</h3><p>⌘⇧2 area, ⌘⇧1 screen, ⌘⇧O text recognition (OCR). Copied instantly; editor with arrows, blur and counters.</p></div>
+    <div class="card"><div class="ic"><i class="fa-solid fa-clipboard"></i></div><h3>Clipboard history</h3><p>⌘⇧V shows the last 10 things you copied. Click pastes straight into the active app.</p></div>
+    <div class="card"><div class="ic"><i class="fa-solid fa-stopwatch"></i>️</div><h3>Timer &amp; Pomodoro</h3><p>Countdown beside the camera, click to pause. Pomodoro 25/5 with long breaks.</p></div>
+    <div class="card"><div class="ic"><i class="fa-solid fa-phone"></i></div><h3>Calls</h3><p>Knows when Discord, Zoom, Teams or FaceTime use your mic. See who is in your Discord voice channel and mute from the notch.</p></div>
+    <div class="card"><div class="ic"><i class="fa-solid fa-cloud-sun"></i></div><h3>Weather &amp; calendar</h3><p>Apple-Weather-style tile for your location and a calendar strip you scrub through by dragging.</p></div>
   </div>
 </section>
 
-<section class="shots">
+<section class="shots" id="screens">
   <h2>Screenshots</h2>
-  <p class="lead">Straight from the app.</p>
-  <img src="screenshot-transit.png" alt="NotchIsland transit search: Prague to Brno with RegioJet and FlixBus" loading="lazy" width="1800" height="310">
-  <img src="screenshot-timer.png" alt="NotchIsland timer and Pomodoro tab" loading="lazy" width="1800" height="310">
+  <p class="lead">Real captures from the app.</p>
+  <figure><img src="screenshot-transit.png" alt="NotchIsland connection search Prague to Brno with FlixBus results" loading="lazy" width="1800" height="304"><figcaption>RegioJet / FlixBus search with prices and live delay</figcaption></figure>
+  <figure><img src="screenshot-calls.png" alt="NotchIsland calls tab" loading="lazy" width="1800" height="304"><figcaption>Calls: mic status and running meeting apps</figcaption></figure>
+  <figure><img src="screenshot-timer.png" alt="NotchIsland timer and Pomodoro" loading="lazy" width="1800" height="304"><figcaption>Timer and Pomodoro</figcaption></figure>
 </section>
 
 <section id="install">
@@ -98,5 +143,6 @@
 </main>
 
 <footer><div class="wrap">Made in Prague by <a href="https://github.com/Brozovec">Adam Brož</a> · <a href="https://github.com/Brozovec/NotchIsland/blob/main/LICENSE">MIT License</a> · <a href="https://github.com/Brozovec/NotchIsland/issues">Report a bug</a></div></footer>
+<script src="showcase.js" defer></script>
 </body>
 </html>

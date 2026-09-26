@@ -11,10 +11,15 @@
 
 <p align="center"><a href="#english">English</a> · <a href="#česky">Česky</a> · <a href="https://notchisland.brozovec.eu/">Website</a> · <a href="https://github.com/Brozovec/NotchIsland/releases/latest">Download DMG</a></p>
 
+<p align="center"><img src="docs/og-image.png" width="900" alt="NotchIsland"></p>
+
 <p align="center">
-  <img src="docs/screenshot-transit.png" width="900" alt="Transit search"><br>
-  <img src="docs/screenshot-timer.png" width="900" alt="Timer">
+  <img src="docs/screenshot-transit.png" width="900" alt="Connection search Prague → Brno with FlixBus results, prices and live delay"><br>
+  <img src="docs/screenshot-calls.png" width="900" alt="Calls tab: microphone status and running meeting apps"><br>
+  <img src="docs/screenshot-timer.png" width="900" alt="Timer and Pomodoro tab">
 </p>
+
+<p align="center">👉 Interactive demo at <a href="https://notchisland.brozovec.eu/">notchisland.brozovec.eu</a></p>
 
 ---
 
