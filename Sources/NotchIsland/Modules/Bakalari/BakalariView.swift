@@ -5,16 +5,26 @@ struct BakalariView: View {
     @State private var day = Date()
     @AppStorage("bakalariWeekView") private var week = false
     @State private var hovered: BakalariService.TodayLesson?
+    /// Odkud rozvrh pro zvolený den je (aktuální / příští / stálý).
+    private var sourceLabel: String? {
+        let cal = Calendar.current
+        if let t = b.timetable, cal.isDate(day, equalTo: t.weekStart, toGranularity: .weekOfYear) { return nil }
+        if let n = b.nextTimetable, cal.isDate(day, equalTo: n.weekStart, toGranularity: .weekOfYear) { return L("příští týden") }
+        return b.permanentTimetable != nil ? L("stálý rozvrh") : nil
+    }
     var body: some View {
         let list = b.lessons(on: day)
         VStack(alignment: .leading, spacing: 4) {
             HStack(spacing: 8) {
                 Picker("", selection: $week) { Text(L("Dnes")).tag(false); Text(L("Týden")).tag(true) }.pickerStyle(.segmented).controlSize(.mini).frame(width: 110)
                     .onChange(of: week) { _, _ in NotchController.relayout?() }
-                Button { day = Calendar.current.date(byAdding: .day, value: -1, to: day)! } label: { Image(systemName: "chevron.left").font(.system(size: 9, weight: .bold)) }.buttonStyle(.plain).foregroundStyle(.white.opacity(0.6))
-                Text(day, format: .dateTime.weekday(.wide).day().month()).font(.system(size: 11, weight: .semibold)).foregroundStyle(.white)
-                    .onTapGesture { day = Date() }
-                Button { day = Calendar.current.date(byAdding: .day, value: 1, to: day)! } label: { Image(systemName: "chevron.right").font(.system(size: 9, weight: .bold)) }.buttonStyle(.plain).foregroundStyle(.white.opacity(0.6))
+                Button { day = Calendar.current.date(byAdding: week ? .weekOfYear : .day, value: -1, to: day)! } label: { Image(systemName: "chevron.left").font(.system(size: 9, weight: .bold)) }.buttonStyle(.plain).foregroundStyle(.white.opacity(0.6))
+                Group {
+                    if week { Text(L("Týden") + " ") + Text(Calendar.current.dateInterval(of: .weekOfYear, for: day)?.start ?? day, format: .dateTime.day().month()) }
+                    else { Text(day, format: .dateTime.weekday(.wide).day().month()) }
+                }.font(.system(size: 11, weight: .semibold)).foregroundStyle(.white).onTapGesture { day = Date() }
+                if let src = sourceLabel { Text(src).font(.system(size: 8)).foregroundStyle(.white.opacity(0.4)) }
+                Button { day = Calendar.current.date(byAdding: week ? .weekOfYear : .day, value: 1, to: day)! } label: { Image(systemName: "chevron.right").font(.system(size: 9, weight: .bold)) }.buttonStyle(.plain).foregroundStyle(.white.opacity(0.6))
                 Spacer()
                 Text(AppSettings.shared.bakalariClass).font(.system(size: 9, weight: .bold)).foregroundStyle(.white.opacity(0.5))
                 if b.loading { ProgressView().controlSize(.mini).tint(.white) }
@@ -22,8 +32,8 @@ struct BakalariView: View {
             }
             if !b.isConfigured {
                 Placeholder(icon: "graduationcap", title: L("Bakaláři"), text: L("Vyplň Bakaláře v Nastavení"))
-            } else if week, let t = b.timetable {
-                WeekGrid(t: t, hours: b.allHours)
+            } else if week, let t = b.timetable(for: day) {
+                WeekGrid(t: t, hours: b.allHours, weekOf: day)
             } else if list.isEmpty {
                 Placeholder(icon: "graduationcap", title: L("Bakaláři"), text: b.status.isEmpty ? L("Dnes žádné hodiny") : b.status)
             } else {
@@ -117,6 +127,7 @@ struct EmptyHourCard: View {
 struct WeekGrid: View {
     let t: Timetable
     let hours: [HourRef]
+    var weekOf: Date = Date()
     private let days = ["Po", "Út", "St", "Čt", "Pá"]
     private func lessonsFor(day: Int, hour: Int) -> [Lesson] {
         let g = AppSettings.shared.bakalariGroup
@@ -126,7 +137,7 @@ struct WeekGrid: View {
         }
     }
     var body: some View {
-        let today = (Calendar.current.component(.weekday, from: Date()) + 5) % 7
+        let today = Calendar.current.isDate(weekOf, equalTo: Date(), toGranularity: .weekOfYear) ? (Calendar.current.component(.weekday, from: Date()) + 5) % 7 : -1
         let rowH: CGFloat = 30
         VStack(spacing: 3) {
             HStack(spacing: 3) {

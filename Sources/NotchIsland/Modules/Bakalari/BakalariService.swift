@@ -7,7 +7,9 @@ import UserNotifications
 @MainActor
 final class BakalariService: ObservableObject {
     static let shared = BakalariService()
-    @Published private(set) var timetable: Timetable?
+    @Published private(set) var timetable: Timetable?          // aktuální týden
+    @Published private(set) var nextTimetable: Timetable?      // příští týden
+    @Published private(set) var permanentTimetable: Timetable? // stálý (pro ostatní týdny)
     @Published private(set) var status = ""
     @Published private(set) var loading = false
     @Published private(set) var classes: [DefinitionEntity] = []
@@ -101,23 +103,29 @@ final class BakalariService: ObservableObject {
         let s = AppSettings.shared
         do {
             if !loggedIn { try await login(server: s.bakalariServer, user: s.bakalariUser, password: Keychain.read("bakalariPassword")) }
-            var html = try await fetchHTML(server: s.bakalariServer, classId: s.bakalariClass)
+            var html = try await fetchHTML(server: s.bakalariServer, classId: s.bakalariClass, kind: "Actual")
             if html.contains("id=\"formlogin\"") {   // session vypršela
                 try await login(server: s.bakalariServer, user: s.bakalariUser, password: Keychain.read("bakalariPassword"))
-                html = try await fetchHTML(server: s.bakalariServer, classId: s.bakalariClass)
+                html = try await fetchHTML(server: s.bakalariServer, classId: s.bakalariClass, kind: "Actual")
             }
-            let t: Timetable
-            if let j = BakalariJSONParser.parse(html: html) {
-                Log.w("bakalari json: \(j.lessons.count) lessons, \(j.hours.count) hours, week \(j.weekStart.map { "\($0)" } ?? "-")")
-                t = Timetable.build(j.lessons, hours: j.hours, weekStart: j.weekStart)
-            } else {
-                let parsed = try BakalariHTMLParser.parseClassTimetable(html: html)
-                t = Timetable.build(parsed.lessons, hours: parsed.hours)
-            }
+            let t = parse(html)
             timetable = t; status = t.lessonsByCell.isEmpty ? L("Rozvrh je prázdný (zkontroluj třídu)") : ""
             updateState()
             if let d = try? JSONEncoder().encode(t) { try? d.write(to: cacheURL) }
+            // příští týden a stálý rozvrh (pro listování dopředu / dozadu)
+            if let h = try? await fetchHTML(server: s.bakalariServer, classId: s.bakalariClass, kind: "Next") {
+                var n = parse(h)
+                if n.weekStart == t.weekStart, let ws = Calendar.current.date(byAdding: .weekOfYear, value: 1, to: t.weekStart) { n = Timetable(weekStart: ws, hours: n.hours, lessonsByCell: n.lessonsByCell, fetchedAt: n.fetchedAt) }
+                nextTimetable = n
+            }
+            if let h = try? await fetchHTML(server: s.bakalariServer, classId: s.bakalariClass, kind: "Permanent") { permanentTimetable = parse(h) }
         } catch { status = error.localizedDescription; loggedIn = false; Log.w("bakalari: \(error)") }
+    }
+
+    private func parse(_ html: String) -> Timetable {
+        if let j = BakalariJSONParser.parse(html: html) { return Timetable.build(j.lessons, hours: j.hours, weekStart: j.weekStart) }
+        if let p = try? BakalariHTMLParser.parseClassTimetable(html: html) { return Timetable.build(p.lessons, hours: p.hours) }
+        return Timetable.build([], hours: [])
     }
 
     private func login(server: String, user: String, password: String) async throws {
@@ -134,10 +142,10 @@ final class BakalariService: ObservableObject {
         loggedIn = true
     }
 
-    private func fetchHTML(server: String, classId: String) async throws -> String {
+    private func fetchHTML(server: String, classId: String, kind: String = "Actual") async throws -> String {
         guard let base = URL(string: server) else { throw URLError(.badURL) }
         let enc = classId.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? classId
-        var r = URLRequest(url: base.appendingPathComponent("Timetable/Public/Actual/Class/\(enc)"))
+        var r = URLRequest(url: base.appendingPathComponent("Timetable/Public/\(kind)/Class/\(enc)"))
         r.setValue("Mozilla/5.0 (NotchIsland)", forHTTPHeaderField: "User-Agent")
         let (d, _) = try await session.data(for: r)
         return String(data: d, encoding: .utf8) ?? ""
@@ -157,13 +165,19 @@ final class BakalariService: ObservableObject {
         return Calendar.current.date(bySettingHour: p[0], minute: p[1], second: 0, of: day)
     }
 
+    /// Rozvrh pro daný den: aktuální týden, příští týden, jinak stálý rozvrh.
+    func timetable(for day: Date) -> Timetable? {
+        let cal = Calendar.current
+        if let t = timetable, cal.isDate(day, equalTo: t.weekStart, toGranularity: .weekOfYear) { return t }
+        if let n = nextTimetable, cal.isDate(day, equalTo: n.weekStart, toGranularity: .weekOfYear) { return n }
+        return permanentTimetable ?? timetable
+    }
+
     func lessons(on day: Date = Date()) -> [TodayLesson] {
-        guard let t = timetable else { return [] }
+        guard let t = timetable(for: day) else { return [] }
         let cal = Calendar.current
         let weekday = (cal.component(.weekday, from: day) + 5) % 7   // po=0
         guard weekday < 5 else { return [] }
-        // rozvrh platí jen pro stažený týden
-        guard cal.isDate(day, equalTo: t.weekStart, toGranularity: .weekOfYear) else { return [] }
         let g = AppSettings.shared.bakalariGroup
         return t.hours.flatMap { h -> [TodayLesson] in
             t.lessons(day: weekday, hourId: h.Id).filter { l in

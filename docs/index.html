@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NotchIsland – Dynamic Island for the MacBook notch (free, open source)</title>
+<meta name="description" content="NotchIsland turns the MacBook notch into a Dynamic Island: now playing with controls, file tray, live public transport, school timetable, screenshots with OCR, clipboard history, Pomodoro timer, weather and calendar. Free, open source, macOS 14+.">
+<link rel="canonical" href="https://notchisland.brozovec.eu/">
+<link rel="alternate" hreflang="en" href="https://notchisland.brozovec.eu/">
+<link rel="alternate" hreflang="cs" href="https://notchisland.brozovec.eu/cs/">
+<link rel="alternate" hreflang="x-default" href="https://notchisland.brozovec.eu/">
+<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="theme-color" content="#07070c">
+<link rel="icon" type="image/png" href="favicon.png"><link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta property="og:type" content="website"><meta property="og:site_name" content="NotchIsland">
+<meta property="og:title" content="NotchIsland – Dynamic Island for the MacBook notch">
+<meta property="og:description" content="Music, files, live transit, timetable, screenshots, clipboard, timer and weather – one hover away, in the notch. Free and open source.">
+<meta property="og:url" content="https://notchisland.brozovec.eu/">
+<meta property="og:image" content="https://notchisland.brozovec.eu/og-image.png"><meta property="og:image:width" content="1280"><meta property="og:image:height" content="640">
+<meta property="og:locale" content="en_US"><meta property="og:locale:alternate" content="cs_CZ">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="NotchIsland – Dynamic Island for the MacBook notch"><meta name="twitter:description" content="Free, open-source Dynamic Island for macOS. Music, files, live transit, timetable, screenshots, clipboard, timer, weather."><meta name="twitter:image" content="https://notchisland.brozovec.eu/og-image.png">
+<link rel="stylesheet" href="style.css">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@graph":[
+{"@type":"SoftwareApplication","name":"NotchIsland","applicationCategory":"UtilitiesApplication","operatingSystem":"macOS 14 or later","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"downloadUrl":"https://github.com/Brozovec/NotchIsland/releases/latest","softwareVersion":"1.0","license":"https://opensource.org/licenses/MIT","author":{"@type":"Person","name":"Adam Brož","url":"https://github.com/Brozovec"},"image":"https://notchisland.brozovec.eu/og-image.png","description":"Dynamic Island for the MacBook notch: now playing, file tray, live public transport, school timetable, screenshots with OCR, clipboard history, timer, weather and calendar."},
+{"@type":"FAQPage","mainEntity":[
+{"@type":"Question","name":"Is NotchIsland free?","acceptedAnswer":{"@type":"Answer","text":"Yes. NotchIsland is free and open source under the MIT license. The code is on GitHub."}},
+{"@type":"Question","name":"Which Macs does it support?","acceptedAnswer":{"@type":"Answer","text":"Any Mac running macOS 14 Sonoma or newer. The full effect needs a MacBook with a notch (Pro 2021+, Air 2022+); on other Macs a small island is drawn below the top edge."}},
+{"@type":"Question","name":"macOS says the app cannot be verified. What now?","acceptedAnswer":{"@type":"Answer","text":"The app is signed but not notarized. Right-click NotchIsland.app and choose Open, or go to System Settings → Privacy & Security and click Open Anyway. You only do this once."}},
+{"@type":"Question","name":"Does it work with YouTube in the browser?","acceptedAnswer":{"@type":"Answer","text":"Yes. NotchIsland reads the system Now Playing information, so anything macOS shows in Control Center appears in the notch – Spotify, Apple Music, YouTube in Chrome or Safari, podcasts."}},
+{"@type":"Question","name":"Does it send my data anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. There is no account and no server. Data stays on your Mac. Network requests go only to the public services you use (transit data, weather, your school's Bakaláři server)."}}
+]}]}
+</script>
+</head>
+<body>
+<header><div class="wrap"><nav>
+<a class="logo" href="./"><img src="icon.png" alt="">NotchIsland</a>
+<div class="links"><a href="#features">Features</a><a href="#install">Install</a><a href="#faq">FAQ</a><a href="https://github.com/Brozovec/NotchIsland">GitHub</a><a href="cs/" lang="cs">Česky</a></div>
+</nav></div></header>
+
+<main class="wrap">
+<section class="hero">
+  <div class="notch" aria-hidden="true">
+    <div class="art"></div>
+    <div class="t"><b>Now Playing</b><span>Spotify · YouTube · Apple Music</span></div>
+    <div class="eq"><i></i><i></i><i></i><i></i></div>
+    <div class="wx"><small>Prague</small><b>12°</b></div>
+  </div>
+  <h1>Your MacBook notch, finally useful.</h1>
+  <p class="sub">NotchIsland turns the camera cutout into a Dynamic Island. Hover to expand: music, files, live transit, your timetable, screenshots, clipboard, a timer and the weather.</p>
+  <div class="cta"><a class="btn" href="https://github.com/Brozovec/NotchIsland/releases/latest">⬇ Download for macOS</a><a class="btn ghost" href="https://github.com/Brozovec/NotchIsland">View on GitHub</a></div>
+  <p class="note">Free · Open source (MIT) · macOS 14+ · Apple Silicon &amp; Intel · Czech, English, German, Slovak, Polish</p>
+</section>
+
+<section id="features">
+  <h2>Everything one hover away</h2>
+  <p class="lead">Nine modules. Turn off the ones you don't need.</p>
+  <div class="grid">
+    <div class="card"><div class="ic">🎵</div><h3>Now Playing</h3><p>Artwork, title, controls and an equalizer for Spotify, Apple Music and anything in a browser. While music plays, small wings appear beside the camera.</p></div>
+    <div class="card"><div class="ic">🗂️</div><h3>File tray</h3><p>Drop files onto the notch to park them, drag them out anywhere later.</p></div>
+    <div class="card"><div class="ic">🚋</div><h3>Live transit</h3><p>Prague (PID) departures with delays and vehicle tracking, plus a RegioJet / FlixBus search with prices, seats and live delay.</p></div>
+    <div class="card"><div class="ic">🎓</div><h3>School timetable</h3><p>Bakaláři timetable with rooms, substitutions and cancellations. Break countdown in the notch and a notification when a break starts.</p></div>
+    <div class="card"><div class="ic">📸</div><h3>Screenshots</h3><p>⌘⇧2 area, ⌘⇧1 screen, ⌘⇧O text recognition (OCR). Copied instantly; editor with arrows, blur and counters.</p></div>
+    <div class="card"><div class="ic">📋</div><h3>Clipboard history</h3><p>⌘⇧V shows the last 10 things you copied. Click pastes straight into the active app.</p></div>
+    <div class="card"><div class="ic">⏱️</div><h3>Timer &amp; Pomodoro</h3><p>Countdown beside the camera, click to pause. Pomodoro 25/5 with long breaks.</p></div>
+    <div class="card"><div class="ic">📞</div><h3>Calls</h3><p>Knows when Discord, Zoom, Teams or FaceTime use your mic. See who is in your Discord voice channel and mute from the notch.</p></div>
+    <div class="card"><div class="ic">🌤️</div><h3>Weather &amp; calendar</h3><p>Apple-Weather-style tile for your location and a calendar strip you scrub through by dragging.</p></div>
+  </div>
+</section>
+
+<section class="shots">
+  <h2>Screenshots</h2>
+  <p class="lead">Straight from the app.</p>
+  <img src="screenshot-transit.png" alt="NotchIsland transit search: Prague to Brno with RegioJet and FlixBus" loading="lazy" width="1800" height="310">
+  <img src="screenshot-timer.png" alt="NotchIsland timer and Pomodoro tab" loading="lazy" width="1800" height="310">
+</section>
+
+<section id="install">
+  <h2>Install in a minute</h2>
+  <div class="steps">
+    <div><b>Download</b> the latest <a href="https://github.com/Brozovec/NotchIsland/releases/latest">NotchIsland DMG</a>, open it and drag the app to Applications.</div>
+    <div><b>First launch:</b> right-click <code>NotchIsland.app</code> → <b>Open</b>. macOS shows a warning because the app is not notarized; this happens only once.</div>
+    <div><b>Allow permissions</b> when asked: Screen Recording (screenshots), Calendar, Location (weather), Accessibility (clipboard paste) and control of Spotify / Music. They are remembered.</div>
+    <div><b>Hover the notch.</b> The app also adds itself to Login Items so it starts with your Mac (you can turn that off in Settings).</div>
+  </div>
+</section>
+
+<section id="faq" class="faq">
+  <h2>FAQ</h2>
+  <details open><summary>Is it free?</summary><p>Yes, free and open source under the MIT license.</p></details>
+  <details><summary>Which Macs are supported?</summary><p>macOS 14 Sonoma or newer. The full effect needs a MacBook with a notch (Pro 2021+, Air 2022+); other Macs get a small island below the top edge.</p></details>
+  <details><summary>"NotchIsland can't be opened because Apple cannot check it for malicious software"</summary><p>Right-click the app → Open, or System Settings → Privacy &amp; Security → Open Anyway. Once.</p></details>
+  <details><summary>Does it see YouTube in the browser?</summary><p>Yes. It reads the same Now Playing info macOS shows in Control Center, so Chrome, Safari, podcasts and every music app show up.</p></details>
+  <details><summary>Screenshots come out black or the shortcut does nothing</summary><p>Allow NotchIsland under System Settings → Privacy &amp; Security → Screen Recording. If you run Shottr at the same time, it grabs the same shortcuts; quit it or change its keys.</p></details>
+  <details><summary>Does it send my data anywhere?</summary><p>No accounts, no servers. Requests go only to the public services you use: transit data, Open-Meteo weather, your school's Bakaláři server.</p></details>
+  <details><summary>Can I hide modules I don't use?</summary><p>Yes, Settings → Modules. Click a module to hide or show its tab.</p></details>
+</section>
+</main>
+
+<footer><div class="wrap">Made in Prague by <a href="https://github.com/Brozovec">Adam Brož</a> · <a href="https://github.com/Brozovec/NotchIsland/blob/main/LICENSE">MIT License</a> · <a href="https://github.com/Brozovec/NotchIsland/issues">Report a bug</a></div></footer>
+</body>
+</html>

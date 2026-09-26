@@ -9,7 +9,7 @@
   <b>Created by Adam Brož</b> · macOS 14+ · Swift / SwiftUI · MIT
 </p>
 
-<p align="center"><a href="#english">English</a> · <a href="#česky">Česky</a> · <a href="https://github.com/brozovec/NotchIsland/releases/latest">Download DMG</a></p>
+<p align="center"><a href="#english">English</a> · <a href="#česky">Česky</a> · <a href="https://notchisland.brozovec.eu/">Website</a> · <a href="https://github.com/Brozovec/NotchIsland/releases/latest">Download DMG</a></p>
 
 <p align="center">
   <img src="docs/screenshot-transit.png" width="900" alt="Transit search"><br>
@@ -41,7 +41,34 @@ Languages: Czech, English, German, Slovak, Polish (follows the system language).
 
 ### Install
 
-**Download:** grab `NotchIsland-x.y.z.dmg` from Releases, drag the app to Applications, open it. On first launch macOS asks for Screen Recording, Calendar, Location and control of Spotify / Music. Allow them once, they are remembered. The app adds itself to Login Items, so it starts with your Mac (you can turn that off in Settings).
+**Download:** grab the latest DMG from [Releases](https://github.com/Brozovec/NotchIsland/releases/latest), open it and drag NotchIsland to Applications.
+
+### Starting the app
+
+1. **First launch:** right-click `NotchIsland.app` → **Open** (or System Settings → Privacy & Security → *Open Anyway*). macOS warns because the app is signed but not notarized. This happens once.
+2. **Permissions:** allow what it asks for. Screen Recording (screenshots), Calendar, Location (weather), Accessibility (clipboard paste) and control of Spotify / Music. They are remembered between updates.
+3. **Use it:** hover over the notch to expand it, move away to collapse. `⌘⇧V` opens clipboard history, `⌘⇧2` takes a screenshot. The gear opens Settings; the icon in the menu bar has *Settings…* and *Quit*.
+4. **Autostart:** the app adds itself to Login Items on first run, so it starts with your Mac. Turn that off in Settings → General if you prefer.
+
+### FAQ
+
+**macOS says the app can't be opened / can't be checked for malware.** Right-click → Open, once. See step 1.
+
+**Hovering does nothing.** Make sure no other notch app (NotchNook, boring.notch) is running; two apps fight over the same pixels. Check Login Items.
+
+**Screenshots are black or the shortcut does nothing.** Allow NotchIsland under Privacy & Security → Screen Recording. If Shottr runs at the same time it owns the same shortcuts; quit it or change its keys.
+
+**YouTube / browser music doesn't show up.** It reads the system Now Playing, so it needs macOS 14+. If it works in Control Center it works here; check the log at `~/Library/Logs/NotchIsland.log` for *nowplaying adapter available=false*.
+
+**Clicking a clipboard item copies but doesn't paste.** Allow NotchIsland under Privacy & Security → Accessibility; pasting is done by simulating `⌘V`.
+
+**Transit says "Unknown stop".** Stop mode covers Prague (PID) only. Type a real stop name (autocomplete shows matches). Connection search works for RegioJet and FlixBus; Czech Railways open in IDOS.
+
+**Timetable is empty.** Settings → Bakaláři: fill in server, username and password, click *Sign in and load classes* and pick your class. The timetable refreshes every 30 minutes.
+
+**How do I hide modules I don't use?** Settings → Modules. Click a module to hide or show its tab.
+
+**Does it send my data anywhere?** No accounts, no servers. Requests go only to the public services you use (transit data, Open-Meteo, your school's Bakaláři).
 
 **Build from source** (Xcode 15+ / Swift 5.9+):
 
@@ -94,7 +121,34 @@ Jazyky: čeština, angličtina, němčina, slovenština, polština (podle jazyka
 
 ### Instalace
 
-**Stažení:** vezmi `NotchIsland-x.y.z.dmg` z Releases, přetáhni appku do Aplikací a spusť. Při prvním startu macOS požádá o nahrávání obrazovky, kalendář, polohu a ovládání Spotify / Hudby. Povol to jednou, pamatuje se to. Appka se sama přidá do položek po přihlášení, takže startuje s Macem (v Nastavení jde vypnout).
+**Stažení:** vezmi nejnovější DMG z [Releases](https://github.com/Brozovec/NotchIsland/releases/latest), otevři ho a přetáhni NotchIsland do Aplikací.
+
+### Spuštění aplikace
+
+1. **První spuštění:** pravý klik na `NotchIsland.app` → **Otevřít** (nebo Nastavení systému → Soukromí a zabezpečení → *Přesto otevřít*). macOS varuje, protože appka je podepsaná, ale ne notarizovaná. Stane se to jen jednou.
+2. **Oprávnění:** povol, o co si řekne. Nahrávání obrazovky (screenshoty), Kalendář, Poloha (počasí), Zpřístupnění (vkládání ze schránky) a ovládání Spotify / Hudby. Pamatují se i po aktualizaci.
+3. **Používání:** najeď myší na notch a rozbalí se, odjeď a sbalí se. `⌘⇧V` otevře historii schránky, `⌘⇧2` udělá screenshot. Ozubené kolo otevře Nastavení, ikona v menu baru má *Nastavení…* a *Ukončit*.
+4. **Autostart:** appka se při prvním spuštění přidá do položek po přihlášení, takže startuje s Macem. V Nastavení → Obecné to jde vypnout.
+
+### Časté otázky
+
+**macOS hlásí, že appku nelze otevřít / ověřit.** Pravý klik → Otevřít, jednou. Viz krok 1.
+
+**Najetí na notch nic nedělá.** Zkontroluj, že neběží jiná notch appka (NotchNook, boring.notch); dvě se perou o stejné místo. Podívej se do položek po přihlášení.
+
+**Screenshoty jsou černé nebo zkratka nic nedělá.** Povol NotchIsland v Soukromí a zabezpečení → Nahrávání obrazovky. Pokud zároveň běží Shottr, bere si stejné zkratky; vypni ho nebo mu změň klávesy.
+
+**YouTube / hudba z prohlížeče se neukazuje.** Čte se systémové Právě hraje, potřeba macOS 14+. Když to funguje v Ovládacím centru, funguje to i tady; v logu `~/Library/Logs/NotchIsland.log` hledej *nowplaying adapter available=false*.
+
+**Klik na položku schránky zkopíruje, ale nevloží.** Povol NotchIsland v Soukromí a zabezpečení → Zpřístupnění; vkládání se dělá simulací `⌘V`.
+
+**Doprava hlásí „Zastávku neznám".** Režim Zastávka pokrývá jen Prahu (PID). Napiš skutečný název zastávky (našeptávání ukáže shody). Spojení funguje pro RegioJet a FlixBus; ČD se otevřou v IDOS.
+
+**Rozvrh je prázdný.** Nastavení → Bakaláři: vyplň server, jméno a heslo, klikni *Přihlásit a načíst třídy* a vyber třídu. Rozvrh se obnovuje každých 30 minut.
+
+**Jak schovám moduly, které nepoužívám?** Nastavení → Moduly. Kliknutím záložku skryješ nebo ukážeš.
+
+**Posílá to někam moje data?** Žádné účty, žádné servery. Požadavky jdou jen na veřejné služby, které používáš (dopravní data, Open-Meteo, Bakaláři tvé školy).
 
 **Sestavení ze zdrojáků** (Xcode 15+ / Swift 5.9+):
 

@@ -1,0 +1,31 @@
+:root{--bg:#07070c;--panel:#111118;--text:#f5f5f7;--muted:#9a9aa6;--accent:#6c7cff;--accent2:#3b82f6;--radius:20px}
+*{box-sizing:border-box}html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Inter,sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+header{position:sticky;top:0;z-index:10;background:rgba(7,7,12,.75);backdrop-filter:saturate(180%) blur(16px);border-bottom:1px solid rgba(255,255,255,.06)}
+nav{display:flex;align-items:center;gap:22px;height:58px}nav .logo{display:flex;align-items:center;gap:10px;font-weight:700;color:var(--text)}nav .logo img{width:28px;height:28px;border-radius:7px}
+nav .links{margin-left:auto;display:flex;gap:18px;font-size:14px}nav .links a{color:var(--muted)}nav .links a:hover{color:var(--text);text-decoration:none}
+.btn{display:inline-flex;align-items:center;gap:8px;background:var(--text);color:#000!important;font-weight:600;padding:12px 20px;border-radius:999px;transition:transform .15s}.btn:hover{transform:translateY(-1px);text-decoration:none}
+.btn.ghost{background:rgba(255,255,255,.08);color:var(--text)!important}
+.hero{padding:88px 0 40px;text-align:center}
+.notch{margin:0 auto 34px;width:min(720px,92vw);background:#000;border-radius:0 0 30px 30px;padding:18px 24px 22px;display:flex;align-items:center;gap:18px;box-shadow:0 30px 80px rgba(0,0,0,.6);position:relative;text-align:left}
+.notch::before{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);width:200px;height:26px;background:#000;border-radius:0 0 14px 14px}
+.notch .art{width:72px;height:72px;border-radius:14px;background:linear-gradient(135deg,#ff6b59,#ffbf40);flex:none}
+.notch .t{flex:1;min-width:0}.notch .t b{display:block;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.notch .t span{color:var(--muted);font-size:13px}
+.eq{display:flex;align-items:flex-end;gap:4px;height:34px}.eq i{width:5px;background:#3fe36f;border-radius:3px;animation:eq 1s infinite ease-in-out}.eq i:nth-child(2){animation-delay:.15s}.eq i:nth-child(3){animation-delay:.3s}.eq i:nth-child(4){animation-delay:.45s}
+@keyframes eq{0%,100%{height:30%}50%{height:100%}}
+.wx{background:linear-gradient(#3a8de0,#7cc0f5);border-radius:16px;padding:10px 14px;min-width:96px;text-align:left}.wx small{font-size:11px;font-weight:600}.wx b{display:block;font-size:26px;font-weight:300}
+h1{font-size:clamp(38px,6vw,64px);letter-spacing:-.03em;margin:0 0 14px;line-height:1.05}
+.sub{font-size:20px;color:var(--muted);max-width:720px;margin:0 auto 28px}
+.cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}.note{color:var(--muted);font-size:13px;margin-top:14px}
+section{padding:56px 0}h2{font-size:32px;letter-spacing:-.02em;margin:0 0 8px}.lead{color:var(--muted);margin:0 0 28px;font-size:17px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px}
+.card{background:var(--panel);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius);padding:22px}.card .ic{font-size:26px;margin-bottom:10px}.card h3{margin:0 0 6px;font-size:17px}.card p{margin:0;color:var(--muted);font-size:14.5px}
+.shots img{width:100%;border-radius:var(--radius);border:1px solid rgba(255,255,255,.08);margin-bottom:14px;display:block}
+.steps{counter-reset:s;display:grid;gap:12px}.steps div{background:var(--panel);border-radius:14px;padding:16px 18px 16px 58px;position:relative;border:1px solid rgba(255,255,255,.06)}
+.steps div::before{counter-increment:s;content:counter(s);position:absolute;left:18px;top:14px;width:28px;height:28px;border-radius:50%;background:var(--accent2);display:grid;place-items:center;font-weight:700;font-size:14px}
+code{background:rgba(255,255,255,.08);padding:2px 6px;border-radius:6px;font-size:.92em}
+.faq details{background:var(--panel);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:4px 18px;margin-bottom:10px}.faq summary{cursor:pointer;font-weight:600;padding:12px 0}.faq p{color:var(--muted);margin:0 0 14px}
+footer{border-top:1px solid rgba(255,255,255,.06);padding:34px 0;color:var(--muted);font-size:14px;text-align:center}
+@media (max-width:640px){.notch{flex-wrap:wrap}.wx{display:none}nav .links{gap:12px;font-size:13px}}
