@@ -22,7 +22,7 @@ struct TransitView: View {
                 Spacer()
                 Text(mode == .stop ? L("PID · živě") : L("RegioJet · FlixBus")).font(.system(size: 8)).foregroundStyle(.white.opacity(0.35))
             }
-            .frame(width: 92)
+            .frame(width: 96)
             Group {
                 switch mode {
                 case .stop: StopBoardView()
