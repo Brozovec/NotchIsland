@@ -56,44 +56,47 @@
 
 <section id="demo">
   <h2>Podívej se, jak to funguje</h2>
-  <p class="lead">Najeď na notch níže. Klikej na záložky. Je to skutečné rozložení, postavené v HTML.</p>
-  <div class="mac">
+  <p class="lead">Skutečné snímky z aplikace. Najeď na notch (nebo klepni) a přepínej záložky.</p>
+  <div class="mac" id="demo-mac">
     <div class="wall"></div>
-    <div class="menubar"><b></b><span>Finder</span><span>Soubor</span><span>Úpravy</span><span>Zobrazení</span><span class="r">po 13:36</span></div>
-    <svg id="cursor" class="cursor" viewBox="0 0 14 20" style="left:50%;top:60%"><path d="M1 1l12 9-5 1 3 6-2 1-3-6-4 4z" fill="#fff" stroke="#000" stroke-width="1"/></svg>
-    <div class="island" id="island">
-      <div class="wing l"><img class="art" src="https://image-cdn-fa.spotifycdn.com/image/ab67616d00001e029c284a6855f4945dc5a3cd73" alt="" width="20" height="20"></div>
-      <div class="wing r"><div class="eqs"><i></i><i></i><i></i><i></i></div></div>
-      <div class="body">
-        <div class="tabs">
-          <button data-tab="island" class="on"><i class="fa-solid fa-house"></i> Island</button><button data-tab="tray"><i class="fa-solid fa-inbox"></i></button><button data-tab="doprava"><i class="fa-solid fa-train-subway"></i></button><button data-tab="hovory"><i class="fa-solid fa-phone"></i></button><button data-tab="shot"><i class="fa-solid fa-camera"></i></button><button data-tab="schranka"><i class="fa-solid fa-clipboard"></i></button><button data-tab="casovac"><i class="fa-solid fa-stopwatch"></i></button><button data-tab="rozvrh"><i class="fa-solid fa-graduation-cap"></i></button>
-          <span class="gear"><i class="fa-solid fa-gear"></i></span>
+    <div class="menubar"><span class="apple"><i class="fa-brands fa-apple"></i></span><b>Finder</b><span>Soubor</span><span>Úpravy</span><span>Zobrazení</span><span>Otevřít</span><span>Okno</span><span>Nápověda</span><span class="r"><i class="fa-solid fa-wifi"></i> <i class="fa-solid fa-magnifying-glass"></i> <i class="fa-solid fa-battery-three-quarters"></i> so 14:02</span></div>
+    <div class="finder">
+      <div class="fbar"><span class="tl"><i></i><i></i><i></i></span><span class="ftitle"><i class="fa-solid fa-folder" style="color:#5ac8fa"></i> Projekty</span><span class="fsearch"><i class="fa-solid fa-magnifying-glass"></i></span></div>
+      <div class="fbody">
+        <div class="fside"><small>Oblíbené</small><div><i class="fa-solid fa-clock-rotate-left"></i> Naposledy</div><div><i class="fa-solid fa-rocket"></i> Aplikace</div><div><i class="fa-solid fa-desktop"></i> Plocha</div><div class="on"><i class="fa-solid fa-folder"></i> Projekty</div><div><i class="fa-solid fa-download"></i> Stažené</div><small>iCloud</small><div><i class="fa-solid fa-cloud"></i> iCloud Drive</div></div>
+        <div class="fgrid">
+          <div><i class="fa-solid fa-folder ic-f"></i>NotchIsland</div><div><i class="fa-solid fa-folder ic-f"></i>mhd-archiv</div><div><i class="fa-solid fa-folder ic-f"></i>škola</div>
+          <div><i class="fa-solid fa-file-image ic-i"></i>og-image.png</div><div><i class="fa-solid fa-file-lines ic-d"></i>README.md</div><div><i class="fa-solid fa-file-zipper ic-z"></i>NotchIsland-1.0.dmg</div>
+          <div><i class="fa-solid fa-file-code ic-c"></i>Package.swift</div><div><i class="fa-solid fa-file-pdf ic-p"></i>rozvrh.pdf</div>
         </div>
-        <div class="pane on" data-pane="island">
-          <img class="art" src="https://image-cdn-fa.spotifycdn.com/image/ab67616d00001e029c284a6855f4945dc5a3cd73" alt="" width="64" height="64">
-          <div class="tile"><b>Mr. Brightside</b><br><span style="color:#9a9aa6">The Killers · Hot Fuss</span><div style="display:flex;align-items:center;gap:14px;margin-top:8px"><i class="fa-solid fa-backward-step"></i><i class="fa-solid fa-pause"></i><i class="fa-solid fa-forward-step"></i><div class="eqs" style="margin:0 0 0 auto"><i></i><i></i><i></i><i></i></div></div><span style="position:absolute;left:58px;top:56px;background:#1db954;border-radius:6px;padding:2px 4px;font-size:10px"><i class="fa-brands fa-spotify"></i></span></div>
-          <div class="tile"><b>zář</b> &nbsp;<span style="color:#9a9aa6">22 · 23 · 24 · </span><b style="color:#3b82f6">25</b><span style="color:#9a9aa6"> · 26</span><br><br><span style="color:#9a9aa6">Další: MAT · A315 · za 12 min</span></div>
-          <div class="wxt"><small>Praha</small><b>12°</b><small>Polojasno</small></div>
-        </div>
-        <div class="pane" data-pane="tray"><div class="tile" style="border:1px dashed rgba(255,255,255,.25);display:grid;place-items:center;color:#9a9aa6">Přetáhni sem soubory · později je odtud vezmi</div></div>
-        <div class="pane" data-pane="doprava"><div class="tile">
-          <div class="row"><span><span class="badge b-tram"><i class="fa-solid fa-train-subway"></i> 9</span> Sídliště Řepy</span><span class="ok">včas</span><b>2 min</b></div>
-          <div class="row"><span><span class="badge b-bus"><i class="fa-solid fa-bus"></i> 191</span> Na Knížecí</span><span class="late">+3′</span><b>5 min</b></div>
-          <div class="row"><span><span class="badge b-metro"><i class="fa-solid fa-m"></i> B</span> Černý Most</span><span class="ok">včas</span><b>7 min</b></div>
-        </div><div class="tile">
-          <div class="row"><span class="badge b-rj">RegioJet</span><span>15:00 → 17:25 · 2:25 h</span><b>199 Kč</b></div>
-          <div class="row"><span class="badge b-fb">FlixBus</span><span>15:30 → 18:05 · 2:35 h</span><b>249 Kč</b></div>
-        </div></div>
-        <div class="pane" data-pane="hovory"><div class="tile"><i class="fa-solid fa-microphone" style="color:#3fe36f"></i> <b>Probíhá hovor</b> · Discord<br><span style="color:#9a9aa6">#general: Adam, Kuba, Tereza</span><div class="chips"><span><i class="fa-solid fa-microphone-slash"></i> Mute</span><span><i class="fa-solid fa-volume-xmark"></i> Deafen</span></div></div></div>
-        <div class="pane" data-pane="shot"><div class="tile"><div class="chips"><span>⌘⇧2 Oblast</span><span>⌘⇧1 Obrazovka</span><span>⌘⇧7 Okno</span><span>⌘⇧O OCR</span></div></div><div class="shot"></div><div class="shot"></div></div>
-        <div class="pane" data-pane="schranka"><div class="tile"><div class="row"><span><i class="fa-regular fa-file-lines" style="color:#9a9aa6"></i> https://github.com/Brozovec/NotchIsland</span><small>2 min</small></div><div class="row"><span><i class="fa-regular fa-file-lines" style="color:#9a9aa6"></i> večeře v 7?</span><small>10 min</small></div><div class="row"><span><i class="fa-regular fa-image" style="color:#9a9aa6"></i> Obrázek 1200×800</span><small>1 h</small></div></div></div>
-        <div class="pane" data-pane="casovac"><div class="ring">24:59</div><div class="tile"><div class="chips"><span>5</span><span>10</span><span>25</span><span>45</span><span style="background:rgba(255,159,10,.35)"><i class="fa-solid fa-leaf"></i> Pomodoro</span></div><p style="color:#9a9aa6;margin:8px 0 0">Odpočet běží vedle kamery. Klik pauzne.</p></div></div>
-        <div class="pane" data-pane="rozvrh"><div class="tile"><div style="color:#ffb340;font-size:11px;margin-bottom:6px"><i class="fa-solid fa-mug-hot"></i> Přestávka 20 min · další MAT (A315) za 14 min</div><div class="cards"><div class="lc"><b>ČJL</b><span class="rm">A103</span><span>8:00</span></div><div class="lc now"><b>PRG</b><span class="rm">A104</span><span>8:50</span></div><div class="lc"><b>PRG</b><span class="rm">A104</span><span>9:45</span></div><div class="lc x"><b>NJ</b><span>Zrušeno</span></div><div class="lc s"><b>MAT</b><span class="rm" style="color:#ffb340">A315</span><span>11:40</span></div><div class="lc"><b>TV</b><span class="rm">SOK</span><span>12:35</span></div></div></div></div>
       </div>
     </div>
-    <div class="dock"><i style="--a:#5ac8fa;--b:#007aff"></i><i style="--a:#ff9f0a;--b:#ff375f"></i><i style="--a:#30d158;--b:#0a84ff"></i><i style="--a:#bf5af2;--b:#5e5ce6"></i><i style="--a:#ffd60a;--b:#ff9f0a"></i><i style="--a:#8e8e93;--b:#48484a"></i></div>
+    <div class="dock">
+      <i class="dk finder" title="Finder"><b></b></i><i class="dk" style="--a:#3a86ff;--b:#0a3d91"><span class="fa-solid fa-compass"></span></i><i class="dk" style="--a:#66d0ff;--b:#1f7cff"><span class="fa-solid fa-envelope"></span></i><i class="dk" style="--a:#ff5f57;--b:#c62828"><span class="fa-regular fa-calendar"></span></i><i class="dk" style="--a:#1db954;--b:#0f7a36"><span class="fa-brands fa-spotify"></span></i><i class="dk" style="--a:#f5f5f7;--b:#c8c8cc"><span class="fa-brands fa-chrome" style="color:#333"></span></i><i class="dk" style="--a:#5865f2;--b:#3b45c4"><span class="fa-brands fa-discord"></span></i><i class="dk" style="--a:#2c2c2e;--b:#0b0b0d"><span class="fa-solid fa-terminal" style="color:#3fe36f"></span></i><i class="dk" style="--a:#8e8e93;--b:#48484a"><span class="fa-solid fa-gear"></span></i><i class="dk sep"></i><i class="dk" style="--a:#e5e5ea;--b:#aeaeb2"><span class="fa-solid fa-trash-can" style="color:#333"></span></i>
+    </div>
+    <div class="rdemo" id="rdemo">
+      <img class="collapsed" src="../demo/collapsed.png" alt="Collapsed notch with timer wings" width="800" height="96">
+      <div class="panel">
+        <img data-tab="home" class="on" src="../demo/home.png" alt="Island: now playing, calendar, weather" width="1800" height="304">
+        <img data-tab="files" src="../demo/files.png" alt="File tray" width="1800" height="304" loading="lazy">
+        <img data-tab="transit" src="../demo/transit.png" alt="Transit: Prague to Brno" width="1800" height="304" loading="lazy">
+        <img data-tab="calls" src="../demo/calls.png" alt="Calls" width="1800" height="304" loading="lazy">
+        <img data-tab="notes" src="../demo/notes.png" alt="Notes" width="1800" height="304" loading="lazy">
+        <img data-tab="clipboard" src="../demo/clipboard.png" alt="Clipboard history" width="1800" height="304" loading="lazy">
+        <img data-tab="timer" src="../demo/timer.png" alt="Timer and Pomodoro" width="1800" height="304" loading="lazy">
+      </div>
+    </div>
   </div>
-  <p class="hint">Tohle je ukázka v HTML. Ta pravá je jedno stažení daleko.</p>
+  <div class="rtabs" id="rtabs">
+    <button data-tab="home" class="on"><i class="fa-solid fa-house"></i> Island</button>
+    <button data-tab="files"><i class="fa-solid fa-inbox"></i> Tray</button>
+    <button data-tab="transit"><i class="fa-solid fa-train-subway"></i> Doprava</button>
+    <button data-tab="calls"><i class="fa-solid fa-phone"></i> Hovory</button>
+    <button data-tab="notes"><i class="fa-regular fa-note-sticky"></i> Poznámky</button>
+    <button data-tab="clipboard"><i class="fa-solid fa-clipboard"></i> Schránka</button>
+    <button data-tab="timer"><i class="fa-solid fa-stopwatch"></i> Časovač</button>
+  </div>
+  <p class="hint">Každý snímek nahoře je skutečný. Jen ukázková data jsou připravená.</p>
 </section>
 
 <section id="features">

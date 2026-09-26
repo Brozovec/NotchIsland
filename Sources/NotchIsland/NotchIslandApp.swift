@@ -37,6 +37,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                     case "capture": ScreenshotService.shared.capture(mode: .screen)
                     case "stop": TransitService.shared.stopQuery = parts.last ?? ""; await TransitService.shared.refresh()
                     case "route": let p = (parts.last ?? "").split(separator: "|").map(String.init); if p.count == 2 { IntercityService.shared.from = p[0]; IntercityService.shared.to = p[1]; await IntercityService.shared.search() }
+                    case "timer": TimerService.shared.start(minutes: Int(parts.last ?? "") ?? 25, pomodoro: true)
+                    case "play": MusicService.shared.playPause()
                     default: break
                     }
                 }

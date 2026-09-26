@@ -85,9 +85,10 @@ final class WeatherService: NSObject, ObservableObject, CLLocationManagerDelegat
                 guard let dt = hf.date(from: ht[i]), dt >= nowDate, i < hT.count, i < hc.count else { return nil }
                 return WeatherHour(date: dt, temp: hT[i], code: hc[i], isDay: i < hd.count ? hd[i] == 1 : true)
             }.prefix(12))
+            let displayCity = UserDefaults.standard.string(forKey: "weatherCityOverride") ?? cityName
             now = WeatherNow(temp: cur["temperature_2m"] as? Double ?? 0, feels: cur["apparent_temperature"] as? Double ?? 0,
                              wind: cur["wind_speed_10m"] as? Double ?? 0, code: cur["weather_code"] as? Int ?? 0,
-                             isDay: (cur["is_day"] as? Int ?? 1) == 1, city: cityName, tMin: mn.first ?? 0, tMax: mx.first ?? 0)
+                             isDay: (cur["is_day"] as? Int ?? 1) == 1, city: displayCity, tMin: mn.first ?? 0, tMax: mx.first ?? 0)
             error = nil
         } catch { self.error = error.localizedDescription }
     }
