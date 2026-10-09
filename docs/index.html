@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>NotchIsland – Dynamic Island for the MacBook notch (free, open source)</title>
-<meta name="description" content="NotchIsland turns the MacBook notch into a Dynamic Island: now playing with controls, file tray, live public transport, school timetable, screenshots with OCR, clipboard history, Pomodoro timer, weather and calendar. Free, open source, macOS 14+.">
+<title>NotchIsland – Dynamic Island for your MacBook notch and Windows (free)</title>
+<meta name="description" content="NotchIsland turns the MacBook notch into a Dynamic Island, and now does the same on Windows: now playing with controls, file tray, live public transport, school timetable, screenshots with OCR, clipboard history, Pomodoro timer, weather and calendar. Free, macOS 14+ and Windows 10/11.">
 <link rel="canonical" href="https://notchisland.brozovec.eu/">
 <link rel="alternate" hreflang="en" href="https://notchisland.brozovec.eu/">
 <link rel="alternate" hreflang="x-default" href="https://notchisland.brozovec.eu/">
@@ -22,10 +22,11 @@
 <link rel="stylesheet" href="style.css"><link rel="stylesheet" href="showcase.css">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[
-{"@type":"SoftwareApplication","name":"NotchIsland","applicationCategory":"UtilitiesApplication","operatingSystem":"macOS 14 or later","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"downloadUrl":"https://github.com/Brozovec/NotchIsland/releases/latest","softwareVersion":"1.0","license":"https://github.com/Brozovec/NotchIsland/blob/main/LICENSE","author":{"@type":"Person","name":"Adam Brož","url":"https://github.com/Brozovec"},"image":"https://notchisland.brozovec.eu/og-image.png","description":"Dynamic Island for the MacBook notch: now playing, file tray, live public transport, school timetable, screenshots with OCR, clipboard history, timer, weather and calendar."},
+{"@type":"SoftwareApplication","name":"NotchIsland","applicationCategory":"UtilitiesApplication","operatingSystem":"macOS 14 or later, Windows 10/11","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"downloadUrl":"https://github.com/Brozovec/NotchIsland/releases/latest","softwareVersion":"1.0","license":"https://github.com/Brozovec/NotchIsland/blob/main/LICENSE","author":{"@type":"Person","name":"Adam Brož","url":"https://github.com/Brozovec"},"image":"https://notchisland.brozovec.eu/og-image.png","description":"Dynamic Island for the MacBook notch: now playing, file tray, live public transport, school timetable, screenshots with OCR, clipboard history, timer, weather and calendar."},
 {"@type":"FAQPage","mainEntity":[
 {"@type":"Question","name":"Is NotchIsland free?","acceptedAnswer":{"@type":"Answer","text":"Yes. NotchIsland is free to use, study and modify. The source is on GitHub under a custom attribution license: keep the credit to Adam Brož and do not republish it as your own."}},
 {"@type":"Question","name":"Which Macs does it support?","acceptedAnswer":{"@type":"Answer","text":"Any Mac running macOS 14 Sonoma or newer. The full effect needs a MacBook with a notch (Pro 2021+, Air 2022+); on other Macs a small island is drawn below the top edge."}},
+{"@type":"Question","name":"Is there a Windows version?","acceptedAnswer":{"@type":"Answer","text":"Yes. NotchIsland for Windows is a free download for Windows 10 and 11 with the same tabs: now playing, transit, timetable, screenshots, clipboard, timer, weather."}},
 {"@type":"Question","name":"macOS says the app cannot be verified. What now?","acceptedAnswer":{"@type":"Answer","text":"The app is signed but not notarized. Right-click NotchIsland.app and choose Open, or go to System Settings → Privacy & Security and click Open Anyway. You only do this once."}},
 {"@type":"Question","name":"Does it work with YouTube in the browser?","acceptedAnswer":{"@type":"Answer","text":"Yes. NotchIsland reads the system Now Playing information, so anything macOS shows in Control Center appears in the notch – Spotify, Apple Music, YouTube in Chrome or Safari, podcasts."}},
 {"@type":"Question","name":"Does it send my data anywhere?","acceptedAnswer":{"@type":"Answer","text":"No. There is no account and no server. Data stays on your Mac. Network requests go only to the public services you use (transit data, weather, your school's Bakaláři server)."}}
@@ -35,7 +36,7 @@
 <body>
 <header><div class="wrap"><nav>
 <a class="logo" href="./"><img src="icon.png" alt="">NotchIsland</a>
-<div class="links"><a href="#demo">Demo</a><a href="#features">Features</a><a href="#install">Install</a><a href="#faq">FAQ</a><a href="https://github.com/Brozovec/NotchIsland">GitHub</a></div>
+<div class="links"><a href="#demo">Demo</a><a href="#features">Features</a><a href="#windows">Windows</a><a href="#install">Install</a><a href="#faq">FAQ</a><a href="https://github.com/Brozovec/NotchIsland">GitHub</a></div>
 </nav></div></header>
 
 <main class="wrap">
@@ -48,8 +49,8 @@
   </div>
   <h1>Your MacBook notch, finally useful.</h1>
   <p class="sub">NotchIsland turns the camera cutout into a Dynamic Island. Hover to expand: music, files, live transit, your timetable, screenshots, clipboard, a timer and the weather.</p>
-  <div class="cta"><a class="btn" href="https://github.com/Brozovec/NotchIsland/releases/latest"><i class="fa-solid fa-download"></i> Download for macOS</a><a class="btn ghost" href="https://github.com/Brozovec/NotchIsland"><i class="fa-brands fa-github"></i> View on GitHub</a></div>
-  <p class="note">Free · Source available · macOS 14+ · Apple Silicon &amp; Intel · Czech, English, German, Slovak, Polish</p>
+  <div class="cta"><a class="btn" href="https://github.com/Brozovec/NotchIsland/releases/latest"><i class="fa-brands fa-apple"></i> Download for macOS</a><a class="btn" href="https://github.com/Brozovec/NotchIsland-Windows/releases/latest"><i class="fa-brands fa-windows"></i> Download for Windows</a><a class="btn ghost" href="https://github.com/Brozovec/NotchIsland"><i class="fa-brands fa-github"></i> GitHub</a></div>
+  <p class="note">Free · macOS 14+ (Apple Silicon &amp; Intel) · <b>new:</b> Windows 10/11 · Czech, English, German, Slovak, Polish</p>
 </section>
 
 
@@ -115,6 +116,15 @@
 </section>
 
 
+
+<section id="windows">
+  <h2>Now on Windows too</h2>
+  <p class="lead">No notch? No problem. The same island sits at the top of your Windows screen.</p>
+  <figure style="margin:0 0 18px"><img src="promo/windows-banner-1600x900.jpg" alt="NotchIsland for Windows" width="1600" height="900" loading="lazy" style="width:100%;border-radius:20px;border:1px solid rgba(255,255,255,.08)"></figure>
+  <div class="cta" style="justify-content:flex-start"><a class="btn" href="https://github.com/Brozovec/NotchIsland-Windows/releases/latest"><i class="fa-brands fa-windows"></i> Download for Windows</a><a class="btn ghost" href="https://github.com/Brozovec/NotchIsland-Windows"><i class="fa-brands fa-github"></i> Windows source</a></div>
+  <p class="note" style="text-align:left">Unzip and run, no install. Windows 10 (19041+) or 11. SmartScreen may ask once: More info → Run anyway. First Windows build, feedback welcome.</p>
+</section>
+
 <section id="install">
   <h2>Install in a minute</h2>
   <div class="steps">
@@ -129,6 +139,7 @@
   <h2>FAQ</h2>
   <details open><summary>Is it free?</summary><p>Yes. Free to use, study and modify. The source is on GitHub under a custom attribution license: keep the credit to Adam Brož and don't republish it as your own.</p></details>
   <details><summary>Which Macs are supported?</summary><p>macOS 14 Sonoma or newer. The full effect needs a MacBook with a notch (Pro 2021+, Air 2022+); other Macs get a small island below the top edge.</p></details>
+  <details><summary>Is there a Windows version?</summary><p>Yes, since October 2026. Download the ZIP from the <a href="https://github.com/Brozovec/NotchIsland-Windows/releases/latest">Windows releases</a>, unzip and run NotchIsland.exe. Same tabs, Windows media session for Now Playing, Ctrl+Shift shortcuts.</p></details>
   <details><summary>"NotchIsland can't be opened because Apple cannot check it for malicious software"</summary><p>Right-click the app → Open, or System Settings → Privacy &amp; Security → Open Anyway. Once.</p></details>
   <details><summary>Does it see YouTube in the browser?</summary><p>Yes. It reads the same Now Playing info macOS shows in Control Center, so Chrome, Safari, podcasts and every music app show up.</p></details>
   <details><summary>Screenshots come out black or the shortcut does nothing</summary><p>Allow NotchIsland under System Settings → Privacy &amp; Security → Screen Recording. If you run Shottr at the same time, it grabs the same shortcuts; quit it or change its keys.</p></details>

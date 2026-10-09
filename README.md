@@ -9,7 +9,9 @@
   <b>Created by Adam Brož</b> · macOS 14+ · Swift / SwiftUI · Source-available, attribution required
 </p>
 
-<p align="center"><a href="#english">English</a> · <a href="#česky">Česky</a> · <a href="https://notchisland.brozovec.eu/">Website</a> · <a href="https://github.com/Brozovec/NotchIsland/releases/latest">Download DMG</a></p>
+<p align="center"><a href="#english">English</a> · <a href="#česky">Česky</a> · <a href="https://notchisland.brozovec.eu/">Website</a> · <a href="https://github.com/Brozovec/NotchIsland/releases/latest">Download DMG</a> · <b>🪟 <a href="https://github.com/Brozovec/NotchIsland-Windows">Windows version</a></b></p>
+
+> **New (October 2026):** NotchIsland is also available for Windows 10/11. Same island, same tabs. Get it at [github.com/Brozovec/NotchIsland-Windows](https://github.com/Brozovec/NotchIsland-Windows).
 
 <p align="center"><img src="docs/promo/banner-1600x900.jpg" width="900" alt="NotchIsland – your MacBook notch, finally useful"></p>
 
@@ -106,6 +108,8 @@ Requires a Mac with a notch for the full effect; on other Macs a small island is
 ---
 
 ## Česky
+
+> **Novinka (říjen 2026):** NotchIsland je i pro Windows 10/11. Stejný ostrůvek, stejné záložky: [github.com/Brozovec/NotchIsland-Windows](https://github.com/Brozovec/NotchIsland-Windows).
 
 ### Co to umí
 
