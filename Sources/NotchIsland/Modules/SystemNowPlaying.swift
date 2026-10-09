@@ -23,11 +23,14 @@ final class SystemNowPlaying: @unchecked Sendable {
 
     func start() {
         guard let script, let framework, FileManager.default.fileExists(atPath: framework + "/MediaRemoteAdapter") else { Log.w("nowplaying adapter missing"); return }
-        let test = Process(); test.executableURL = URL(fileURLWithPath: "/usr/bin/perl"); test.arguments = [script, framework, "test"]
-        test.standardOutput = FileHandle.nullDevice; test.standardError = FileHandle.nullDevice
-        try? test.run(); test.waitUntilExit()
-        available = test.terminationStatus == 0
-        Log.w("nowplaying adapter available=\(available)")
+        // adaptérový příkaz "test" vyžaduje testovacího klienta, který nepřibalujeme → ověříme rovnou přes "get"
+        let probe = Process(); probe.executableURL = URL(fileURLWithPath: "/usr/bin/perl"); probe.arguments = [script, framework, "get", "--no-artwork"]
+        let out = Pipe(); probe.standardOutput = out; probe.standardError = FileHandle.nullDevice
+        try? probe.run()
+        let data = out.fileHandleForReading.readDataToEndOfFile(); probe.waitUntilExit()
+        let text = String(decoding: data, as: UTF8.self)
+        available = probe.terminationStatus == 0 || text.contains("{")
+        Log.w("nowplaying adapter available=\(available) exit=\(probe.terminationStatus)")
         guard available else { return }
         launchStream()
     }
