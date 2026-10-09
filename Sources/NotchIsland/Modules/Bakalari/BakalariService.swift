@@ -35,7 +35,7 @@ final class BakalariService: ObservableObject {
         session = URLSession(configuration: c)
         if let d = try? Data(contentsOf: cacheURL), let t = try? JSONDecoder().decode(Timetable.self, from: d) { timetable = t }
         timer = Timer.scheduledTimer(withTimeInterval: 1800, repeats: true) { [weak self] _ in Task { await self?.refresh() } }
-        stateTimer = Timer.scheduledTimer(withTimeInterval: 15, repeats: true) { [weak self] _ in self?.updateState() }
+        stateTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in self?.updateState() }   // 1 s – plynulý odpočet přestávky
         Task { await refresh(); updateState() }
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound]) { _, _ in }
     }
@@ -72,7 +72,7 @@ final class BakalariService: ObservableObject {
             if let prev = list.last(where: { $0.end <= now }) { new = .breakTime(next: next, startsIn: next.start.timeIntervalSince(now), length: next.start.timeIntervalSince(prev.end)) }
             else { new = .beforeSchool(first: next, startsIn: next.start.timeIntervalSince(now)) }
         } else { new = .done }
-        school = new
+        if school != new { school = new }
         // oznámení: začátek přestávky / poslední hodina skončila
         let key: String
         switch new {
