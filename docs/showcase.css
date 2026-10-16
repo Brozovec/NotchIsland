@@ -35,18 +35,9 @@
 
 @media (max-width:900px){.mac .menubar span:not(.r){display:none}.mac .menubar{justify-content:space-between}}
 
-/* --- ukázka z reálných snímků --- */
-.rdemo{position:absolute;top:0;left:50%;transform:translateX(-50%);width:100%;z-index:5;pointer-events:none}
-.rdemo .collapsed{position:absolute;top:0;left:50%;transform:translateX(-50%);width:33%;height:auto;pointer-events:auto;transition:opacity .2s;cursor:pointer}
-.rdemo .panel{position:absolute;top:0;left:50%;transform:translateX(-50%) scaleY(.35);transform-origin:top center;width:min(75%,900px);opacity:0;transition:transform .42s cubic-bezier(.2,1.2,.3,1),opacity .28s;pointer-events:none;filter:drop-shadow(0 30px 60px rgba(0,0,0,.6))}
-.rdemo .panel img{position:absolute;top:0;left:0;width:100%;height:auto;opacity:0;transition:opacity .25s}
-.rdemo .panel img.on{opacity:1;position:relative}
-.rdemo.open .panel{transform:translateX(-50%) scaleY(1);opacity:1;pointer-events:auto}
-.rdemo.open .collapsed{opacity:0;pointer-events:none}
 .rtabs{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:16px}
 .rtabs button{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.08);color:var(--muted);font:600 13px/1 inherit;padding:9px 13px;border-radius:999px;cursor:pointer;display:flex;gap:6px;align-items:center;transition:all .15s}
 .rtabs button.on,.rtabs button:hover{background:#fff;color:#000;border-color:#fff}
-@media (max-width:900px){.rdemo{position:relative;left:auto;transform:none;min-height:0;padding-top:26px}.rdemo .collapsed{width:60%}.rdemo .panel{width:96%}}
 
 /* --- realistická plocha macOS --- */
 .mac .wall{background:radial-gradient(900px 500px at 15% 110%,#f0733a 0,transparent 55%),radial-gradient(900px 600px at 85% -10%,#5f3dc4 0,transparent 60%),radial-gradient(700px 400px at 60% 60%,#c2185b 0,transparent 60%),linear-gradient(160deg,#1a0f3a,#2d1b69 40%,#0d1b4b)}

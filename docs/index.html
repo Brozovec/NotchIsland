@@ -19,7 +19,7 @@
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="NotchIsland – Dynamic Island for the MacBook notch"><meta name="twitter:description" content="Free, open-source Dynamic Island for macOS. Music, files, live transit, timetable, screenshots, clipboard, timer, weather."><meta name="twitter:image" content="https://notchisland.brozovec.eu/og-image.png">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer">
-<link rel="stylesheet" href="style.css"><link rel="stylesheet" href="showcase.css">
+<link rel="stylesheet" href="style.css"><link rel="stylesheet" href="showcase.css"><link rel="stylesheet" href="island/island.css">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@graph":[
 {"@type":"SoftwareApplication","name":"NotchIsland","applicationCategory":"UtilitiesApplication","operatingSystem":"macOS 14 or later, Windows 10/11","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"downloadUrl":"https://github.com/Brozovec/NotchIsland/releases/latest","softwareVersion":"1.0","license":"https://github.com/Brozovec/NotchIsland/blob/main/LICENSE","author":{"@type":"Person","name":"Adam Brož","url":"https://github.com/Brozovec"},"image":"https://notchisland.brozovec.eu/og-image.png","description":"Dynamic Island for the MacBook notch: now playing, file tray, live public transport, school timetable, screenshots with OCR, clipboard history, timer, weather and calendar."},
@@ -56,7 +56,7 @@
 
 <section id="demo">
   <h2>See it in action</h2>
-  <p class="lead">Real screenshots of the app. Hover the notch (or tap it), then switch tabs.</p>
+  <p class="lead">A live, interactive copy of the island. Hover the notch (or tap it), switch tabs, press play, start a timer.</p>
   <div class="mac" id="demo-mac">
     <div class="wall"></div>
     <div class="menubar"><span class="apple"><i class="fa-brands fa-apple"></i></span><b>Finder</b><span>File</span><span>Edit</span><span>View</span><span>Go</span><span>Window</span><span>Help</span><span class="r"><i class="fa-solid fa-wifi"></i> <i class="fa-solid fa-magnifying-glass"></i> <i class="fa-solid fa-battery-three-quarters"></i> Sat 14:02</span></div>
@@ -74,29 +74,20 @@
     <div class="dock">
       <i class="dk finder" title="Finder"><b></b></i><i class="dk" style="--a:#3a86ff;--b:#0a3d91"><span class="fa-solid fa-compass"></span></i><i class="dk" style="--a:#66d0ff;--b:#1f7cff"><span class="fa-solid fa-envelope"></span></i><i class="dk" style="--a:#ff5f57;--b:#c62828"><span class="fa-regular fa-calendar"></span></i><i class="dk" style="--a:#1db954;--b:#0f7a36"><span class="fa-brands fa-spotify"></span></i><i class="dk" style="--a:#f5f5f7;--b:#c8c8cc"><span class="fa-brands fa-chrome" style="color:#333"></span></i><i class="dk" style="--a:#5865f2;--b:#3b45c4"><span class="fa-brands fa-discord"></span></i><i class="dk" style="--a:#2c2c2e;--b:#0b0b0d"><span class="fa-solid fa-terminal" style="color:#3fe36f"></span></i><i class="dk" style="--a:#8e8e93;--b:#48484a"><span class="fa-solid fa-gear"></span></i><i class="dk sep"></i><i class="dk" style="--a:#e5e5ea;--b:#aeaeb2"><span class="fa-solid fa-trash-can" style="color:#333"></span></i>
     </div>
-    <div class="rdemo" id="rdemo">
-      <img class="collapsed" src="demo/collapsed.png" alt="Collapsed notch with timer wings" width="800" height="96">
-      <div class="panel">
-        <img data-tab="home" class="on" src="demo/home.png" alt="Island: now playing, calendar, weather" width="1800" height="304">
-        <img data-tab="files" src="demo/files.png" alt="File tray" width="1800" height="304" loading="lazy">
-        <img data-tab="transit" src="demo/transit.png" alt="Transit: Prague to Brno" width="1800" height="304" loading="lazy">
-        <img data-tab="calls" src="demo/calls.png" alt="Calls" width="1800" height="304" loading="lazy">
-        <img data-tab="notes" src="demo/notes.png" alt="Notes" width="1800" height="304" loading="lazy">
-        <img data-tab="clipboard" src="demo/clipboard.png" alt="Clipboard history" width="1800" height="304" loading="lazy">
-        <img data-tab="timer" src="demo/timer.png" alt="Timer and Pomodoro" width="1800" height="304" loading="lazy">
-      </div>
-    </div>
+    <div class="ni-wrap" id="ni-wrap"><div id="island-root"></div></div>
   </div>
   <div class="rtabs" id="rtabs">
     <button data-tab="home" class="on"><i class="fa-solid fa-house"></i> Island</button>
-    <button data-tab="files"><i class="fa-solid fa-inbox"></i> Tray</button>
+    <button data-tab="tray"><i class="fa-solid fa-inbox"></i> Tray</button>
     <button data-tab="transit"><i class="fa-solid fa-train-subway"></i> Transit</button>
+    <button data-tab="shot"><i class="fa-solid fa-camera"></i> Shot</button>
     <button data-tab="calls"><i class="fa-solid fa-phone"></i> Calls</button>
     <button data-tab="notes"><i class="fa-regular fa-note-sticky"></i> Notes</button>
     <button data-tab="clipboard"><i class="fa-solid fa-clipboard"></i> Clipboard</button>
     <button data-tab="timer"><i class="fa-solid fa-stopwatch"></i> Timer</button>
+    <button data-tab="timetable"><i class="fa-solid fa-graduation-cap"></i> Timetable</button>
   </div>
-  <p class="hint">Every frame above is a real capture. Only the sample data was staged.</p>
+  <p class="hint">Built with the same layout, sizes and animations as the app. The data is sample data.</p>
 </section>
 
 <section id="features">
@@ -149,6 +140,6 @@
 </main>
 
 <footer><div class="wrap">Made in Prague by <a href="https://github.com/Brozovec">Adam Brož</a> · <a href="https://github.com/Brozovec/NotchIsland/blob/main/LICENSE">License</a> · <a href="https://github.com/Brozovec/NotchIsland/issues">Report a bug</a></div></footer>
-<script src="showcase.js" defer></script>
+<script src="island.js" defer></script><script src="showcase.js" defer></script>
 </body>
 </html>
