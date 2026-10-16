@@ -69,8 +69,29 @@
 .ni-pomo{background:#5a3a12!important;color:#ffb366!important;display:flex;gap:6px;align-items:center;margin-left:4px}.ni-pomo.on{background:#6a4218!important}
 .ni-tbtns{display:flex;gap:5px}.ni-tbtns input{width:52px;background:rgba(255,255,255,.1);border:0;color:#fff;border-radius:8px;padding:4px 8px;font:600 12px inherit;outline:0}.ni-tbtns button{background:rgba(255,255,255,.14);border:0;color:#fff;border-radius:8px;width:30px;height:26px;font-size:12px}
 .ni-tctl small{color:#6b6b75;font-size:10px}
-/* timetable */
-.ni-tt{display:flex;flex-direction:column;gap:8px;width:100%}
-.ni-tthead{display:flex;align-items:center;gap:6px;font-size:11px}.ni-tthead button{background:rgba(255,255,255,.08);border:0;color:#9a9aa6;border-radius:999px;padding:4px 10px;font:700 11px inherit}.ni-tthead button.on{background:#3b82f6;color:#fff}.ni-tthead span{margin-left:8px;color:#ffb366;display:flex;gap:6px;align-items:center}.ni-tthead b{margin-left:auto;color:#9a9aa6}
-.ni-ttrow{display:flex;gap:5px;flex:1}.ni-les{flex:1;background:rgba(255,255,255,.06);border-radius:10px;padding:8px 6px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px}.ni-les small{color:#6b6b75;font-size:9px}.ni-les b{font-size:14px}.ni-les span{color:#9a9aa6}.ni-les.now{background:rgba(63,227,111,.18);outline:1px solid #3fe36f}.ni-les.free{opacity:.4}
+/* transit – stop board (PID) */
+.ni-stopfield{display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.08);border-radius:8px;padding:3px 8px;height:22px;font-size:10px;color:rgba(255,255,255,.5)}.ni-stopfield input{flex:1;background:transparent;border:0;color:#fff;font:400 11px inherit;outline:0}
+.ni-favs{display:flex;gap:4px;height:16px}.ni-favs button{background:rgba(255,255,255,.08);border:0;color:rgba(255,255,255,.9);border-radius:999px;padding:0 6px;font:400 9px inherit}.ni-favs button.on{background:rgba(255,255,255,.18);font-weight:700}
+.ni-deps{gap:2px;overflow:auto;scrollbar-width:none}
+.ni-dep{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.04);border-radius:6px;padding:2px 6px;height:24px}.ni-dep:hover{background:rgba(255,255,255,.1)}
+.ni-line{min-width:46px;box-sizing:border-box;color:#fff;border-radius:5px;padding:2px 5px;font:700 10px inherit;display:flex;gap:3px;align-items:center;justify-content:center}.ni-line i{font-size:8px}
+.ni-dt{flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.1}.ni-dt b{font-size:11px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ni-dt span{font-size:9px;color:rgba(255,255,255,.5)}
+.ni-late{font:600 10px inherit;color:#ff453a}.ni-ontime{font:400 9px inherit;color:rgba(48,209,88,.8)}
+.ni-min{width:44px;text-align:right;font-size:11px;font-weight:700}.ni-track{font-size:10px;color:rgba(255,255,255,.3)}.ni-dep:hover .ni-track{color:rgba(255,255,255,.9)}
+/* timetable – Bakaláři */
+.ni-tt{display:flex;flex-direction:column;gap:4px;width:100%;align-items:flex-start}
+.ni-tthead{display:flex;align-items:center;gap:8px;width:100%;font-size:11px}
+.ni-seg{display:flex;background:rgba(255,255,255,.1);border-radius:6px;padding:1px;width:110px}.ni-seg button{flex:1;background:transparent;border:0;color:rgba(255,255,255,.7);border-radius:5px;font:600 10px inherit;padding:2px 0}.ni-seg button.on{background:rgba(255,255,255,.22);color:#fff}
+.ni-chev{font-size:9px;color:rgba(255,255,255,.6)}.ni-tthead b{font-weight:600}.ni-cls{margin-left:auto;font:700 9px inherit;color:rgba(255,255,255,.5)}
+.ni-state{display:flex;align-items:center;gap:6px;height:12px;font-size:10px;font-weight:500}.ni-state em{font:700 9px inherit;color:#5ac8fa}.ni-state b{font:600 10px inherit}.ni-state span{color:rgba(255,255,255,.7);font-size:9px}.ni-state .ni-warn{font:600 9px inherit;color:#ffd60a}.ni-state .ni-chg{font:600 9px inherit;color:#ff9f0a}
+.ni-cards{display:flex;gap:4px;height:80px;overflow:hidden;width:100%}
+.ni-lcard,.ni-ecard{position:relative;width:66px;height:78px;flex:none;border-radius:9px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;box-sizing:border-box}
+.ni-lcard{background:rgba(255,255,255,.07);border:1px solid transparent}.ni-lcard.now{background:rgba(48,209,88,.22);border-color:rgba(48,209,88,.6)}.ni-lcard.change{background:rgba(255,159,10,.2);border-color:rgba(255,159,10,.5)}.ni-lcard.cancel{background:rgba(255,69,58,.14);border:1px dashed rgba(255,69,58,.5)}
+.ni-lcard small{font:700 8px inherit;color:rgba(255,255,255,.4)}.ni-lcard small.t{font-weight:400;color:rgba(255,255,255,.5)}.ni-lcard b{font-size:13px}.ni-lcard.cancel b{color:rgba(255,255,255,.45);text-decoration:line-through #ff453a}
+.ni-lcard span{font:700 10px inherit;color:#5ac8fa}.ni-lcard span.chg{color:#ff9f0a}.ni-lcard em{font:600 9px inherit;color:#ff453a}
+.ni-bdg{position:absolute;top:3px;left:3px;width:11px;height:11px;border-radius:3px;font:900 7px/11px inherit;text-align:center;color:#fff}.ni-bdg.red{background:#ff453a}.ni-bdg.org{background:#ff9f0a}
+.ni-ecard{background:rgba(255,255,255,.025);border:1px dashed rgba(255,255,255,.06);justify-content:space-between;padding:4px 0}.ni-ecard small{font:700 8px inherit;color:rgba(255,255,255,.3)}.ni-ecard small.b{font-weight:400;color:rgba(255,255,255,.2)}
+.ni-wgrid{display:flex;flex-direction:column;gap:3px;width:100%}.ni-wrow{display:flex;gap:3px;align-items:stretch}.ni-wrow>span{width:34px;flex:none;font:700 9px inherit;color:rgba(255,255,255,.55);display:flex;align-items:center;justify-content:center;border-radius:6px}.ni-wrow>span.on{color:#5ac8fa;background:rgba(90,200,250,.15)}
+.ni-whead span{font:700 8px inherit;color:rgba(255,255,255,.5);flex:1;width:auto}.ni-whead span:first-child{flex:none;width:34px}
+.ni-wcell{flex:1;height:30px;background:rgba(255,255,255,.07);border-radius:4px;display:flex;flex-direction:column;align-items:center;justify-content:center}.ni-wcell.free{background:rgba(255,255,255,.03)}.ni-wcell b{font-size:10px}.ni-wcell small{font:600 8px inherit;color:#5ac8fa}
 @media (max-width:900px){.ni-wrap{position:relative;left:auto;transform:none;width:100%;transform:none}.ni-hover{padding:26px 0 10px}}

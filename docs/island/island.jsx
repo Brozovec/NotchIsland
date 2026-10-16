@@ -50,25 +50,28 @@ function Tray() {
 }
 
 function Transit() {
-  const [mode, setMode] = useState("routes");
-  const rows = [["FlixBus", "#8ad326", "14:35", "17:10", "2:35 h", "Praha (ÚAN Florenc) → Brno (aut. nádr. Hotel Grand)", "", "279 CZK"], ["RegioJet", "#ffd21f", "15:00", "17:30", "2:30 h", "Prague – ÚAN Florenc → Brno – bus station Grand", "7 seats", "329 CZK"], ["RegioJet", "#ffd21f", "15:00", "17:25", "2:25 h", "Praha hl. n. → Brno hl. n.", "2 seats", "529 CZK"]];
-  const stops = [["Anděl", "9", "Spořilov", "now"], ["Anděl", "12", "Sídliště Barrandov", "2 min"], ["Anděl", "20", "Divoká Šárka", "4 min"], ["Anděl", "B", "Zličín", "5 min"]];
+  const [mode, setMode] = useState("stop"); const [stop, setStop] = useState("Anděl");
+  const favs = ["Anděl", "Hlavní nádraží", "Karlovo náměstí"];
+  const rows = [["FlixBus", "#8ad326", "14:35", "17:10", "2:35 h", "Praha (ÚAN Florenc) → Brno (aut. nádr. Hotel Grand)", "", "279"], ["RegioJet", "#ffd21f", "15:00", "17:30", "2:30 h", "Prague – ÚAN Florenc → Brno – bus station Grand", "7 seats", "329"], ["RegioJet", "#ffd21f", "15:00", "17:25", "2:25 h", "Praha hl. n. → Brno hl. n.", "2 seats", "529"]];
+  // PID: [mode, line, headsign, scheduled, platform, delay, minutes]
+  const PID = { tram: ["#9A2B2B", "train-tram"], metro: ["#1F6E43", "train-subway"], bus: ["#1D5FB8", "bus"] };
+  const deps = [["tram", "9", "Spořilov", "14:03", "A", 0, 0], ["tram", "12", "Sídliště Barrandov", "14:05", "B", 2, 2], ["metro", "B", "Černý Most", "14:06", "", 0, 3], ["tram", "20", "Divoká Šárka", "14:08", "A", 0, 5], ["bus", "137", "U Waltrovky", "14:09", "C", 1, 6], ["tram", "15", "Kotlářka", "14:11", "B", 0, 8]];
   return (
     <div className="ni-transit">
-      <div className="ni-tside"><button className={mode === "stop" ? "on" : ""} onClick={() => setMode("stop")}><I n="bus-simple" /> Stop</button><button className={mode === "routes" ? "on" : ""} onClick={() => setMode("routes")}><I n="bus" /> Routes</button><small>RegioJet · FlixBus</small></div>
+      <div className="ni-tside"><button className={mode === "stop" ? "on" : ""} onClick={() => setMode("stop")}><I n="bus-simple" /> Stop</button><button className={mode === "routes" ? "on" : ""} onClick={() => setMode("routes")}><I n="bus" /> Routes</button><small>{mode === "stop" ? "PID · live" : "RegioJet · FlixBus"}</small></div>
       <div className="ni-tmain">
         {mode === "routes" ? <>
           <div className="ni-trow"><input defaultValue="Prague" /><button className="ni-ic"><I n="right-left" /></button><input defaultValue="Brno" /><button className="ni-ic"><I n="star" style={{ color: "#ffd21f" }} /></button><button className="ni-search"><I n="magnifying-glass" /></button><button className="ni-idos">ČD · IDOS</button></div>
-          <div className="ni-list">{rows.map((r, i) => <div key={i} className="ni-route"><span className="ni-brand" style={{ background: r[1] }}><I n="bus" /> {r[0]}</span><div className="ni-rt"><div><b>{r[2]}</b> <I n="arrow-right" className="ni-arr" /> <b>{r[3]}</b> <small>{r[4]}</small></div><span>{r[5]}</span></div><div className="ni-rr">{r[6] && <small>{r[6]}</small>}<b>{r[7]}</b><I n="cart-shopping" /><I n="location-arrow" /></div></div>)}</div>
+          <div className="ni-list">{rows.map((r, i) => <div key={i} className="ni-route"><span className="ni-brand" style={{ background: r[1] }}><I n="bus" /> {r[0]}</span><div className="ni-rt"><div><b>{r[2]}</b> <I n="arrow-right" className="ni-arr" /> <b>{r[3]}</b> <small>{r[4]}</small></div><span>{r[5]}</span></div><div className="ni-rr">{r[6] && <small>{r[6]}</small>}<b>{r[7]} CZK</b><I n="cart-shopping" /><I n="location-arrow" /></div></div>)}</div>
         </> : <>
-          <div className="ni-trow"><input defaultValue="Anděl" /><button className="ni-search"><I n="magnifying-glass" /></button></div>
-          <div className="ni-list">{stops.map((s, i) => <div key={i} className="ni-route"><span className="ni-brand" style={{ background: s[1] === "B" ? "#ffd21f" : "#d32f2f", color: s[1] === "B" ? "#000" : "#fff" }}>{s[1] === "B" ? <I n="train-subway" /> : <I n="train-tram" />} {s[1]}</span><div className="ni-rt"><div><b>{s[2]}</b></div><span>on time</span></div><div className="ni-rr"><b>{s[3]}</b></div></div>)}</div>
+          <div className="ni-stopfield"><I n="magnifying-glass" /><input value={stop} onChange={e => setStop(e.target.value)} placeholder="Stop (Anděl, Hlavní nádraží…)" /><I n="star" style={{ color: "#ffd21f" }} /></div>
+          <div className="ni-favs">{favs.map(f => <button key={f} className={f === stop ? "on" : ""} onClick={() => setStop(f)}>{f}</button>)}</div>
+          <div className="ni-list ni-deps">{deps.map((d, i) => <div key={i} className="ni-dep"><span className="ni-line" style={{ background: PID[d[0]][0] }}><I n={PID[d[0]][1]} /> {d[1]}</span><div className="ni-dt"><b>{d[2]}</b><span>{d[3]}{d[4] && <> &nbsp; plat. {d[4]}</>}</span></div>{d[5] > 0 ? <em className="ni-late">+{d[5]}′</em> : <em className="ni-ontime">on time</em>}<b className="ni-min">{d[6] === 0 ? "now" : d[6] + " min"}</b><I n="location-arrow" className="ni-track" /></div>)}</div>
         </>}
       </div>
     </div>
   );
 }
-
 const Calls = () => <div className="ni-calls"><div className="ni-tile ni-call"><I n="microphone-slash" className="ni-dim" /><b>No call</b><span className="ni-chip"><I n="chrome" brand /> Chrome (Meet)</span></div><div className="ni-tile ni-discord"><div className="ni-dhead"><I n="discord" brand style={{ color: "#5865f2" }} /><b>Discord</b></div><span>Enter Discord Client ID in Settings</span></div></div>;
 const Shot = () => <div className="ni-shot"><div className="ni-shotbtns"><button><I n="crop-simple" /> Area <small>⌘⇧2</small></button><button><I n="display" /> Screen <small>⌘⇧1</small></button><button><I n="font" /> Text (OCR) <small>⌘⇧O</small></button></div><div className="ni-empty"><I n="camera" /><span>No screenshots yet</span></div></div>;
 function Notes() { const [t, setT] = useState("Groceries: milk, bread, coffee\nCall Jake about the weekend\nMath test on Thursday – chapters 3 and 4\nIdea: show train departures in the notch"); return <div className="ni-notes"><textarea value={t} onChange={e => setT(e.target.value)} spellCheck={false} /><div className="ni-nicons"><button><I n="copy" /></button><button onClick={() => setT("")}><I n="trash-can" /></button></div></div>; }
@@ -88,11 +91,21 @@ function Timer() {
       <small>Countdown runs beside the camera, click = pause. Pomodoro 25/5, 15 min after 4 rounds.</small></div></div>;
 }
 function Timetable() {
-  const hours = ["7:10", "8:00", "8:50", "9:45", "10:50", "11:40", "12:35", "13:25", "14:20"];
-  const les = [["MAT", "A204"], ["ČJL", "A204"], ["PRG", "B17"], ["PRG", "B17"], ["ANJ", "C3"], ["TV", "TV"], ["TV", "TV"], null, null];
-  return <div className="ni-tt"><div className="ni-tthead"><button className="on">Today</button><button>Week</button><span><I n="mug-hot" /> Break · next PRG in 4:12</span><b>Fri 16. 10.</b></div><div className="ni-ttrow">{les.map((l, i) => <div key={i} className={"ni-les" + (i === 2 ? " now" : "") + (l ? "" : " free")}><small>{hours[i]}</small>{l ? <><b>{l[0]}</b><span>{l[1]}</span></> : <span>–</span>}</div>)}</div></div>;
+  const [week, setWeek] = useState(false); const [hov, setHov] = useState(null);
+  const hours = [["0", "7:10", "7:55"], ["1", "8:00", "8:45"], ["2", "8:50", "9:35"], ["3", "9:45", "10:30"], ["4", "10:50", "11:35"], ["5", "11:40", "12:25"], ["6", "12:35", "13:20"], ["7", "13:25", "14:10"], ["8", "14:20", "15:05"], ["9", "15:10", "15:55"]];
+  // [hour, subject, room, teacher, state(now|cancel|change|null), full name]
+  const les = { 1: ["MAT", "A204", "Nov", null, "Matematika"], 2: ["ČJL", "A204", "Svo", null, "Český jazyk a literatura"], 3: ["PRG", "B17", "Kra", "now", "Programování"], 4: ["PRG", "B17", "Kra", null, "Programování"], 5: ["ANJ", "C3", "Hol", "change", "Anglický jazyk"], 6: ["TEV", "TV", "Bar", "cancel", "Tělesná výchova"], 7: ["DOP", "A110", "Pet", null, "Dopravní technika"] };
+  const days = ["Mon", "Tue", "Wed", "Thu", "Fri"]; const wk = [["MAT", "ČJL", "PRG", "PRG", "ANJ", "TEV", "DOP"], ["ANJ", "MAT", "ELT", "ELT", "ČJL", "FYZ", null], ["PRG", "PRG", "MAT", "DOP", "DOP", "ANJ", "TEV"], ["ČJL", "FYZ", "MAT", "ELT", "PRG", "PRG", null], ["DOP", "ANJ", "ČJL", "MAT", "TEV", null, null]];
+  const h = hov != null ? les[hov] : null;
+  return <div className="ni-tt">
+    <div className="ni-tthead"><div className="ni-seg"><button className={!week ? "on" : ""} onClick={() => setWeek(false)}>Today</button><button className={week ? "on" : ""} onClick={() => setWeek(true)}>Week</button></div><I n="chevron-left" className="ni-chev" /><b>{week ? "Week 12. 10." : "Friday 16. 10."}</b><I n="chevron-right" className="ni-chev" /><span className="ni-cls">2.B</span><I n="rotate-right" className="ni-chev" /></div>
+    {week ? <div className="ni-wgrid"><div className="ni-wrow ni-whead"><span /> {hours.slice(1, 8).map(x => <span key={x[0]}>{x[0]}</span>)}</div>{days.map((d, i) => <div key={d} className="ni-wrow"><span className={i === 4 ? "on" : ""}>{d}</span>{wk[i].map((s, k) => <div key={k} className={"ni-wcell" + (s ? "" : " free")}>{s && <><b>{s}</b><small>{les[k + 1]?.[1] ?? "A204"}</small></>}</div>)}</div>)}</div> : <>
+      {h ? <div className="ni-state"><em>{hov}. {hours[hov][1]}–{hours[hov][2]}</em><b>{h[4]}</b><span>·</span><span>{h[2]} · {h[1]}</span>{h[3] === "cancel" && <i className="ni-warn">Cancelled</i>}{h[3] === "change" && <i className="ni-chg">Room change: C3</i>}</div>
+        : <div className="ni-state"><I n="book" style={{ color: "#3fe36f" }} /><span>Now: PRG (B17) · ends in 23 min</span></div>}
+      <div className="ni-cards">{hours.map(([n, b]) => { const l = les[n]; return l ? <div key={n} className={"ni-lcard " + (l[3] || "")} onMouseEnter={() => setHov(n)} onMouseLeave={() => setHov(null)}><small>{n}</small><b>{l[0]}</b>{l[3] === "cancel" ? <em>Cancelled</em> : <span className={l[3] === "change" ? "chg" : ""}>{l[1]}</span>}<small className="t">{l[2]}</small><small>{b}</small>{l[3] === "cancel" && <i className="ni-bdg red">×</i>}{l[3] === "change" && <i className="ni-bdg org">!</i>}</div> : <div key={n} className="ni-ecard"><small>{n}</small><small className="b">{b}</small></div>; })}</div>
+    </>}
+  </div>;
 }
-
 function Island() {
   const [open, setOpen] = useState(false); const [tab, setTab] = useState("home"); const [playing, setPlaying] = useState(true);
   const closeT = useRef(null); const user = useRef(false);
